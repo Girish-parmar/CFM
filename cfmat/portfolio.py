@@ -71,7 +71,8 @@ def risk_parity_weights(cov) -> pd.Series:
     c = _as_array(cov)
     n = len(c)
     res = minimize(lambda y: 0.5 * y @ c @ y - np.log(y).sum() / n, np.full(n, 1.0 / n),
-                   method="L-BFGS-B", bounds=[(1e-9, None)] * n)
+                   jac=lambda y: c @ y - 1.0 / (n * y), method="L-BFGS-B", bounds=[(1e-9, None)] * n,
+                   options={"ftol": 1e-15, "gtol": 1e-12, "maxiter": 10_000})
     w = res.x / res.x.sum()
     return pd.Series(w, index=_labels(cov, n))
 
@@ -127,3 +128,36 @@ def hrp_weights(returns: pd.DataFrame) -> pd.Series:
             nxt += [left, right]
         clusters = nxt
     return pd.Series(weights, index=returns.columns)
+
+
+def rolling_allocation(
+    returns: pd.DataFrame, method: str = "inverse_vol", lookback: int = 126, rebalance: int = 21
+) -> pd.DataFrame:
+    """Weights across strategy sleeves, re-estimated every ``rebalance`` bars from
+    the trailing ``lookback`` bars only (weights decided at each rebalance close).
+
+    ``method``: "equal", "inverse_vol", "risk_parity" or "hrp". Before the first
+    rebalance the weights are zero (cash).
+    """
+    weights = pd.DataFrame(np.nan, index=returns.index, columns=returns.columns)
+    n = returns.shape[1]
+    for i in range(lookback - 1, len(returns), rebalance):
+        window = returns.iloc[i - lookback + 1 : i + 1]
+        if method == "equal":
+            w = np.full(n, 1.0 / n)
+        elif method == "inverse_vol":
+            inv = 1.0 / window.std().replace(0.0, np.nan)
+            w = (inv / inv.sum()).fillna(0.0).to_numpy()
+        elif method == "risk_parity":
+            w = risk_parity_weights(window.cov()).to_numpy()
+        elif method == "hrp":
+            w = hrp_weights(window).to_numpy()
+        else:
+            raise ValueError(f"unknown method {method!r}")
+        weights.iloc[i] = w
+    return weights.ffill().fillna(0.0)
+
+
+def allocation_returns(returns: pd.DataFrame, weights: pd.DataFrame) -> pd.Series:
+    """Combined return when weights decided at close t are held over t+1."""
+    return (weights.shift(1).fillna(0.0) * returns).sum(axis=1)

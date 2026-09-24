@@ -17,7 +17,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: pip
       - name: Install
-        run: pip install -e ".[dev]"
+        run: pip install -e ".[dev]" xgboost-cpu lightgbm optuna
       - name: Unit tests and lab smoke tests
         run: pytest -q
       - name: Validate n8n workflow JSON

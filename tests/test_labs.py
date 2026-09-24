@@ -11,8 +11,8 @@ ROOT = Path(__file__).resolve().parent.parent
 LABS = sorted((ROOT / "labs").glob("lab*.py"))
 
 
-def test_all_fifteen_labs_present():
-    assert len(LABS) == 15
+def test_all_labs_present():
+    assert len(LABS) == 18
 
 
 @pytest.mark.parametrize("lab", LABS, ids=lambda p: p.stem)

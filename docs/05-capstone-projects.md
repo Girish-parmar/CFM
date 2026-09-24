@@ -1,18 +1,18 @@
 # Capstone Projects
 
-The capstone (Module 16, Weeks 34–40) is where learners show they can do the whole job: form a hypothesis, test it honestly, control its risk, run it live on paper, and defend it to practitioners. Work is individual; pairs are allowed for the two infrastructure-heavy projects (7 and 10) with a larger scope.
+The capstone (Module 17, Weeks 36–42) is where learners show they can do the whole job: form a hypothesis, test it honestly, control its risk, run it live on paper, and defend it to practitioners. Work is individual; pairs are allowed for the two infrastructure-heavy projects (7 and 10) with a larger scope.
 
 ## Timeline
 
 | Week | Milestone | Deliverable |
 |---|---|---|
-| 33 | Topic approved by mentor | One-page proposal |
-| 34 | **Pre-registration** | Hypothesis, economic rationale, data, universe, rules, parameters to search, the full list of trials, success criteria (committed to Git before any testing) |
-| 35 | Data and engineering review | Reproducible pipeline, tests passing, data-quality report |
-| 36 | Research review | Walk-forward backtest with costs, Deflated Sharpe Ratio, stress tests, risk limits |
-| 36–39 | **Live paper trading (4 weeks)** | Strategy running on a static-IP server through `PaperBroker` or a broker sandbox, with RMS limits, kill switch and daily journal |
-| 39 | Draft report | Peer review by two classmates |
-| 40 | **Demo Day** | 15-minute presentation and 10-minute viva before an industry jury; final report and repository |
+| 35 | Topic approved by mentor | One-page proposal |
+| 36 | **Pre-registration** | Hypothesis, economic rationale, data, universe, rules, parameters to search, the full list of trials, success criteria (committed to Git before any testing) |
+| 37 | Data and engineering review | Reproducible pipeline, tests passing, data-quality report |
+| 38 | Research review | Walk-forward backtest with costs, Deflated Sharpe Ratio, stress tests, risk limits |
+| 38–41 | **Live paper trading (4 weeks)** | Strategy running on a static-IP server through `PaperBroker` or a broker sandbox, with RMS limits, kill switch and daily journal |
+| 41 | Draft report | Peer review by two classmates |
+| 42 | **Demo Day** | 15-minute presentation and 10-minute viva before an industry jury; final report and repository |
 
 ## Project options
 
@@ -20,14 +20,16 @@ The capstone (Module 16, Weeks 34–40) is where learners show they can do the w
 2. **Pairs trading within Indian sectors.** Screen same-sector stocks for cointegration in a formation window, trade in the next window, handle breakdowns, and measure capacity after costs.
 3. **Short-volatility options strategy with tail hedges.** Systematic index option selling (for example iron condors) with defined risk, margin modelling, event filters and stress testing against historical crashes.
 4. **Multi-factor equity portfolio.** Value, quality, momentum and low-volatility factors on a survivorship-free universe, with sector neutrality, turnover control and HRP or risk-parity weighting.
-5. **Machine-learning meta-labelling.** A primary rule-based signal plus an ML model that decides whether to take each trade, with triple-barrier labels and purged cross-validation.
+5. **Machine-learning meta-labelling.** A primary rule-based signal plus a tuned gradient-boosted model (XGBoost or LightGBM, nested walk-forward) that decides whether to take each trade and how much to bet, with triple-barrier labels and purged cross-validation.
 6. **News and filings sentiment signal.** Build a headline or announcement sentiment pipeline (lexicon, FinBERT or LLM), aggregate it by stock and day, and test it with an event study and a trading rule.
 7. **RAG research assistant for Indian filings** (pairs allowed). A retrieval-augmented assistant over annual reports and exchange announcements, with an evaluation set, citation accuracy and hallucination checks, plus a trading or screening use case.
 8. **Execution algorithm and TCA.** Implement VWAP/POV or Almgren–Chriss for a large order on intraday data, and measure implementation shortfall against benchmarks.
 9. **Reinforcement-learning execution or allocation agent.** An RL agent for optimal execution or dynamic allocation, compared with a strong classical baseline.
 10. **End-to-end automated trading system** (pairs allowed). Data ingestion, signal service, OMS/RMS, broker-sandbox adapter, n8n monitoring and alerts, logging and reconciliation, designed to meet SEBI's retail-algo requirements.
 
-Learners may propose their own topic if the mentor approves it by Week 33.
+11. **Regime-aware multi-strategy portfolio.** Three or more strategy sleeves combined with HRP or risk parity, switched or scaled by a Markov regime filter and GARCH volatility forecasts, with PBO reported for every design choice.
+
+Learners may propose their own topic if the mentor approves it by Week 35.
 
 ## Minimum technical requirements
 

@@ -19,6 +19,7 @@ dependencies = [
 
 [project.optional-dependencies]
 data = ["yfinance>=0.2.40"]
+boost = ["xgboost>=2.0", "lightgbm>=4.0", "optuna>=3.4"]
 llm = ["anthropic"]
 dl = ["torch"]
 dev = ["pytest>=8"]

@@ -136,3 +136,55 @@ def proba_to_position(proba: pd.Series, threshold: float = 0.55) -> pd.Series:
     pos[proba > threshold] = 1.0
     pos[proba < 1 - threshold] = -1.0
     return pos
+
+
+def meta_labels(
+    close: pd.Series,
+    side: pd.Series,
+    horizon: int = 10,
+    pt_mult: float = 1.0,
+    sl_mult: float = 1.0,
+    vol_window: int = 20,
+) -> pd.DataFrame:
+    """Meta-labels (López de Prado, 2018, ch. 3.6).
+
+    A primary model decides the *side* (+1 long, −1 short, 0 no trade). For each
+    bar with a side, label 1 if a trade in that direction would reach its profit
+    target before its stop-loss (or finish positive at the time barrier), else 0.
+    A secondary model trained on these labels learns *when to trust* the primary
+    model, and its probability can size the bet.
+    """
+    logp = np.log(close.to_numpy(dtype=float))
+    s = side.reindex(close.index).fillna(0.0).to_numpy()
+    daily_vol = pd.Series(logp, index=close.index).diff().rolling(vol_window).std().to_numpy()
+    n = len(close)
+    labels = np.full(n, np.nan)
+    rets = np.full(n, np.nan)
+    for i in range(n - horizon):
+        if s[i] == 0 or np.isnan(daily_vol[i]):
+            continue
+        width = daily_vol[i] * np.sqrt(horizon)
+        path = s[i] * (logp[i + 1 : i + horizon + 1] - logp[i])       # P&L path of the trade
+        up = np.nonzero(path >= pt_mult * width)[0]
+        down = np.nonzero(path <= -sl_mult * width)[0]
+        first_up = up[0] if len(up) else horizon
+        first_down = down[0] if len(down) else horizon
+        j = min(first_up, first_down, horizon - 1)
+        labels[i] = 1.0 if first_up < first_down or (first_up == first_down and path[j] > 0) else 0.0
+        rets[i] = path[j]
+    return pd.DataFrame({"label": labels, "ret": rets, "side": s}, index=close.index)
+
+
+def bet_size(proba: pd.Series) -> pd.Series:
+    """Map the probability that a trade succeeds to a size in [0, 1].
+
+    Size = 2·Φ(z) − 1 with z = (p − 0.5) / sqrt(p(1 − p)), floored at 0, so
+    trades the model doubts get no capital and confident ones approach full size
+    (López de Prado, 2018, ch. 10).
+    """
+    from scipy.stats import norm
+
+    p = proba.clip(1e-6, 1 - 1e-6)
+    z = (p - 0.5) / np.sqrt(p * (1 - p))
+    size = pd.Series(2 * norm.cdf(z) - 1, index=proba.index).clip(lower=0.0)
+    return size.where(proba.notna(), 0.0)

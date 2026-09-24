@@ -4,10 +4,10 @@
 
 | Component | Weight | What it measures |
 |---|---|---|
-| Module quizzes (15 × online, 20 min) | 10% | Concepts from each module; lowest two scores dropped |
-| Lab assignments (15 labs, graded through GitHub) | 25% | Correct, tested, readable code and written interpretation |
+| Module quizzes (16 × online, 20 min) | 10% | Concepts from each module; lowest two scores dropped |
+| Lab assignments (18 labs, graded through GitHub) | 25% | Correct, tested, readable code and written interpretation |
 | Term examinations (2 × 4 h, proctored) | 20% | Week 9 (Term 1) and Week 26 (Terms 2–3): theory, numericals, short code-reading questions |
-| Mini-projects (3) | 15% | End of Terms 2, 3 and 4: a strategy study, a risk/execution study and an ML/NLP study |
+| Mini-projects (3) | 15% | End of Terms 2, 3 and 4: a strategy study, a risk/execution study and a tuned-ML or advanced-strategy study |
 | Capstone | 30% | Research quality, code, paper-trading discipline, report and jury viva |
 
 ## Capstone rubric (30%)
@@ -36,7 +36,7 @@ Paper-trading P&L is **not** graded on profit. It is graded on discipline: follo
 
 1. Overall score of at least 60% and capstone score of at least 50%.
 2. Attendance of at least 80% of live sessions (recordings do not count towards attendance) and both bootcamps.
-3. All 15 labs submitted.
+3. All 18 labs submitted.
 4. No upheld academic-integrity violation.
 
 The certificate carries a unique credential ID that employers can verify online, together with a transcript listing modules, hours and grade band. It is a certificate of the institute. It is not a SEBI registration or a NISM certification; NISM exams are taken separately using the vouchers included in the fee.

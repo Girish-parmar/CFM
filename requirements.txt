@@ -11,3 +11,5 @@ pytest>=8
 # yfinance>=0.2.40   # Module 2/4: download real NSE/BSE/US prices
 # anthropic          # Module 14: LLM answer step of the RAG lab
 # torch              # Module 13: LSTM exercise
+# xgboost lightgbm optuna   # Module 16: boosting and hyperparameter optimisation
+#                           (xgboost-cpu is a much smaller CPU-only build of xgboost)

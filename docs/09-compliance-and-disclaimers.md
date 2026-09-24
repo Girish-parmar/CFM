@@ -73,7 +73,7 @@ Placement data, if published, must be audited and show the base and period (see 
 
 ## 9. Professional conduct taught in the program
 
-Module 16 covers the SEBI (Prohibition of Insider Trading) Regulations, 2015, the SEBI (Prohibition of Fraudulent and Unfair Trade Practices relating to Securities Market) Regulations, 2003 (including spoofing, layering, front-running and circular trading), and the confidentiality duties of anyone working with order flow or client data.
+Module 17 covers the SEBI (Prohibition of Insider Trading) Regulations, 2015, the SEBI (Prohibition of Fraudulent and Unfair Trade Practices relating to Securities Market) Regulations, 2003 (including spoofing, layering, front-running and circular trading), and the confidentiality duties of anyone working with order flow or client data.
 
 ## Standard disclaimer (for the website, brochure, LMS and every lab)
 

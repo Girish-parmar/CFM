@@ -23,7 +23,7 @@
 | L4 | From model to strategy (Sun, W28) | Probabilities to positions; bet sizing; costs; model monitoring, drift and decay; model risk governance |
 | C1–C4 | Clinics | Feature and label pipeline; leakage hunt; Lab 12; meta-labelling exercise |
 
-## Assignment (Mini-project 3, due Week 33)
+## Assignment (Mini-project 3, due Week 35; extended with tuning in Module 16)
 
 Build an ML-driven strategy or meta-labelling layer on real data using purged CV. Report the gap between shuffled and purged CV scores, out-of-sample performance after costs, and feature importance, and say honestly whether there is an edge.
 

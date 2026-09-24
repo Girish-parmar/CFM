@@ -5,7 +5,7 @@
 | Role | Count per cohort | Profile |
 |---|---|---|
 | Program Director | 1 | 15+ years in trading, quant research or risk; PhD, CFA or FRM preferred; owns curriculum quality and the capstone jury |
-| Core faculty | 5–6 | One lead per area: markets and derivatives; Python and data engineering; quant research and backtesting; risk and execution; ML/DL; NLP/LLMs and automation |
+| Core faculty | 5–6 | One lead per area: markets and derivatives; Python and data engineering; quant research and backtesting; risk and execution; ML/DL and advanced strategies; NLP/LLMs and automation |
 | Industry practitioners | 8–10 guest sessions | Prop traders, AMC fund managers, broker technology heads, exchange and regtech specialists, compliance officers |
 | Practitioner mentors | 1 per 5 learners | Working quants, traders and risk managers; 12 hours of 1:1 mentoring per learner |
 | Teaching assistants | 1 per 15 learners | Strong alumni or postgraduates; run lab clinics, review pull requests, hold office hours |
@@ -22,11 +22,11 @@
 
 | Layer | Tools | Notes |
 |---|---|---|
-| Programming | Python 3.11+, JupyterLab, VS Code, `cfmat` course library | Labs are Jupytext "percent" scripts: they run as scripts and open as notebooks |
+| Programming | Python 3.11+, JupyterLab, VS Code, `cfmat` course library; scikit-learn, statsmodels, XGBoost, LightGBM, Optuna | Labs are Jupytext "percent" scripts: they run as scripts and open as notebooks |
 | Version control | Git, GitHub (classroom organisation) | Every lab submitted as a pull request; peer review |
 | Databases | SQLite (labs), PostgreSQL + TimescaleDB (tick data), DuckDB + Parquet (research) | Shared read-only research database with licensed data |
 | Market data | Licensed historical NSE cash and F&O data (EOD and intraday) for the program term; free sources such as yfinance for practice | Redistribution is not allowed; see compliance |
-| Compute | Cloud lab VMs; GPU hours for Module 13; containerised environments with Docker | Per-learner budget with spending alerts |
+| Compute | Cloud lab VMs; GPU hours for Modules 13 and 16 (deep learning, large hyperparameter searches); containerised environments with Docker | Per-learner budget with spending alerts |
 | Paper trading | Static-IP cloud server per learner for the capstone; `cfmat.broker.PaperBroker`; broker sandbox or paper accounts where available | Mirrors the static-IP and API-key controls of the retail algo framework |
 | Automation | Self-hosted n8n (Docker) per learner group | Credentials stored in n8n's credential store, never in workflow JSON |
 | AI | LLM API access (for example Claude) with per-learner spending caps; vector database (pgvector or Chroma) | Only public or licensed documents go to LLM APIs |
@@ -39,7 +39,7 @@
 git clone <course repository>
 cd CFM
 python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
-pip install -e ".[dev]"            # add ,data,llm for yfinance and the Claude client
+pip install -e ".[dev,boost]"      # boost = XGBoost, LightGBM, Optuna; add ,data,llm for yfinance and the Claude client
 pytest                              # the whole suite should pass
 python labs/lab01_markets_instruments.py
 ```

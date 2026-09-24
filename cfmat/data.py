@@ -144,6 +144,95 @@ def universe(
     return pd.DataFrame(paths, index=trading_days(n_days, start), columns=cols)
 
 
+def regime_prices(
+    n: int = 2500,
+    mu: tuple[float, float] = (0.15, -0.25),
+    sigma: tuple[float, float] = (0.12, 0.35),
+    phi: tuple[float, float] = (0.0, 0.0),
+    p_stay: tuple[float, float] = (0.985, 0.95),
+    seed: int | None = None,
+    start: str = "2016-01-01",
+) -> pd.DataFrame:
+    """Prices from a two-state Markov-switching model.
+
+    State 0 is "calm", state 1 "turbulent". Each state has its own annual drift
+    ``mu``, annual volatility ``sigma`` and AR(1) coefficient ``phi`` on daily
+    returns; ``p_stay`` is the daily probability of staying in each state.
+    Returns columns ``close`` and ``regime`` (the true hidden state, for grading
+    only: a strategy must never use it).
+
+    With different ``phi`` per state, whether momentum or reversal works depends
+    on the regime, an interaction that tree ensembles can learn and linear
+    models cannot.
+    """
+    rng = np.random.default_rng(seed)
+    dt = 1.0 / TRADING_DAYS
+    states = np.zeros(n, dtype=int)
+    for t in range(1, n):
+        stay = p_stay[states[t - 1]]
+        states[t] = states[t - 1] if rng.random() < stay else 1 - states[t - 1]
+    r = np.zeros(n)
+    for t in range(1, n):
+        k = states[t]
+        r[t] = mu[k] * dt + phi[k] * (r[t - 1] - mu[states[t - 1]] * dt) + sigma[k] * np.sqrt(dt) * rng.normal()
+    close = 100.0 * np.exp(np.cumsum(r))
+    return pd.DataFrame({"close": close, "regime": states}, index=trading_days(n, start))
+
+
+def garch_prices(
+    n: int = 2500,
+    omega: float = 2e-6,
+    alpha: float = 0.08,
+    beta: float = 0.90,
+    mu: float = 0.08,
+    seed: int | None = None,
+    start: str = "2016-01-01",
+) -> pd.DataFrame:
+    """Prices whose daily returns follow GARCH(1,1): volatility clusters.
+
+    σ²_t = omega + alpha·ε²_{t−1} + beta·σ²_{t−1}. Returns ``close`` and the true
+    conditional volatility ``sigma`` (daily).
+    """
+    rng = np.random.default_rng(seed)
+    var = np.empty(n)
+    eps = np.empty(n)
+    var[0] = omega / (1 - alpha - beta)
+    eps[0] = np.sqrt(var[0]) * rng.normal()
+    for t in range(1, n):
+        var[t] = omega + alpha * eps[t - 1] ** 2 + beta * var[t - 1]
+        eps[t] = np.sqrt(var[t]) * rng.normal()
+    r = mu / TRADING_DAYS + eps
+    r[0] = 0.0
+    close = 100.0 * np.exp(np.cumsum(r))
+    return pd.DataFrame({"close": close, "sigma": np.sqrt(var)}, index=trading_days(n, start))
+
+
+def drifting_pair(
+    n: int = 1500,
+    beta_start: float = 1.2,
+    beta_end: float = 1.9,
+    half_life: float = 8.0,
+    spread_sigma: float = 1.5,
+    seed: int | None = None,
+    start: str = "2019-01-01",
+) -> pd.DataFrame:
+    """A pair whose hedge ratio drifts from ``beta_start`` to ``beta_end``.
+
+    y = 20 + beta_t · x + OU spread. A hedge ratio fixed in a formation window
+    goes stale; an adaptive (Kalman) estimate keeps up. Column ``true_beta`` is
+    for grading only.
+    """
+    rng = np.random.default_rng(seed)
+    x = gbm_prices(n, 100.0, 0.06, 0.22, seed=int(rng.integers(1_000_000)), start=start).to_numpy()
+    beta = np.linspace(beta_start, beta_end, n)
+    theta = np.log(2) / half_life
+    s = np.zeros(n)
+    for t in range(1, n):
+        s[t] = s[t - 1] * (1 - theta) + rng.normal(0, spread_sigma)
+    y = 20.0 + beta * x + s
+    return pd.DataFrame({"y": y, "x": x, "true_beta": beta}, index=trading_days(n, start))
+
+
 def intraday_volume_profile(n_buckets: int = 25) -> np.ndarray:
     """U-shaped share of daily volume per bucket (sums to 1).
 

@@ -1,4 +1,4 @@
-# Academic Calendar (40 weeks)
+# Academic Calendar (42 weeks)
 
 **Weekly rhythm (IST)**
 
@@ -67,20 +67,22 @@ Python basics (variables, control flow, functions, lists and dictionaries, files
 | 30 | M13 | Reinforcement learning foundations | RL for trading and execution | Lab 13 | Quiz 13 |
 | 31 | M14 | Text as data; lexicons; FinBERT | News and earnings-call signals | Sentiment pipeline | – |
 | 32 | M14 | LLMs and RAG architecture | Evaluation, hallucination, prompt injection, cost | Lab 14 | Quiz 14 |
-| 33 | M15 | n8n fundamentals; scheduled pipelines | Alerts, webhooks, AI agents; security | Lab 15 + workflows | Quiz 15; **Mini-project 3**; capstone topic approved |
+| 33 | M15 | n8n fundamentals; scheduled pipelines | Alerts, webhooks, AI agents; security | Lab 15 + workflows | Quiz 15 |
+| 34 | M16 | Gradient boosting for trading | Hyperparameter optimisation: purged CV, Optuna, nested walk-forward, DSR, PBO | Lab 16 | – |
+| 35 | M16 | Regimes, GARCH, Kalman filters | Meta-labelling and strategy portfolios | Labs 17–18 | Quiz 16; **Mini-project 3**; capstone topic approved |
 
 ## Term 5: Capstone and Career
 
 | Week | Saturday | Sunday | Lab clinics / other | Milestone |
 |---|---|---|---|---|
-| 34 | Research design and pre-registration | Trading psychology and discipline | Mentor 1:1 | Pre-registration committed |
-| 35 | Data and engineering reviews | Professional ethics; market abuse rules | Code review clinic | Engineering review |
-| 36 | Research reviews | Career studio: CV and GitHub portfolio | Deployment clinic; paper trading starts | Research review |
-| 37 | Paper-trading stand-ups | Career studio: interviews and quant puzzles | Incident drills | Weekly journal |
-| 38 | Paper-trading stand-ups | Employer connect session | Mock interviews | Weekly journal |
-| 39 | Paper-trading wrap-up; reconciliation | Peer review of reports | Presentation rehearsal | Draft report |
-| 40 | **Demo Day** (jury) | Graduation and hiring-partner showcase | – | Final report and viva |
+| 36 | Research design and pre-registration | Trading psychology and discipline | Mentor 1:1 | Pre-registration committed |
+| 37 | Data and engineering reviews | Professional ethics; market abuse rules | Code review clinic | Engineering review |
+| 38 | Research reviews | Career studio: CV and GitHub portfolio | Deployment clinic; paper trading starts | Research review |
+| 39 | Paper-trading stand-ups | Career studio: interviews and quant puzzles | Incident drills | Weekly journal |
+| 40 | Paper-trading stand-ups | Employer connect session | Mock interviews | Weekly journal |
+| 41 | Paper-trading wrap-up; reconciliation | Peer review of reports | Presentation rehearsal | Draft report |
+| 42 | **Demo Day** (jury) | Graduation and hiring-partner showcase | – | Final report and viva |
 
 ## Mentoring schedule
 
-Six 2-hour 1:1 sessions: Weeks 4, 10, 18, 27, 34 and 38.
+Six 2-hour 1:1 sessions: Weeks 4, 10, 18, 27, 36 and 40.
