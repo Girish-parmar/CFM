@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-import numpy as np
 import pandas as pd
 
-from ..analytics.metrics import MONTHS, drawdown_series, equity_curve, performance_summary
+from ..analytics.metrics import drawdown_series, equity_curve, performance_summary
+from ..analytics.performance import monthly_returns
 
 
 def trade_stats(trades: pd.DataFrame) -> dict[str, float]:
@@ -47,14 +47,11 @@ def backtest_stats(result) -> pd.Series:
 
 
 def monthly_returns_table(returns: pd.Series) -> pd.DataFrame:
-    """Compounded return (%) per calendar month, years as rows, plus a yearly total."""
-    monthly = (1 + returns).groupby([returns.index.year, returns.index.month]).prod() - 1
-    table = monthly.unstack() * 100
-    table.columns = [MONTHS[m - 1] for m in table.columns]
-    table.index.name = "year"
-    yearly = (1 + returns).groupby(returns.index.year).prod() - 1
-    table["Year"] = yearly.to_numpy() * 100
-    return table
+    """Compounded return (%) per calendar month, years as rows, plus a yearly total.
+
+    Kept for existing code; the implementation lives in ``analytics.performance.monthly_returns``.
+    """
+    return monthly_returns(returns)
 
 
 def compare(results: dict) -> pd.DataFrame:
@@ -87,4 +84,4 @@ def plot_backtest(bars: pd.DataFrame, result, title: str = ""):
     return fig
 
 
-__all__ = ["backtest_stats", "compare", "monthly_returns_table", "np", "plot_backtest", "trade_stats"]
+__all__ = ["backtest_stats", "compare", "monthly_returns_table", "plot_backtest", "trade_stats"]

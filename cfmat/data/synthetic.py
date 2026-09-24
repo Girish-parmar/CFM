@@ -463,3 +463,45 @@ def intraday_volume_profile(n_buckets: int = 25) -> np.ndarray:
     weights = 1.0 + 1.5 * u**2
     weights[-1] *= 1.3  # closing auction / last-hour rush
     return weights / weights.sum()
+
+
+def brownian_ohlc(
+    n_days: int = 504,
+    sigma: float | np.ndarray = 0.25,
+    mu: float = 0.0,
+    overnight_share: float = 0.2,
+    steps_per_day: int = 375,
+    s0: float = 100.0,
+    seed: int | None = None,
+    start: str = "2022-01-03",
+) -> pd.DataFrame:
+    """Daily OHLC bars built from a simulated intraday path, with the true volatility known.
+
+    Each day's variance σ²/252 is split between an overnight gap
+    (``overnight_share``) and a Brownian intraday session of ``steps_per_day``
+    one-minute steps (375 = NSE 09:15–15:30); high and low are the extremes of
+    that path. ``sigma`` is annualised, either one number or one value per day
+    (for volatility regimes). The ``true_vol`` column holds it, so estimators can
+    be graded against the truth.
+    """
+    if not 0 <= overnight_share < 1:
+        raise ValueError("overnight_share must be in [0, 1)")
+    rng = np.random.default_rng(seed)
+    vol = np.broadcast_to(np.asarray(sigma, dtype=float), (n_days,)).copy()
+    daily_var = vol**2 / TRADING_DAYS
+    drift = (mu - 0.5 * vol**2) / TRADING_DAYS
+    gap = rng.normal(overnight_share * drift, np.sqrt(overnight_share * daily_var))
+    steps = rng.normal(0.0, 1.0, size=(n_days, steps_per_day))
+    steps *= np.sqrt((1 - overnight_share) * daily_var / steps_per_day)[:, None]
+    steps += ((1 - overnight_share) * drift / steps_per_day)[:, None]
+    session = np.cumsum(steps, axis=1)
+    prev_close = np.log(s0)
+    rows = np.empty((n_days, 4))
+    for d in range(n_days):
+        open_ = prev_close + gap[d]
+        path = open_ + session[d]
+        rows[d] = open_, max(open_, path.max()), min(open_, path.min()), path[-1]
+        prev_close = path[-1]
+    frame = pd.DataFrame(np.exp(rows), columns=["open", "high", "low", "close"], index=trading_days(n_days, start))
+    frame["true_vol"] = vol
+    return frame
