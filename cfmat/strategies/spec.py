@@ -1,4 +1,4 @@
-"""``StrategySpec``: a strategy as data (rules, exits, parameters), JSON round-trip (Module 12).
+"""``StrategySpec``: a strategy as data (rules, exits, parameters), JSON round-trip (M12).
 """
 
 from __future__ import annotations
@@ -11,6 +11,7 @@ from pathlib import Path
 
 @dataclass
 class StrategySpec:
+    """A strategy as data: entry and exit rules, protective exits and parameters."""
     name: str
     long_entry: list[str] = field(default_factory=list)
     long_exit: list[str] = field(default_factory=list)
@@ -49,6 +50,7 @@ class StrategySpec:
             raise ValueError(f"strategy {self.name!r} needs a value for parameter {exc}") from exc
 
     def to_dict(self) -> dict:
+        """The spec as a plain dict."""
         return asdict(self)
 
     def to_json(self, path: str | os.PathLike | None = None) -> str:

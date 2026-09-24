@@ -1,4 +1,4 @@
-"""Reinforcement learning for trading (Module 13): tabular Q-learning.
+"""Reinforcement learning for trading (M21): tabular Q-learning.
 
 Deliberately small so every moving part is visible — state, action, reward,
 Bellman update, exploration. Deep RL (DQN, PPO) replaces the table with a
@@ -21,6 +21,7 @@ ACTIONS = (-1, 0, 1)
 
 @dataclass
 class QLearningTrader:
+    """Tabular Q-learning agent: state = signs of recent returns + position; actions = short, flat, long."""
     n_lags: int = 3
     alpha: float = 0.05          # learning rate
     gamma: float = 0.9           # discount factor
@@ -37,6 +38,7 @@ class QLearningTrader:
         return self.q.setdefault(state, np.zeros(len(ACTIONS)))
 
     def fit(self, returns: pd.Series, episodes: int = 20) -> QLearningTrader:
+        """Train for ``episodes`` passes over ``returns`` with ε-greedy exploration."""
         rng = np.random.default_rng(self.seed)
         r = returns.to_numpy(dtype=float)
         for _ in range(episodes):
@@ -64,6 +66,7 @@ class QLearningTrader:
         return pd.Series(out, index=returns.index)
 
     def policy_table(self) -> pd.DataFrame:
+        """Q-values and the greedy action for every visited state."""
         rows = [{"state": s, **{f"Q[{a:+d}]": v for a, v in zip(ACTIONS, vals)}, "best": ACTIONS[int(np.argmax(vals))]}
                 for s, vals in sorted(self.q.items())]
         return pd.DataFrame(rows)

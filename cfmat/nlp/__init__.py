@@ -1,4 +1,4 @@
-"""Text analytics for markets (Module 22).
+"""Text analytics for markets (M22).
 
 sentiment  lexicon sentiment with negation, TF-IDF + logistic-regression classifier
 rag        chunking, TF-IDF retrieval, grounded prompts, extractive answers

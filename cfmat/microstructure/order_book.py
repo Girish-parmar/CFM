@@ -1,4 +1,4 @@
-"""A price-time-priority limit order book (Module 15).
+"""A price-time-priority limit order book (M15).
 """
 
 from __future__ import annotations
@@ -28,23 +28,29 @@ class OrderBook:
 
     # -- queries -------------------------------------------------------------
     def best_bid(self) -> float | None:
+        """Highest resting bid price, or None."""
         return max(self.bids) if self.bids else None
 
     def best_ask(self) -> float | None:
+        """Lowest resting ask price, or None."""
         return min(self.asks) if self.asks else None
 
     def spread(self) -> float | None:
+        """Best ask − best bid, or None if either side is empty."""
         bid, ask = self.best_bid(), self.best_ask()
         return None if bid is None or ask is None else ask - bid
 
     def resting_order_ids(self) -> list[int]:
+        """IDs of orders still resting in the book."""
         return list(self._where)
 
     def mid(self) -> float | None:
+        """Mid price, or None if either side is empty."""
         bid, ask = self.best_bid(), self.best_ask()
         return None if bid is None or ask is None else (bid + ask) / 2
 
     def depth(self, levels: int = 5) -> pd.DataFrame:
+        """Top ``levels`` price levels on each side with their total quantity."""
         bids = sorted(self.bids, reverse=True)[:levels]
         asks = sorted(self.asks)[:levels]
         rows = []
@@ -59,6 +65,7 @@ class OrderBook:
 
     # -- order entry ---------------------------------------------------------------
     def add_limit(self, side: str, price: float, qty: int) -> tuple[int, list[dict]]:
+        """Match a limit order against the book; any remainder rests. Returns (order id, trades)."""
         order_id = next(self._ids)
         remaining, trades = self._match(side, qty, order_id, limit=price)
         if remaining > 0:
@@ -68,10 +75,12 @@ class OrderBook:
         return order_id, trades
 
     def add_market(self, side: str, qty: int) -> list[dict]:
+        """Match a market order against the book; any unfilled remainder is dropped. Returns trades."""
         _, trades = self._match(side, qty, next(self._ids), limit=None)
         return trades
 
     def cancel(self, order_id: int) -> bool:
+        """Cancel a resting order; False if it is not in the book."""
         loc = self._where.pop(order_id, None)
         if loc is None:
             return False

@@ -1,4 +1,4 @@
-"""Labels for financial ML: triple-barrier and meta-labels (Modules 19, 23).
+"""Labels for financial ML: triple-barrier and meta-labels (M19, M23).
 """
 
 from __future__ import annotations

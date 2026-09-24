@@ -1,5 +1,5 @@
 """Two-state Markov-switching regimes: fit on a training window, then filter
-(no look-ahead) or smooth (look-ahead, for description only) (Module 23).
+(no look-ahead) or smooth (look-ahead, for description only) (M23).
 """
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Option strategy backtester (Module 17).
+"""Option strategy backtester (M09, M12).
 
 Each cycle opens a multi-leg position on an entry date, re-prices every leg
 daily with Black–Scholes at that day's implied volatility, tracks position
@@ -44,10 +44,12 @@ VIEW = {
 
 @dataclass
 class OptionsResult:
+    """Outcome of an option-structure backtest: one row per trade and a daily P&L/Greeks table."""
     trades: pd.DataFrame
     daily: pd.DataFrame
 
     def summary(self) -> dict[str, float]:
+        """Headline statistics: trades, win rate, P&L, worst trade, profit factor, return on margin."""
         t = self.trades
         if len(t) == 0:
             return {"trades": 0}

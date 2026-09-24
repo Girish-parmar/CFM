@@ -1,4 +1,4 @@
-"""The rule language of the Strategy Creator (Module 12).
+"""The rule language of the Strategy Creator (M12).
 
 Rules such as ``"close > sma(200)"`` or ``"rsi(2) < 10 and bullish_engulfing"``
 are parsed with Python's ``ast`` module; only whitelisted syntax (numbers,
@@ -179,6 +179,7 @@ class Evaluator:
         return self._eval(tree.body)
 
     def boolean(self, expr: str) -> pd.Series:
+        """Evaluate a rule and return a boolean Series (missing values count as False)."""
         value = self(expr)
         if not isinstance(value, pd.Series):
             return pd.Series(bool(value), index=self.bars.index)
@@ -240,4 +241,5 @@ class Evaluator:
 
 
 def available_functions() -> list[str]:
+    """Every name the rule language accepts: functions, patterns and price fields."""
     return sorted(FUNCTIONS) + sorted(pat.ALL_PATTERNS) + list(PRICE_FIELDS)

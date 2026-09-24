@@ -1,4 +1,4 @@
-"""Order and fill records shared by brokers and risk checks (Module 17).
+"""Order and fill records shared by brokers and risk checks (M17).
 """
 
 from __future__ import annotations
@@ -14,6 +14,7 @@ MARKET, LIMIT = "MARKET", "LIMIT"
 
 @dataclass
 class Order:
+    """An order request and its lifecycle status."""
     symbol: str
     side: str
     qty: int
@@ -35,6 +36,7 @@ class Order:
 
 @dataclass
 class Fill:
+    """An execution: price, quantity and charges."""
     order_id: int
     symbol: str
     side: str

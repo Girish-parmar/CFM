@@ -1,4 +1,4 @@
-"""Market data (Modules 3, 5).
+"""Market data (M03, M05).
 
 synthetic  reproducible generators with documented, planted properties
 loaders    CSV and free-API loaders for real data
@@ -15,6 +15,7 @@ from .synthetic import (
     ar1_prices,
     cointegrated_pair,
     drifting_pair,
+    factor_panel,
     garch_prices,
     gbm_prices,
     implied_vol_series,
@@ -35,6 +36,7 @@ __all__ = [
     "cointegrated_pair",
     "download_prices",
     "drifting_pair",
+    "factor_panel",
     "garch_prices",
     "gbm_prices",
     "implied_vol_series",

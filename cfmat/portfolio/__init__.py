@@ -1,4 +1,4 @@
-"""Risk measurement and portfolio construction (Modules 13, 14).
+"""Risk measurement and portfolio construction (M13, M14).
 
 The package namespace re-exports the construction methods
 (``from cfmat import portfolio; portfolio.hrp_weights(...)``).

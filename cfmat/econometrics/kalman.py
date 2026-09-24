@@ -1,4 +1,4 @@
-"""Kalman-filter hedge ratios and pairs signals (Module 23; Chan, 2013, ch. 3).
+"""Kalman-filter hedge ratios and pairs signals (M23; Chan, 2013, ch. 3).
 """
 
 from __future__ import annotations

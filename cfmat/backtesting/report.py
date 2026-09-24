@@ -1,4 +1,4 @@
-"""Backtest reports: trade statistics, summary tables and charts (Module 17)."""
+"""Backtest reports: trade statistics, summary tables and charts (M11, M12)."""
 
 from __future__ import annotations
 

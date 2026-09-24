@@ -1,9 +1,15 @@
-"""Synthetic market data with known, documented properties (Modules 2-17).
+"""Synthetic market data with known, documented properties (M03-M23).
 
 Every generator is reproducible with ``seed`` and runs offline. Several plant a
 specific effect (momentum, mean reversion, regimes, calendar effects, trend
 archetypes) so a lab can show a method working when the effect exists. Real
 markets are noisier and effects are smaller: always re-test on real data.
+
+Generators that add noise to an existing series (``ohlcv_from_close``,
+``implied_vol_series``) draw from a *salted* random stream. Labs often pass the
+same seed to a price generator and to ``ohlcv_from_close``; with an unsalted
+stream the open-price noise would equal the next day's return shock, planting
+a look-ahead that makes candlestick patterns look predictive.
 """
 
 from __future__ import annotations
@@ -12,6 +18,15 @@ import numpy as np
 import pandas as pd
 
 from ..analytics.metrics import TRADING_DAYS
+
+
+def _derived_rng(seed: int | None, salt: int) -> np.random.Generator:
+    """A random stream independent of ``default_rng(seed)`` for derived series."""
+    return np.random.default_rng(None if seed is None else [salt, seed])
+
+
+_OHLC_SALT = 0x4F484C43   # "OHLC"
+_IV_SALT = 0x49565331     # "IVS1"
 
 
 def trading_days(n: int, start: str = "2022-01-03") -> pd.DatetimeIndex:
@@ -65,8 +80,12 @@ def ar1_prices(
 
 
 def ohlcv_from_close(close: pd.Series, seed: int | None = None, base_volume: float = 1e6) -> pd.DataFrame:
-    """Build plausible open/high/low/volume columns around a close series."""
-    rng = np.random.default_rng(seed)
+    """Build plausible open/high/low/volume columns around a close series.
+
+    The noise comes from a stream independent of any price generator given the
+    same ``seed``, so open, high and low carry no information about future closes.
+    """
+    rng = _derived_rng(seed, _OHLC_SALT)
     c = close.to_numpy(dtype=float)
     rets = np.diff(np.log(c), prepend=np.log(c[0]))
     daily_vol = max(float(np.std(rets[1:])) if len(c) > 2 else 0.01, 1e-4)
@@ -140,6 +159,74 @@ def universe(
     paths = 100.0 * np.exp(np.vstack([np.zeros(n_assets), np.cumsum(rets, axis=0)]))
     cols = [f"SYN{i + 1:02d}" for i in range(n_assets)]
     return pd.DataFrame(paths, index=trading_days(n_days, start), columns=cols)
+
+
+def factor_panel(
+    n_stocks: int = 200,
+    n_months: int = 120,
+    premia: dict[str, float] | None = None,
+    premium_vol: float = 1.5,
+    outlier_share: float = 0.02,
+    seed: int | None = None,
+    start: str = "2015-01-31",
+) -> pd.DataFrame:
+    """Monthly (date, stock) panel of characteristics and next-month returns.
+
+    Characteristics follow persistent AR(1) processes: ``earnings_yield``, ``roe``,
+    ``debt_equity``, ``momentum_12_1`` and ``log_mcap``. Next-month returns
+    (``fwd_ret``) load on standardised *sector-relative* value, quality and
+    momentum. Each premium has a long-run mean (``premia``, per month per unit
+    z-score) but drifts over time (AR(1) multiplier with volatility
+    ``premium_vol``), so every factor has dry spells. Sectors differ in their
+    typical earnings yield, so a raw value score is partly a sector bet, and
+    ``outlier_share`` of reported earnings yields are distorted (one-off gains,
+    data errors) without affecting returns, which is what winsorising is for.
+    All numbers are fictional.
+    """
+    rng = np.random.default_rng(seed)
+    premia = {"value": 0.0015, "quality": 0.0012, "momentum": 0.0015, **(premia or {})}
+    sectors = np.array(["Banks", "IT", "Pharma", "Auto", "FMCG", "Energy", "Metals", "Infra"])
+    sector_ey = dict(zip(sectors, [0.09, 0.035, 0.045, 0.06, 0.025, 0.08, 0.10, 0.07]))
+    sector = rng.choice(sectors, n_stocks)
+    names = [f"STK{i + 1:03d}" for i in range(n_stocks)]
+    dates = pd.date_range(start, periods=n_months, freq="ME")
+
+    def ar1(mean, sd, phi=0.9, shape=(n_months, n_stocks)):
+        x = np.empty(shape)
+        x[0] = mean + rng.normal(0, sd, shape[1])
+        for t in range(1, shape[0]):
+            x[t] = mean + phi * (x[t - 1] - mean) + rng.normal(0, sd * np.sqrt(1 - phi**2), shape[1])
+        return x
+
+    base_ey = np.array([sector_ey[s] for s in sector])
+    ey = ar1(base_ey, 0.02)
+    roe = ar1(0.15, 0.06)
+    de = np.exp(ar1(-0.7, 0.5))
+    mom = ar1(0.0, 0.25, phi=0.8)
+    size = ar1(10.0, 1.2, phi=0.98)
+
+    def z(x):
+        return (x - x.mean(axis=1, keepdims=True)) / x.std(axis=1, keepdims=True)
+
+    loadings = {"value": z(ey - base_ey), "quality": z(z(roe) - 0.5 * z(np.log(de))), "momentum": z(mom)}
+    drift = ar1(1.0, premium_vol, phi=0.9, shape=(n_months, len(loadings)))
+    sector_ret = {s: rng.normal(0, 0.03, n_months) for s in sectors}
+    fwd = (0.008 + np.column_stack([sector_ret[s] for s in sector]) + rng.normal(0, 0.08, (n_months, n_stocks)))
+    for j, (name, load) in enumerate(loadings.items()):
+        fwd += premia[name] * drift[:, [j]] * load
+    reported_ey = ey.copy()
+    hit = rng.random(ey.shape) < outlier_share
+    reported_ey[hit] *= rng.choice([-2.0, 4.0, 8.0], size=int(hit.sum()))
+    index = pd.MultiIndex.from_product([dates, names], names=["date", "stock"])
+    return pd.DataFrame({
+        "sector": np.tile(sector, n_months),
+        "earnings_yield": reported_ey.ravel(),
+        "roe": roe.ravel(),
+        "debt_equity": de.ravel(),
+        "momentum_12_1": mom.ravel(),
+        "log_mcap": size.ravel(),
+        "fwd_ret": fwd.ravel(),
+    }, index=index)
 
 
 def regime_prices(
@@ -354,7 +441,7 @@ def implied_vol_series(
     premium) while IV still jumps when the market turns turbulent. Uses data
     up to each bar only.
     """
-    rng = np.random.default_rng(seed)
+    rng = _derived_rng(seed, _IV_SALT)
     r = np.log(close).diff().fillna(0.0).to_numpy()
     var = np.empty(len(r))
     var[0] = r[1:60].var() if len(r) > 60 else 0.0001

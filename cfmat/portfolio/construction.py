@@ -1,4 +1,4 @@
-"""Portfolio construction (Module 9): mean–variance, risk parity and
+"""Portfolio construction (M14): mean–variance, risk parity and
 Hierarchical Risk Parity. Inputs are annualised ``mu`` (expected returns) and
 ``cov`` (covariance) as numpy arrays or pandas objects.
 """
@@ -25,6 +25,7 @@ def _labels(obj, n: int) -> list:
 
 
 def portfolio_stats(weights, mu, cov, rf: float = 0.0) -> dict[str, float]:
+    """Expected return, volatility and Sharpe ratio of ``weights``."""
     w, m, c = _as_array(weights), _as_array(mu), _as_array(cov)
     ret = float(w @ m)
     vol = float(np.sqrt(w @ c @ w))
@@ -49,6 +50,7 @@ def _solve(objective, n: int, long_only: bool, extra_constraints=()) -> np.ndarr
 
 
 def min_variance_weights(cov, long_only: bool = True) -> pd.Series:
+    """Minimum-variance weights (long-only by default, fully invested)."""
     c = _as_array(cov)
     n = len(c)
     if long_only:
@@ -60,6 +62,7 @@ def min_variance_weights(cov, long_only: bool = True) -> pd.Series:
 
 
 def max_sharpe_weights(mu, cov, rf: float = 0.0, long_only: bool = True) -> pd.Series:
+    """Maximum-Sharpe (tangency) weights; unstable because expected returns are noisy."""
     m, c = _as_array(mu), _as_array(cov)
     n = len(m)
     w = _solve(lambda w: -(w @ m - rf) / np.sqrt(w @ c @ w), n, long_only)
@@ -78,6 +81,7 @@ def risk_parity_weights(cov) -> pd.Series:
 
 
 def efficient_frontier(mu, cov, n_points: int = 30, long_only: bool = True) -> pd.DataFrame:
+    """Minimum-variance portfolios for a range of target returns."""
     m, c = _as_array(mu), _as_array(cov)
     n = len(m)
     targets = np.linspace(m.min(), m.max(), n_points)
@@ -99,7 +103,16 @@ def hrp_weights(returns: pd.DataFrame) -> pd.Series:
     2. Re-order the covariance matrix so similar assets sit together.
     3. Split capital top-down between clusters in inverse proportion to risk.
     No matrix inversion, so it stays stable when assets are highly correlated.
+    Assets with zero variance in ``returns`` (not trading yet) get zero weight.
     """
+    active = returns.std() > 0
+    if not active.all():
+        weights = pd.Series(0.0, index=returns.columns)
+        if active.sum() == 1:
+            weights[active] = 1.0
+        elif active.sum() > 1:
+            weights[active] = hrp_weights(returns.loc[:, active])
+        return weights
     cov = returns.cov().to_numpy()
     corr = returns.corr().to_numpy()
     dist = np.sqrt(np.clip(0.5 * (1.0 - corr), 0.0, None))
@@ -137,24 +150,30 @@ def rolling_allocation(
     the trailing ``lookback`` bars only (weights decided at each rebalance close).
 
     ``method``: "equal", "inverse_vol", "risk_parity" or "hrp". Before the first
-    rebalance the weights are zero (cash).
+    rebalance the weights are zero (cash). A sleeve with zero variance in the
+    look-back window (not trading yet, or switched off) gets zero weight.
     """
+    if method not in ("equal", "inverse_vol", "risk_parity", "hrp"):
+        raise ValueError(f"unknown method {method!r}")
     weights = pd.DataFrame(np.nan, index=returns.index, columns=returns.columns)
-    n = returns.shape[1]
     for i in range(lookback - 1, len(returns), rebalance):
         window = returns.iloc[i - lookback + 1 : i + 1]
-        if method == "equal":
-            w = np.full(n, 1.0 / n)
-        elif method == "inverse_vol":
-            inv = 1.0 / window.std().replace(0.0, np.nan)
-            w = (inv / inv.sum()).fillna(0.0).to_numpy()
-        elif method == "risk_parity":
-            w = risk_parity_weights(window.cov()).to_numpy()
-        elif method == "hrp":
-            w = hrp_weights(window).to_numpy()
-        else:
-            raise ValueError(f"unknown method {method!r}")
-        weights.iloc[i] = w
+        active = window.columns[window.std() > 0]
+        w = pd.Series(0.0, index=returns.columns)
+        if len(active) == 1:
+            w[active] = 1.0
+        elif len(active) > 1:
+            sub = window[active]
+            if method == "equal":
+                w[active] = 1.0 / len(active)
+            elif method == "inverse_vol":
+                inv = 1.0 / sub.std()
+                w[active] = inv / inv.sum()
+            elif method == "risk_parity":
+                w[active] = risk_parity_weights(sub.cov()).to_numpy()
+            else:
+                w[active] = hrp_weights(sub).to_numpy()
+        weights.iloc[i] = w.to_numpy()
     return weights.ffill().fillna(0.0)
 
 

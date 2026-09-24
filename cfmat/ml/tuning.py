@@ -1,4 +1,4 @@
-"""Gradient boosting and hyperparameter optimisation for trading models (Module 16).
+"""Gradient boosting and hyperparameter optimisation for trading models (M23).
 
 Hyperparameter search is the easiest way to overfit a trading model: every
 extra configuration you try is another chance to find noise that looks like
@@ -88,6 +88,7 @@ def make_booster(kind: str = "hgb", random_state: int = 0, **params):
 
 
 def sample_params(space: dict[str, tuple[str, float, float]], rng: np.random.Generator) -> dict:
+    """Draw one parameter set from a search space of (kind, low, high) ranges."""
     params = {}
     for name, (kind, low, high) in space.items():
         if kind == "int":
@@ -157,6 +158,7 @@ def cv_score(
 
 @dataclass
 class SearchResult:
+    """Outcome of a hyperparameter search: every trial, out-of-fold predictions and the winner."""
     trials: pd.DataFrame     # one row per trial: params and score
     oof: pd.DataFrame        # out-of-fold probabilities, one column per trial
     best_params: dict

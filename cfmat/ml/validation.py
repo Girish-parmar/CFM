@@ -1,5 +1,5 @@
 """Validation for overlapping financial labels: purged K-fold with embargo,
-walk-forward splits and out-of-fold predictions (Module 19).
+walk-forward splits and out-of-fold predictions (M19).
 """
 
 from __future__ import annotations

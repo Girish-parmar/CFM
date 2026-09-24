@@ -1,4 +1,4 @@
-"""Library of ready-made strategies expressed as ``StrategySpec`` rules (Module 12).
+"""Library of ready-made strategies expressed as ``StrategySpec`` rules (M12).
 
 Categories: trend_up, trend_down, trend_both, range, either_way, pattern.
 """
@@ -76,4 +76,5 @@ TEMPLATES: dict[str, StrategySpec] = {
 
 
 def templates(category: str | None = None) -> dict[str, StrategySpec]:
+    """Template strategies, optionally only one category."""
     return {k: v for k, v in TEMPLATES.items() if category is None or v.category == category}

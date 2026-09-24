@@ -1,4 +1,4 @@
-"""SQLite trade journal used by the signal service and the n8n workflows (Module 18).
+"""SQLite trade journal used by the signal service and the n8n workflows (M18).
 
 Constraints live in the schema (side must be BUY/SELL, qty > 0), so bad rows are
 rejected by the database even if a caller skips validation.

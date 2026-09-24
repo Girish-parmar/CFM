@@ -1,4 +1,4 @@
-"""Running research tasks in parallel (Module 17).
+"""Running research tasks in parallel (M12).
 
 Backtests of many parameter sets, many instruments or many strategies are
 independent of each other, so they parallelise well:
@@ -64,6 +64,7 @@ class _WithShared:
 
 
 def available_workers() -> int:
+    """Number of CPUs this process may use."""
     try:
         return len(os.sched_getaffinity(0))
     except AttributeError:  # pragma: no cover - macOS/Windows
@@ -71,6 +72,7 @@ def available_workers() -> int:
 
 
 def in_worker_process() -> bool:
+    """True inside a worker process started by a process pool."""
     return mp.parent_process() is not None
 
 

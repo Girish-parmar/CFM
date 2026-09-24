@@ -1,4 +1,4 @@
-"""Tiny HTTP service that the n8n workflows call (Module 18).
+"""Tiny HTTP service that the n8n workflows call (M18).
 
 Endpoints
     GET  /health                          liveness probe
@@ -51,6 +51,7 @@ def load_close(symbol: str) -> pd.Series:
 
 
 def compute_signal(symbol: str, fast: int = 20, slow: int = 50) -> dict:
+    """Latest SMA-crossover signal for ``symbol`` with the action it implies (enter, exit, hold, stay flat)."""
     if not 0 < fast < slow:
         raise ValueError("need 0 < fast < slow")
     close = load_close(symbol)
@@ -86,6 +87,7 @@ class _BadRequest(Exception):
 
 
 def make_handler(db_path: str | Path):
+    """Build the HTTP request handler class bound to the journal at ``db_path``."""
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, fmt, *args):  # keep test output quiet
             pass
@@ -164,11 +166,13 @@ def make_handler(db_path: str | Path):
 
 
 def make_server(host: str = "127.0.0.1", port: int = 8000, db_path: str | Path = "trade_journal.sqlite") -> ThreadingHTTPServer:
+    """Create the journal if needed and return a threaded HTTP server (call ``serve_forever``)."""
     init_journal(db_path)
     return ThreadingHTTPServer((host, port), make_handler(db_path))
 
 
 def main(argv: list[str] | None = None) -> None:  # pragma: no cover - CLI entry point
+    """Command-line entry point: ``python -m cfmat.automation.signal_service --port 8000``."""
     parser = argparse.ArgumentParser(description="CFMAT signal service for n8n workflows")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8000)

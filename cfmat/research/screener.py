@@ -1,4 +1,4 @@
-"""Screeners and analytics for instrument selection (Module 17).
+"""Screeners and analytics for instrument selection (M12).
 
 Workflow:
 

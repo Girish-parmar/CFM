@@ -1,4 +1,4 @@
-"""Risk measurement and position sizing (Module 9).
+"""Risk measurement and position sizing (M13).
 
 VaR and expected shortfall are returned as positive loss fractions: 0.021
 means "a 2.1% loss". Multiply by portfolio value for rupees.
@@ -12,6 +12,7 @@ from scipy.stats import norm
 
 
 def historical_var(returns: pd.Series, alpha: float = 0.99) -> float:
+    """Historical VaR at ``alpha`` as a positive loss fraction."""
     return float(-np.quantile(returns.dropna(), 1 - alpha))
 
 
@@ -38,6 +39,29 @@ def expected_shortfall(returns: pd.Series, alpha: float = 0.975) -> float:
 def scale_var(one_day_var: float, horizon_days: int) -> float:
     """Square-root-of-time rule (assumes i.i.d. returns)."""
     return float(one_day_var * np.sqrt(horizon_days))
+
+
+def kupiec_test(breaches: pd.Series, alpha: float = 0.99) -> dict[str, float]:
+    """Kupiec proportion-of-failures test of a VaR model.
+
+    ``breaches`` is a boolean Series (loss worse than VaR). Under a correct
+    ``alpha`` VaR the breach rate is ``1 - alpha``; the likelihood-ratio statistic
+    is chi-squared with one degree of freedom.
+    """
+    from scipy.stats import chi2
+
+    b = breaches.dropna().astype(bool)
+    n, x = len(b), int(b.sum())
+    p = 1.0 - alpha
+    phat = x / n if n else 0.0
+
+    def loglik(q: float) -> float:
+        q = min(max(q, 1e-12), 1 - 1e-12)
+        return (n - x) * np.log(1 - q) + x * np.log(q)
+
+    lr = -2.0 * (loglik(p) - loglik(phat))
+    return {"days": n, "breaches": x, "expected": n * p, "breach_rate": phat, "lr_stat": float(lr),
+            "p_value": float(chi2.sf(lr, 1))}
 
 
 def fixed_fractional_qty(capital: float, risk_fraction: float, entry: float, stop: float, lot_size: int = 1) -> int:

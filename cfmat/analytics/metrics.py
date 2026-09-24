@@ -17,14 +17,17 @@ EULER_GAMMA = 0.5772156649015329
 
 
 def simple_returns(prices: pd.Series | pd.DataFrame) -> pd.Series | pd.DataFrame:
+    """Period-over-period simple returns, dropping the first (empty) row."""
     return prices.pct_change().dropna(how="all")
 
 
 def log_returns(prices: pd.Series | pd.DataFrame) -> pd.Series | pd.DataFrame:
+    """Period-over-period log returns, dropping the first (empty) row."""
     return np.log(prices / prices.shift(1)).dropna(how="all")
 
 
 def equity_curve(returns: pd.Series, start_value: float = 1.0) -> pd.Series:
+    """Growth of ``start_value`` when compounding ``returns``."""
     return start_value * (1.0 + returns).cumprod()
 
 
@@ -40,6 +43,7 @@ def cagr(returns: pd.Series, periods: int = TRADING_DAYS) -> float:
 
 
 def annualized_volatility(returns: pd.Series, periods: int = TRADING_DAYS) -> float:
+    """Sample standard deviation of returns scaled by √periods."""
     return float(returns.std(ddof=1) * np.sqrt(periods))
 
 
@@ -72,6 +76,7 @@ def max_drawdown(equity: pd.Series) -> float:
 
 
 def calmar_ratio(returns: pd.Series, periods: int = TRADING_DAYS) -> float:
+    """CAGR divided by the absolute maximum drawdown (0 if there was no drawdown)."""
     mdd = max_drawdown(equity_curve(returns))
     return 0.0 if mdd == 0 else float(cagr(returns, periods) / abs(mdd))
 
@@ -83,6 +88,7 @@ def hit_rate(returns: pd.Series) -> float:
 
 
 def profit_factor(returns: pd.Series) -> float:
+    """Sum of gains divided by sum of losses (inf when there are no losses)."""
     gains = returns[returns > 0].sum()
     losses = -returns[returns < 0].sum()
     return float(gains / losses) if losses > 0 else float("inf")

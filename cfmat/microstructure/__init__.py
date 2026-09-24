@@ -1,4 +1,4 @@
-"""Market microstructure and execution (Module 15).
+"""Market microstructure and execution (M15).
 
 order_book   price-time-priority limit order book
 schedules    TWAP, VWAP, POV and Almgren-Chriss trajectories

@@ -1,4 +1,4 @@
-"""Time-series econometrics for trading (Modules 13, 23).
+"""Time-series econometrics for trading (M13, M23).
 
 kalman    Kalman-filter hedge ratio and pairs signals
 garch     GARCH(1,1) fit, causal forecasts, volatility targeting

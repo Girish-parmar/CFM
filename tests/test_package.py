@@ -48,3 +48,27 @@ def test_output_dir_honours_environment(tmp_path, monkeypatch):
 def test_version_matches_pyproject():
     text = (ROOT / "pyproject.toml").read_text()
     assert re.search(r'^version = "([^"]+)"', text, re.M).group(1) == cfmat.__version__
+
+
+def test_every_public_function_and_class_has_a_docstring():
+    import importlib
+    import inspect
+    import pkgutil
+
+    missing = []
+    for info in pkgutil.walk_packages(cfmat.__path__, "cfmat."):
+        if info.ispkg or info.name == "cfmat.infra.plotting":
+            continue
+        module = importlib.import_module(info.name)
+        for name, obj in vars(module).items():
+            if name.startswith("_") or not (inspect.isfunction(obj) or inspect.isclass(obj)):
+                continue
+            if obj.__module__ != module.__name__:
+                continue
+            doc = inspect.getdoc(obj) or ""
+            if not obj.__doc__ or (inspect.isclass(obj) and doc.startswith(f"{name}(")):
+                missing.append(f"{info.name}.{name}")
+            if inspect.isclass(obj):
+                missing += [f"{info.name}.{name}.{m}" for m, f in vars(obj).items()
+                            if not m.startswith("_") and inspect.isfunction(f) and not f.__doc__]
+    assert missing == [], f"add docstrings (they feed docs/reference): {missing}"

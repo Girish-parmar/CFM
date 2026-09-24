@@ -1,4 +1,4 @@
-"""Research tools (Modules 12, 23).
+"""Research tools (M12, M23).
 
 screener   instrument analytics, regime labels, screens, ranking, diversification
 segments   strategy analysis and optimisation by day, month, regime and pattern

@@ -1,4 +1,4 @@
-"""Broker interface and a simulated (paper) broker (Module 17).
+"""Broker interface and a simulated (paper) broker (M17).
 
 Real broker APIs (Kite Connect, Upstox, SmartAPI, Interactive Brokers ...) are
 wrapped behind ``BrokerAdapter`` so a strategy can move from paper to live by
@@ -21,16 +21,20 @@ class BrokerAdapter(ABC):
     """The surface every broker integration implements."""
 
     @abstractmethod
-    def place_order(self, order: Order, timestamp: datetime | None = None) -> Order: ...
+    def place_order(self, order: Order, timestamp: datetime | None = None) -> Order:
+        """Send an order; returns it with its id and status."""
 
     @abstractmethod
-    def cancel_order(self, order_id: int) -> bool: ...
+    def cancel_order(self, order_id: int) -> bool:
+        """Cancel an open order; False if it is not open."""
 
     @abstractmethod
-    def positions(self) -> dict[str, int]: ...
+    def positions(self) -> dict[str, int]:
+        """Open positions by symbol."""
 
     @abstractmethod
-    def equity(self) -> float: ...
+    def equity(self) -> float:
+        """Cash plus marked-to-market positions."""
 
 
 @dataclass
@@ -72,6 +76,7 @@ class PaperBroker(BrokerAdapter):
 
     # -- market data -------------------------------------------------------
     def update_price(self, symbol: str, price: float, timestamp: datetime | None = None) -> None:
+        """New last price: fill marketable resting orders and run the mark-to-market loss check."""
         self.last_price[symbol] = price
         for order in list(self.open_orders.values()):
             if order.symbol == symbol and self._marketable(order, price):
@@ -81,12 +86,14 @@ class PaperBroker(BrokerAdapter):
             self.risk.activate_kill_switch(f"daily loss limit {self.risk.limits.max_daily_loss:,.0f} breached")
 
     def start_new_day(self) -> None:
+        """Reset the day's P&L baseline and the kill switch."""
         self.day_start_equity = self.equity()
         if self.risk:
             self.risk.reset_kill_switch()
 
     # -- orders -------------------------------------------------------------
     def place_order(self, order: Order, timestamp: datetime | None = None) -> Order:
+        """Risk-check and execute or rest an order at the last price (with slippage)."""
         order.id = next(self._ids)
         self.orders.append(order)
         ltp = self.last_price.get(order.symbol)
@@ -108,6 +115,7 @@ class PaperBroker(BrokerAdapter):
         return order
 
     def cancel_order(self, order_id: int) -> bool:
+        """Cancel an open order; False if it is not open."""
         order = self.open_orders.pop(order_id, None)
         if order is None:
             return False
@@ -128,15 +136,19 @@ class PaperBroker(BrokerAdapter):
 
     # -- state ---------------------------------------------------------------
     def position(self, symbol: str) -> int:
+        """Signed quantity held in ``symbol``."""
         return self._positions.get(symbol, _Position()).qty
 
     def positions(self) -> dict[str, int]:
+        """Non-zero positions by symbol."""
         return {s: p.qty for s, p in self._positions.items() if p.qty}
 
     def equity(self) -> float:
+        """Cash plus positions marked at the last price."""
         return self.cash + sum(p.qty * self.last_price.get(s, p.avg_price) for s, p in self._positions.items())
 
     def day_pnl(self) -> float:
+        """Equity change since the start of the day."""
         return self.equity() - self.day_start_equity
 
     # -- internals -------------------------------------------------------------

@@ -1,4 +1,4 @@
-"""Candlestick and chart-structure patterns (Modules 5 and 17).
+"""Candlestick and chart-structure patterns (M06, M12).
 
 Every function returns a boolean Series that is True on the bar where the
 pattern is *complete*, using only that bar and earlier bars, so it can drive a
@@ -60,11 +60,13 @@ def shooting_star(bars: pd.DataFrame) -> pd.Series:
 
 
 def bullish_marubozu(bars: pd.DataFrame, min_body: float = 0.9) -> pd.Series:
+    """Up candle whose body fills at least ``min_body`` of the day's range."""
     o, h, l, c, body, rng, _, _ = _parts(bars)
     return ((c > o) & (body >= min_body * rng)).fillna(False)
 
 
 def bearish_marubozu(bars: pd.DataFrame, min_body: float = 0.9) -> pd.Series:
+    """Down candle whose body fills at least ``min_body`` of the day's range."""
     o, h, l, c, body, rng, _, _ = _parts(bars)
     return ((c < o) & (body >= min_body * rng)).fillna(False)
 
@@ -81,6 +83,7 @@ def bullish_engulfing(bars: pd.DataFrame) -> pd.Series:
 
 
 def bearish_engulfing(bars: pd.DataFrame) -> pd.Series:
+    """Yesterday bullish, today bearish with a body covering yesterday's body, after a rise."""
     o, h, l, c = (bars[k] for k in ("open", "high", "low", "close"))
     po, pc = o.shift(1), c.shift(1)
     return ((pc > po) & (c < o) & (o >= pc) & (c <= po) & _uptrend(c.shift(1))).fillna(False)
@@ -94,6 +97,7 @@ def piercing_line(bars: pd.DataFrame) -> pd.Series:
 
 
 def dark_cloud_cover(bars: pd.DataFrame) -> pd.Series:
+    """Bullish day, then a bearish day opening above its high and closing below its midpoint."""
     o, h, l, c = (bars[k] for k in ("open", "high", "low", "close"))
     po, pc, ph = o.shift(1), c.shift(1), h.shift(1)
     return ((pc > po) & (o > ph) & (c < (po + pc) / 2) & (c > po)).fillna(False)
@@ -111,6 +115,7 @@ def morning_star(bars: pd.DataFrame) -> pd.Series:
 
 
 def evening_star(bars: pd.DataFrame) -> pd.Series:
+    """Strong up candle, a small-bodied candle, then a down candle closing below the first one's midpoint."""
     o, h, l, c, body, rng, _, _ = _parts(bars)
     avg_body = body.rolling(10).mean()
     first_bull = (c.shift(2) > o.shift(2)) & (body.shift(2) > avg_body.shift(2))
@@ -129,6 +134,7 @@ def three_white_soldiers(bars: pd.DataFrame) -> pd.Series:
 
 
 def three_black_crows(bars: pd.DataFrame) -> pd.Series:
+    """Three falling down candles, each opening inside the previous body."""
     o, c = bars["open"], bars["close"]
     bear = c < o
     falling = (c < c.shift(1)) & (c.shift(1) < c.shift(2))
@@ -137,10 +143,12 @@ def three_black_crows(bars: pd.DataFrame) -> pd.Series:
 
 
 def inside_bar(bars: pd.DataFrame) -> pd.Series:
+    """Today's range lies inside yesterday's range."""
     return ((bars["high"] < bars["high"].shift(1)) & (bars["low"] > bars["low"].shift(1))).fillna(False)
 
 
 def outside_bar(bars: pd.DataFrame) -> pd.Series:
+    """Today's range engulfs yesterday's range."""
     return ((bars["high"] > bars["high"].shift(1)) & (bars["low"] < bars["low"].shift(1))).fillna(False)
 
 
@@ -158,6 +166,7 @@ def swing_highs(bars: pd.DataFrame, k: int = 3) -> pd.Series:
 
 
 def swing_lows(bars: pd.DataFrame, k: int = 3) -> pd.Series:
+    """Swing-low prices, flagged ``k`` bars after the low (when it is first known)."""
     low = bars["low"]
     centred = low.rolling(2 * k + 1, center=True).min()
     return low.where(low == centred).shift(k)
@@ -174,6 +183,7 @@ def higher_highs_lows(bars: pd.DataFrame, k: int = 3) -> pd.Series:
 
 
 def lower_highs_lows(bars: pd.DataFrame, k: int = 3) -> pd.Series:
+    """True while the latest confirmed swing high and swing low are both lower than the previous ones."""
     sh = swing_highs(bars, k).dropna()
     sl = swing_lows(bars, k).dropna()
     lh = (sh < sh.shift(1)).reindex(bars.index).ffill()
@@ -202,6 +212,7 @@ def double_bottom(bars: pd.DataFrame, k: int = 3, tolerance: float = 0.02, lookb
 
 
 def double_top(bars: pd.DataFrame, k: int = 3, tolerance: float = 0.02, lookback: int = 60) -> pd.Series:
+    """Two swing highs within ``tolerance`` of each other, completed when price closes below the trough between them."""
     highs = swing_highs(bars, k)
     close, low = bars["close"].to_numpy(), bars["low"].to_numpy()
     out = np.zeros(len(bars), dtype=bool)

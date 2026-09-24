@@ -1,5 +1,5 @@
 """GARCH(1,1) volatility: maximum-likelihood fit, causal forecast and volatility-target
-weights (Modules 13, 23).
+weights (M13, M23).
 """
 
 from __future__ import annotations

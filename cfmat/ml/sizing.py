@@ -1,4 +1,4 @@
-"""From model probabilities to positions and bet sizes (Modules 19, 23).
+"""From model probabilities to positions and bet sizes (M19, M23).
 """
 
 from __future__ import annotations

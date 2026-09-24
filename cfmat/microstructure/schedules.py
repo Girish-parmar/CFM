@@ -1,4 +1,4 @@
-"""Execution schedules: TWAP, VWAP, POV and the Almgren-Chriss optimal trajectory (Module 15).
+"""Execution schedules: TWAP, VWAP, POV and the Almgren-Chriss optimal trajectory (M15).
 """
 
 from __future__ import annotations
@@ -17,10 +17,12 @@ def _integer_split(total: int, weights: np.ndarray) -> np.ndarray:
 
 
 def twap_schedule(total_qty: int, n_slices: int) -> np.ndarray:
+    """Split ``total_qty`` into ``n_slices`` near-equal integer child orders."""
     return _integer_split(total_qty, np.ones(n_slices))
 
 
 def vwap_schedule(total_qty: int, volume_profile: np.ndarray) -> np.ndarray:
+    """Split ``total_qty`` in proportion to an intraday volume profile, as integers that sum exactly."""
     return _integer_split(total_qty, volume_profile)
 
 

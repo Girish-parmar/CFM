@@ -1,4 +1,4 @@
-"""Signal generators for the classic strategy families in Module 7.
+"""Signal generators for the classic strategy families (M10).
 
 Every function returns a *target position* series (+1 long, −1 short, 0 flat)
 computed from information available at the close of each bar. The backtester

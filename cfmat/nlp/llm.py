@@ -1,4 +1,4 @@
-"""Optional LLM answer step for RAG, using the Claude API (Module 22).
+"""Optional LLM answer step for RAG, using the Claude API (M22).
 
 Needs ``pip install anthropic`` and an ``ANTHROPIC_API_KEY``. Everything else in
 ``cfmat.nlp`` runs offline.

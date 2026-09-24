@@ -1,4 +1,4 @@
-"""Trade journal: fills as plain records for pandas, SQL or webhooks (Modules 17, 18).
+"""Trade journal: fills as plain records for pandas, SQL or webhooks (M17, M18).
 """
 
 from __future__ import annotations
@@ -15,6 +15,7 @@ class TradeJournal:
     rows: list[dict] = field(default_factory=list)
 
     def record(self, fill: Fill) -> dict:
+        """Append a fill as a plain record and return it."""
         row = {
             "order_id": fill.order_id,
             "symbol": fill.symbol,

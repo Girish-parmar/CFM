@@ -1,5 +1,5 @@
 """Parameter search for Strategy Creator specs: parallel sweeps, coarse-to-fine
-search, walk-forward and strategy x instrument matrices (Module 12).
+search, walk-forward and strategy x instrument matrices (M12).
 """
 
 from __future__ import annotations
@@ -16,6 +16,7 @@ from .rule_engine import BacktestResult, backtest
 
 
 def expand_grid(grid: dict[str, list]) -> list[dict]:
+    """Every combination of a parameter grid, as a list of dicts."""
     keys = list(grid)
     return [dict(zip(keys, values)) for values in product(*(grid[k] for k in keys))]
 

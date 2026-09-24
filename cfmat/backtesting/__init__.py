@@ -1,4 +1,4 @@
-"""Backtesting engines and reports (Modules 11, 12). Costs live in ``cfmat.microstructure.costs``.
+"""Backtesting engines and reports (M11, M12). Costs live in ``cfmat.microstructure.costs``.
 
 vectorized     position x return backtests, grid search, walk-forward (signal functions)
 event_driven   bar-by-bar engine with orders, broker and risk checks

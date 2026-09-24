@@ -1,4 +1,4 @@
-"""Strategy optimisation by segment: calendar, regime and pattern (Module 16).
+"""Strategy optimisation by segment: calendar, regime and pattern (M23).
 
 A strategy rarely works equally well every day. This module splits history into
 *segments* (weekday, month, turn of month, expiry week, volatility regime, trend
@@ -22,6 +22,7 @@ import pandas as pd
 from scipy import stats
 
 from ..analytics.metrics import MONTHS, WEEKDAYS, sharpe_ratio
+from ..analytics.stats import benjamini_hochberg
 from ..backtesting.vectorized import vectorized_backtest
 
 # ---------------------------------------------------------------------------
@@ -135,18 +136,6 @@ def segment_features(bars: pd.DataFrame, tom_days: tuple[int, int] = (1, 3)) -> 
 # ---------------------------------------------------------------------------
 # Statistics per segment
 # ---------------------------------------------------------------------------
-
-def benjamini_hochberg(pvalues: pd.Series) -> pd.Series:
-    """False-discovery-rate adjusted p-values (q-values)."""
-    p = pvalues.to_numpy(dtype=float)
-    n = len(p)
-    order = np.argsort(p)
-    ranked = p[order] * n / np.arange(1, n + 1)
-    q = np.minimum.accumulate(ranked[::-1])[::-1]
-    out = np.empty(n)
-    out[order] = np.clip(q, 0, 1)
-    return pd.Series(out, index=pvalues.index)
-
 
 def segment_stats(returns: pd.Series, labels: pd.DataFrame, min_obs: int = 30) -> pd.DataFrame:
     """Performance of ``returns`` inside each segment versus all other days.

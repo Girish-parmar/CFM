@@ -1,4 +1,4 @@
-"""Bar-by-bar execution of a ``StrategySpec`` with trade-level accounting (Module 12).
+"""Bar-by-bar execution of a ``StrategySpec`` with trade-level accounting (M12).
 
 Execution model: rules are evaluated at each bar's close; orders fill at the
 next bar's open (with slippage); protective stops and targets fill intrabar at
@@ -21,6 +21,7 @@ from ..strategies.spec import StrategySpec
 
 @dataclass
 class BacktestResult:
+    """Outcome of a rule-engine backtest: daily returns, positions and the trade list."""
     spec: StrategySpec
     returns: pd.Series
     position: pd.Series
@@ -31,6 +32,7 @@ class BacktestResult:
         return equity_curve(self.returns)
 
     def stats(self) -> pd.Series:
+        """Summary statistics of the backtest (see ``cfmat.backtesting.report.backtest_stats``)."""
         from .report import backtest_stats
         return backtest_stats(self)
 

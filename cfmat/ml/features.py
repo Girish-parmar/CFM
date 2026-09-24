@@ -1,4 +1,4 @@
-"""Leakage-free features for trading models (Module 19).
+"""Leakage-free features for trading models (M19).
 """
 
 from __future__ import annotations

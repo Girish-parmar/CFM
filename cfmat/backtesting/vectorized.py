@@ -1,4 +1,4 @@
-"""Vectorised backtesting and parameter search for signal functions (Module 11).
+"""Vectorised backtesting and parameter search for signal functions (M11).
 
 The one rule that matters most: a signal computed from bar t's close can only
 earn bar t+1's return. ``vectorized_backtest`` enforces this by shifting the

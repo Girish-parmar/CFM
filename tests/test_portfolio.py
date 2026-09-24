@@ -59,3 +59,26 @@ def test_optimisers_are_valid(rets):
     mv = portfolio.min_variance_weights(cov)
     eq = np.full(6, 1 / 6)
     assert portfolio.portfolio_stats(mv, mu, cov)["volatility"] <= portfolio.portfolio_stats(eq, mu, cov)["volatility"]
+
+
+@pytest.mark.parametrize("method", ["equal", "inverse_vol", "risk_parity", "hrp"])
+def test_rolling_allocation_skips_sleeves_that_are_not_trading_yet(method):
+    rng = np.random.default_rng(0)
+    idx = pd.bdate_range("2024-01-01", periods=300)
+    rets = pd.DataFrame(rng.normal(0, 0.01, (300, 3)), index=idx, columns=["a", "b", "late"])
+    rets.loc[idx[:200], "late"] = 0.0                    # flat during a formation period
+    w = portfolio.rolling_allocation(rets, method=method, lookback=60, rebalance=20)
+    assert (w.loc[idx[:200], "late"] == 0).all()
+    assert w.iloc[-1]["late"] > 0 and np.isclose(w.iloc[-1].sum(), 1.0)
+    assert np.allclose(w.loc[idx[59:200]].sum(axis=1), 1.0)
+    assert (portfolio.hrp_weights(rets.iloc[:100]) == pd.Series({"a": portfolio.hrp_weights(rets.iloc[:100, :2])["a"],
+            "b": portfolio.hrp_weights(rets.iloc[:100, :2])["b"], "late": 0.0})).all()
+
+
+def test_kupiec_accepts_a_good_var_and_rejects_a_bad_one():
+    rng = np.random.default_rng(1)
+    good = pd.Series(rng.random(2000) < 0.01)
+    bad = pd.Series(rng.random(2000) < 0.03)
+    assert risk.kupiec_test(good, 0.99)["p_value"] > 0.05
+    out = risk.kupiec_test(bad, 0.99)
+    assert out["p_value"] < 0.001 and out["breaches"] == int(bad.sum()) and out["expected"] == pytest.approx(20)

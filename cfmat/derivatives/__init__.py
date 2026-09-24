@@ -1,4 +1,4 @@
-"""Futures and options (Modules 8, 9).
+"""Futures and options (M08, M09).
 
 options            Black-Scholes, Greeks, implied volatility, binomial trees, payoffs
 futures            expiry calendars, futures curves, rollover-aware backtests, basis trades

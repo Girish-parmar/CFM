@@ -1,4 +1,4 @@
-"""Option pricing for Module 6: Black–Scholes–Merton, Greeks, implied volatility,
+"""Option pricing (M08, M09): Black–Scholes–Merton, Greeks, implied volatility,
 binomial trees, futures fair value and multi-leg payoffs.
 
 Conventions: ``T`` in years, ``r`` and ``q`` continuously compounded annual
@@ -40,6 +40,7 @@ def bs_price(S: float, K: float, T: float, r: float, sigma: float, kind: str = "
 
 @dataclass(frozen=True)
 class Greeks:
+    """First-order Greeks: vega per 1 volatility point, theta per calendar day, rho per 1% rate move."""
     delta: float
     gamma: float
     vega: float   # price change for +1 volatility point (1%)
@@ -48,6 +49,7 @@ class Greeks:
 
 
 def bs_greeks(S: float, K: float, T: float, r: float, sigma: float, kind: str = "call", q: float = 0.0) -> Greeks:
+    """Black–Scholes–Merton Greeks for a European option with continuous dividend yield ``q``."""
     kind = _check_kind(kind)
     d1, d2 = _d1_d2(S, K, T, r, sigma, q)
     disc_q, disc_r = np.exp(-q * T), np.exp(-r * T)

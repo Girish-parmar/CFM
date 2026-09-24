@@ -1,5 +1,5 @@
 """Pre-trade risk management (RMS): size, value, price band, position, daily loss,
-orders-per-second throttle and kill switch (Module 17).
+orders-per-second throttle and kill switch (M17).
 """
 
 from __future__ import annotations
@@ -12,6 +12,7 @@ from .orders import BUY, LIMIT, Order
 
 @dataclass
 class RiskLimits:
+    """Pre-trade limits a broker RMS enforces for one account."""
     max_order_qty: int = 10_000
     max_order_value: float = 500_000.0
     max_position_qty: int = 20_000
@@ -31,14 +32,17 @@ class RiskManager:
         self._recent: deque[float] = deque()
 
     def activate_kill_switch(self, reason: str) -> None:
+        """Block all new orders until reset."""
         self.kill_switch = True
         self.kill_reason = reason
 
     def reset_kill_switch(self) -> None:
+        """Allow orders again (for example at the start of a new day)."""
         self.kill_switch = False
         self.kill_reason = ""
 
     def check(self, order: Order, ltp: float, position_qty: int, day_pnl: float, now: float) -> tuple[bool, str]:
+        """Run every pre-trade check; returns (allowed, reason)."""
         lim = self.limits
         if self.kill_switch:
             return False, f"kill switch active: {self.kill_reason}"

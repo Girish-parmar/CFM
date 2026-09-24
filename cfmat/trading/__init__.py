@@ -1,4 +1,4 @@
-"""Order management for paper and live trading (Module 17).
+"""Order management for paper and live trading (M17).
 
 orders        order and fill records
 risk_checks   pre-trade risk management (RMS) and kill switch

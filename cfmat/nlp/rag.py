@@ -1,6 +1,6 @@
 """Retrieval-Augmented Generation building blocks: sentence-aware chunking with
 contextual headers, a TF-IDF retriever, grounded prompts and an offline
-extractive answer (Module 22).
+extractive answer (M22).
 """
 
 from __future__ import annotations
@@ -19,6 +19,7 @@ from .sentiment import NEGATORS, tokenize
 
 @dataclass
 class Chunk:
+    """A passage of a document with its source, position and contextual title."""
     source: str
     chunk_id: int
     text: str
@@ -29,6 +30,7 @@ _SENTENCE = re.compile(r"(?<=[.!?])\s+")
 
 
 def split_sentences(text: str) -> list[str]:
+    """Split text into sentences on terminal punctuation."""
     return [s.strip() for s in _SENTENCE.split(text) if s.strip()]
 
 
@@ -59,7 +61,7 @@ def chunk_text(text: str, source: str, chunk_words: int = 120, overlap: int = 30
 
 
 def load_filings(directory: str | Path | None = None, **chunk_kwargs) -> list[Chunk]:
-    """Chunk every .md/.txt file in ``directory`` (default: data/filings).
+    """Chunk every .md/.txt file in ``directory`` (default: the packaged sample filings).
 
     The first ``# heading`` becomes the document title and is attached to every
     chunk (a "contextual chunk header"), so a chunk about net debt still knows
@@ -89,6 +91,7 @@ class TfidfRetriever:
         self.matrix = self.vectorizer.fit_transform([f"{c.title} {c.text}" for c in chunks])
 
     def search(self, query: str, k: int = 3) -> list[tuple[float, Chunk]]:
+        """The ``k`` most similar chunks to ``query`` (cosine similarity > 0), best first."""
         scores = cosine_similarity(self.vectorizer.transform([query]), self.matrix).ravel()
         top = np.argsort(scores)[::-1][:k]
         return [(float(scores[i]), self.chunks[i]) for i in top if scores[i] > 0]

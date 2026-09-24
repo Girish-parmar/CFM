@@ -7,10 +7,12 @@ import pandas as pd
 
 
 def sma(series: pd.Series, window: int) -> pd.Series:
+    """Simple moving average over ``window`` bars."""
     return series.rolling(window).mean()
 
 
 def ema(series: pd.Series, span: int) -> pd.Series:
+    """Exponential moving average with span ``span`` (no bias adjustment, like most charting tools)."""
     return series.ewm(span=span, adjust=False).mean()
 
 
@@ -28,18 +30,21 @@ def rsi(close: pd.Series, period: int = 14) -> pd.Series:
 
 
 def macd(close: pd.Series, fast: int = 12, slow: int = 26, signal: int = 9) -> pd.DataFrame:
+    """MACD line (fast EMA − slow EMA), its signal line and the histogram."""
     line = ema(close, fast) - ema(close, slow)
     sig = ema(line, signal)
     return pd.DataFrame({"macd": line, "signal": sig, "histogram": line - sig})
 
 
 def bollinger_bands(close: pd.Series, window: int = 20, n_std: float = 2.0) -> pd.DataFrame:
+    """Middle band (SMA) and bands ``n_std`` population standard deviations above and below."""
     mid = sma(close, window)
     sd = close.rolling(window).std(ddof=0)
     return pd.DataFrame({"middle": mid, "upper": mid + n_std * sd, "lower": mid - n_std * sd})
 
 
 def true_range(ohlc: pd.DataFrame) -> pd.Series:
+    """True range: the largest of high − low, |high − previous close| and |low − previous close|."""
     prev_close = ohlc["close"].shift(1)
     ranges = pd.concat(
         [ohlc["high"] - ohlc["low"], (ohlc["high"] - prev_close).abs(), (ohlc["low"] - prev_close).abs()],
@@ -54,6 +59,7 @@ def atr(ohlc: pd.DataFrame, period: int = 14) -> pd.Series:
 
 
 def rolling_zscore(series: pd.Series, window: int) -> pd.Series:
+    """How many rolling standard deviations the series is from its rolling mean."""
     mean = series.rolling(window).mean()
     sd = series.rolling(window).std(ddof=0)
     return (series - mean) / sd.replace(0.0, np.nan)
@@ -145,6 +151,7 @@ def stochastic(ohlc: pd.DataFrame, k: int = 14, d: int = 3) -> pd.DataFrame:
 
 
 def rate_of_change(close: pd.Series, window: int = 10) -> pd.Series:
+    """Percentage change over ``window`` bars (×100)."""
     return close.pct_change(window) * 100
 
 

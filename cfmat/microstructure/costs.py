@@ -1,5 +1,5 @@
 """Transaction costs for Indian markets: brokerage, STT, exchange fees, SEBI fee,
-stamp duty and GST (Modules 1, 11, 15).
+stamp duty and GST (M01, M11, M15).
 """
 
 from __future__ import annotations
@@ -13,6 +13,7 @@ RATES_AS_OF = "2024-10-01"  # the charge sheet the default rates follow
 
 @dataclass
 class SegmentRates:
+    """Charge rates for one segment (delivery, intraday, futures or options), as fractions of turnover."""
     brokerage_pct: float      # fraction of turnover (inf = always the flat cap)
     brokerage_cap: float      # max rupees per executed order (inf = no cap)
     stt_buy: float
@@ -50,6 +51,7 @@ class IndianCostModel:
     dp_charge: float = 0.0       # ₹ per delivery sell order, before GST
 
     def charges(self, side: str, qty: float, price: float, segment: str = "equity_intraday") -> dict[str, float]:
+        """Every charge on one order (brokerage, STT, exchange, SEBI, stamp, DP, GST) and the total."""
         if side not in ("buy", "sell"):
             raise ValueError("side must be 'buy' or 'sell'")
         rates = self.segments[segment]

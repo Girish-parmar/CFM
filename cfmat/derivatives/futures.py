@@ -1,4 +1,4 @@
-"""Futures strategies: contract calendar, rollover, lots, margin and basis trades (Module 17).
+"""Futures strategies: contract calendar, rollover, lots, margin and basis trades (M09, M12).
 
 A futures position is not a stock position: it is sized in lots, needs margin,
 expires every month and must be rolled into the next contract, paying charges

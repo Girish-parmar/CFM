@@ -19,15 +19,18 @@ SAMPLE_DATA_DIR = PACKAGE_DIR / "data" / "samples"
 
 
 def repo_root() -> Path:
+    """The repository root for an editable install, otherwise the current working directory."""
     candidate = PACKAGE_DIR.parent
     return candidate if (candidate / "pyproject.toml").exists() else Path.cwd()
 
 
 def user_data_dir() -> Path:
+    """Folder for the learner's own price files (``CFMAT_DATA_DIR``, default ``<repo>/data``)."""
     return Path(os.environ.get("CFMAT_DATA_DIR") or repo_root() / "data")
 
 
 def output_dir(create: bool = True) -> Path:
+    """Folder for lab charts and files (``CFMAT_OUTPUT_DIR``, default ``<repo>/build/lab-output``)."""
     path = Path(os.environ.get("CFMAT_OUTPUT_DIR") or repo_root() / "build" / "lab-output")
     if create:
         path.mkdir(parents=True, exist_ok=True)

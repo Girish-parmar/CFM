@@ -1,4 +1,4 @@
-"""Event-driven backtester (Module 8).
+"""Event-driven backtester (M11).
 
 Unlike the vectorised backtester, this replays bars one at a time through the
 same ``PaperBroker`` used for paper trading, so strategy code written here runs
@@ -20,6 +20,7 @@ from ..trading import BUY, SELL, Order, PaperBroker, RiskManager
 
 @dataclass
 class Context:
+    """What a strategy sees on each bar: its symbol, the broker, and the history so far."""
     symbol: str
     broker: PaperBroker
     history: pd.DataFrame = field(default_factory=pd.DataFrame)
@@ -35,6 +36,7 @@ class Context:
             self._pending.append(Order(self.symbol, BUY if qty > 0 else SELL, abs(int(qty))))
 
     def order_target(self, target_qty: int) -> None:
+        """Send the order that moves the position to ``target_qty``."""
         self.order(int(target_qty) - self.position)
 
 
@@ -42,9 +44,11 @@ class Strategy:
     """Subclass and override ``on_bar``."""
 
     def on_start(self, ctx: Context) -> None:  # pragma: no cover - optional hook
+        """Called once before the first bar."""
         pass
 
     def on_bar(self, ctx: Context, bar: pd.Series) -> None:
+        """Called at each bar's close with the history up to and including ``bar``."""
         raise NotImplementedError
 
 
@@ -55,6 +59,7 @@ class SmaCrossStrategy(Strategy):
         self.fast, self.slow, self.qty = fast, slow, qty
 
     def on_bar(self, ctx: Context, bar: pd.Series) -> None:
+        """Hold ``qty`` shares while the fast SMA is above the slow SMA, otherwise flat."""
         close = ctx.history["close"]
         if len(close) < self.slow:
             return

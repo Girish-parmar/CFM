@@ -1,5 +1,5 @@
 """Financial sentiment: a Loughran-McDonald-style lexicon with negation, and a
-TF-IDF + logistic-regression baseline classifier (Module 22).
+TF-IDF + logistic-regression baseline classifier (M22).
 """
 
 from __future__ import annotations
@@ -46,6 +46,7 @@ _TOKEN = re.compile(r"[a-z][a-z\-']*")
 
 
 def tokenize(text: str) -> list[str]:
+    """Lower-case word tokens (letters and apostrophes)."""
     return _TOKEN.findall(text.lower())
 
 

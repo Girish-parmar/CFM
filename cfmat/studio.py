@@ -1,4 +1,4 @@
-"""Strategy Studio: one namespace for the Strategy Creator workflow (Module 12).
+"""Strategy Studio: one namespace for the Strategy Creator workflow (M12).
 
 ``from cfmat import studio`` gives the rule language, strategy specs, the
 template library, the trade-level backtester and the optimisers together. The

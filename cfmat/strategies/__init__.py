@@ -1,4 +1,4 @@
-"""Strategies as code and as data (Modules 10, 12).
+"""Strategies as code and as data (M10, M12).
 
 The package namespace re-exports the classic signal generators from ``signals``
 (``from cfmat import strategies; strategies.sma_crossover(...)``).

@@ -1,4 +1,4 @@
-"""Machine learning for trading (Modules 19-21, 23).
+"""Machine learning for trading (M19-M21, M23).
 
 The package namespace re-exports features, labels, validation and sizing
 (``from cfmat import ml; ml.purged_kfold(...)``).

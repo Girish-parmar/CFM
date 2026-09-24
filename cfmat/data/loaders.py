@@ -1,4 +1,4 @@
-"""Loading real market data from files and free APIs (Modules 2, 4).
+"""Loading real market data from files and free APIs (M03, M05).
 """
 
 from __future__ import annotations

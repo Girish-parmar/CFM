@@ -5,8 +5,8 @@ import pandas as pd
 import pytest
 
 from cfmat import data
+from cfmat.analytics import factors, metrics, stats
 from cfmat.analytics import indicators as ind
-from cfmat.analytics import metrics
 from cfmat.analytics import patterns as pt
 
 
@@ -127,3 +127,67 @@ def test_rsi_bounds_and_all_gain_series():
     assert r.between(0, 100).all()
     rising = pd.Series(np.arange(1, 50, dtype=float))
     assert ind.rsi(rising).dropna().eq(100).all()
+
+
+def test_hac_tstat_shrinks_for_overlapping_returns():
+    rng = np.random.default_rng(0)
+    daily = pd.Series(rng.normal(0.0005, 0.01, 3000))
+    overlapping = daily.rolling(20).sum().dropna()          # 20-day returns sampled daily
+    naive = overlapping.mean() / overlapping.std() * np.sqrt(len(overlapping))
+    assert abs(stats.hac_tstat(overlapping, lags=19)) < abs(naive) / 2.5
+
+
+def test_event_study_has_correct_size_under_the_null():
+    rejections = 0
+    for seed in range(40):
+        close = data.gbm_prices(800, seed=seed)
+        events = pd.Series(np.random.default_rng(seed + 100).random(800) < 0.03, index=close.index)
+        rejections += stats.event_study(close, events, horizons=(10,), n_perm=300)["p_value"].iloc[0] < 0.05
+    assert rejections <= 6                                   # about 2 expected at a 5% level
+
+
+def test_event_study_finds_a_planted_edge():
+    close = data.gbm_prices(1500, sigma=0.15, seed=1)
+    # random (not periodic) event dates: a circular shift of a periodic pattern would realign with it
+    events = pd.Series(np.random.default_rng(2).random(len(close)) < 0.04, index=close.index)
+    events.iloc[-10:] = False
+    bumped = close.copy()
+    for i in np.flatnonzero(events.to_numpy()):
+        bumped.iloc[i + 1:] *= 1.01                         # +1% the day after every event
+    table = stats.event_study(bumped, events, horizons=(1, 3))
+    assert (table["p_value"] < 0.01).all() and (table["excess"] > 0.008).all()
+
+
+def test_candles_carry_no_information_about_future_closes():
+    # ohlcv_from_close must not reuse the price generator's random stream (same seed)
+    bars = data.ohlcv_from_close(data.ar1_prices(3000, phi=0.0, seed=7), seed=7)
+    gap = np.log(bars["open"] / bars["close"].shift(1))
+    next_ret = np.log(bars["close"].shift(-1) / bars["close"])
+    assert abs(gap.corr(next_ret)) < 0.05
+
+
+def test_factor_tools_work_date_by_date():
+    idx = pd.MultiIndex.from_product([pd.date_range("2024-01-31", periods=2, freq="ME"), list("abcd")],
+                                     names=["date", "stock"])
+    x = pd.Series([1.0, 2.0, 3.0, 100.0, 10.0, 20.0, 30.0, 40.0], index=idx)
+    groups = pd.Series(["g1", "g1", "g2", "g2"] * 2, index=idx)
+    w = factors.winsorize(x, 0.0, 0.75)
+    assert w.loc["2024-01-31"].max() < 100 and w.loc["2024-02-29"].max() <= 40
+    z = factors.zscore(x)
+    assert np.allclose(z.groupby(level=0).mean(), 0) and np.allclose(z.groupby(level=0).std(), 1)
+    n = factors.neutralize(x, groups)
+    assert np.allclose(n.groupby([n.index.get_level_values(0), groups]).mean(), 0)
+    fwd = x * 0.01
+    assert np.allclose(factors.information_coefficient(x, fwd), 1.0)
+    q = factors.quantile_returns(x, fwd, q=2)
+    assert (q[2] > q[1]).all()
+    assert factors.turnover(x, top=0.5).iloc[0] == 0.0
+
+
+def test_factor_panel_rewards_sector_neutral_value():
+    panel = data.factor_panel(n_stocks=150, n_months=96, premium_vol=0.0, seed=3)   # constant premia
+    fwd, sector = panel["fwd_ret"], panel["sector"]
+    raw = factors.information_coefficient(factors.zscore(panel["earnings_yield"]), fwd).mean()
+    neutral = factors.information_coefficient(
+        factors.zscore(factors.neutralize(factors.winsorize(panel["earnings_yield"], 0.025, 0.975), sector)), fwd).mean()
+    assert neutral > raw + 0.01 and neutral > 0

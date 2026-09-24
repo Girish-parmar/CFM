@@ -1,4 +1,4 @@
-"""Transaction-cost analysis: market impact and implementation shortfall (Module 15).
+"""Transaction-cost analysis: market impact and implementation shortfall (M15).
 """
 
 from __future__ import annotations
