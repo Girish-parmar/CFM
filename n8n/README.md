@@ -1,4 +1,4 @@
-# n8n Workflows (Module 15)
+# n8n Workflows (M18)
 
 Three workflows that connect n8n to the CFMAT signal service (`cfmat/automation/signal_service.py`).
 

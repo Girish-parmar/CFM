@@ -1,0 +1,584 @@
+# CFMAT course manifest: the single source of truth for structure, schedule, fees and routes.
+#
+# Edit this file, then run:
+#   python tools/route_manager.py check     # validate everything below against the repository
+#   python tools/route_manager.py render    # rewrite the generated tables in the Markdown docs
+#
+# Money is in Indian rupees. Amounts are exact to the paisa; the route manager derives the
+# GST split from the all-inclusive amount and refuses a manifest whose numbers do not add up.
+
+schema_version: 1
+
+program:
+  name: Certificate in Financial Market and Algorithmic Trading
+  code: CFMAT
+  edition: "2027"
+  version: 2.0.0
+  duration_weeks: 52
+  prework_weeks: 4
+  prework_hours: 40
+  format: Hybrid — live online weekend classes, weekday lab clinics, three 3-day in-person bootcamps
+  intakes: [January, July]
+  language: English
+  cohort: {target: 36, maximum: 40, minimum_to_run: 30}
+  self_study_hours_per_week: 6
+  mentoring_hours: 24
+  weekly_rhythm:            # guided hours in a normal module week (IST)
+    - {code: L1, day: Saturday, time: "10:00–13:00", hours: 3, kind: Live lecture — concepts and cases}
+    - {code: L2, day: Sunday, time: "10:00–13:00", hours: 3, kind: Live workshop — worked examples and code}
+    - {code: C1, day: Tuesday, time: "19:30–21:30", hours: 2, kind: Lab clinic 1 — guided lab with TAs}
+    - {code: OH, day: Wednesday, time: "20:00–21:00", hours: 1, kind: Office hours — faculty and TAs}
+    - {code: C2, day: Thursday, time: "19:30–21:30", hours: 2, kind: Lab clinic 2 — lab completion and code review}
+    - {code: QP, day: Friday, time: "20:00–21:00", hours: 1, kind: Quiz and peer review}
+
+fee:
+  currency: INR
+  total_all_inclusive: 1000000.00     # ₹10,00,000.00 including 18% GST
+  gst_rate: 0.18
+  application_fee: 2500.00            # adjusted against the first payment on enrolment
+  inclusions:
+    - 736 guided hours: live classes, lab clinics, office hours, reviews, bootcamps, capstone studio and 1:1 mentoring
+    - Three 3-day in-person bootcamps with venue, trading-floor simulation, stay (3 nights each, twin sharing) and meals
+    - 24 hours of 1:1 mentoring with a practitioner mentor
+    - Licensed NSE cash and F&O historical data (education licence) for the programme and 6 months after
+    - Cloud lab, GPU hours for M20–M23, and a static-IP server for capstone paper trading
+    - Vouchers for NISM Series VIII (Equity Derivatives) and Series XV (Research Analyst)
+    - Digital access to the core texts or equivalent reading packs
+    - Career services, employer connect, Demo Day with an industry jury
+    - Two years of alumni access to recordings, updated labs and alumni events
+  exclusions:
+    - Travel to and from bootcamp venues
+    - A laptop (minimum 8 GB RAM, 4 cores; 16 GB recommended)
+    - Personal broker accounts and any live trading capital; live trading is outside the programme
+    - Re-sit fees for external exams beyond the included vouchers
+  payment_plans:
+    - id: A
+      name: Pay in full
+      note: One payment on accepting the offer.
+      schedule:
+        - {due: On accepting the offer, amount: 1000000.00}
+    - id: B
+      name: Four instalments (no interest)
+      note: Each instalment falls due before a term starts; a missed instalment pauses LMS access after 15 days.
+      schedule:
+        - {due: On accepting the offer (seat booking), amount: 100000.00}
+        - {due: Before Week 1 (Term 1), amount: 300000.00}
+        - {due: Before Week 20 (Term 3), amount: 300000.00}
+        - {due: Before Week 39 (Term 5), amount: 300000.00}
+    - id: C
+      name: Education loan through a partner bank or NBFC
+      note: The lender pays the institute in full; the learner repays the lender over 12–60 months at the lender's rate. The institute does not subsidise interest.
+      schedule:
+        - {due: Disbursed by the lender before Week 1, amount: 1000000.00}
+    - id: D
+      name: Employer sponsored
+      note: Invoiced to the employer with the institute's GSTIN; a GST-registered employer may be able to claim input tax credit (confirm with its tax adviser).
+      schedule:
+        - {due: On accepting the offer, amount: 1000000.00}
+  scholarships:
+    budget_share_of_base: 0.10          # cap on all scholarships, as a share of the cohort's fee before GST
+    one_per_learner: true
+    categories:
+      - {name: Need-based, max_share: 0.50, criteria: Household income below the published threshold; documents verified}
+      - {name: Merit, max_share: 0.25, criteria: Top 10% in the admission test and interview}
+      - {name: Women in quantitative finance, max_share: 0.25, criteria: Women applicants who meet the admission standard}
+      - {name: Armed forces, max_share: 0.20, criteria: Veterans and dependants of serving personnel}
+  refund_policy:
+    - {when: "Within 14 days of paying the seat booking, and before Week 1", refund: "100% of all amounts paid"}
+    - {when: "More than 14 days after seat booking, and at least 15 days before Week 1", refund: "All amounts paid minus ₹50,000"}
+    - {when: "Less than 15 days before Week 1, up to the end of Week 2", refund: "50% of all amounts paid"}
+    - {when: "After Week 2", refund: "No refund of instalments already due; later instalments are not charged. One free deferral to the next cohort"}
+    - {when: "The institute cancels the cohort or postpones it by more than 30 days", refund: "100% of all amounts paid, or a free move to the next cohort"}
+
+unit_economics:
+  plan_cohort_sizes: [30, 36, 40]
+  sensitivity:                          # surplus margin for other all-inclusive prices and cohort sizes
+    totals: [800000, 900000, 1000000, 1100000]
+    cohorts: [24, 30, 36, 40]
+  scholarship_share_of_base: 0.10       # budgeted average; equals the cap above
+  marketing_share_of_base: 0.12         # marketing, admissions and counselling per enrolled learner
+  payment_processing_share: 0.015       # gateway and loan-partner fees, share of the all-inclusive amount
+  fixed_costs:                          # per cohort, before GST where applicable
+    - {item: "Faculty — module delivery", basis: "528 h × ₹8,000", amount: 4224000}
+    - {item: "Faculty — reviews and term exams", basis: "36 h × ₹6,000", amount: 216000}
+    - {item: "Faculty — bootcamps", basis: "72 h × ₹10,000", amount: 720000}
+    - {item: "Capstone supervision", basis: "76 h × ₹8,000", amount: 608000}
+    - {item: "Industry jury and guest practitioners", basis: "3 juries + 10 guest sessions", amount: 300000}
+    - {item: "Teaching assistants", basis: "3 × 12 months × ₹70,000", amount: 2520000}
+    - {item: "Programme manager and learner success", basis: "12 months × ₹1,20,000", amount: 1440000}
+    - {item: "Career services", basis: "12 months × ₹60,000", amount: 720000}
+    - {item: "Content refresh and lab QA", basis: "annual refresh of 24 modules and 30 labs", amount: 1000000}
+    - {item: "LMS, video, code hosting and CI", basis: "platform licences", amount: 400000}
+    - {item: "Bootcamp venues and simulation", basis: "3 × ₹2,00,000", amount: 600000}
+    - {item: "Compliance, legal, audit and insurance", basis: "allocation", amount: 400000}
+    - {item: "Administration and overheads", basis: "allocation", amount: 800000}
+  variable_costs_per_learner:
+    - {item: "Market-data licence (education seat)", amount: 35000}
+    - {item: "Cloud lab, GPU hours and static-IP server", amount: 24000}
+    - {item: "Bootcamp stay and meals (9 nights)", amount: 36000}
+    - {item: "1:1 mentoring (24 h × ₹2,000)", amount: 48000}
+    - {item: "NISM vouchers, books and kit", amount: 8000}
+    - {item: "Exams, proctoring and credential", amount: 3000}
+
+terms:
+  - {id: T0, name: Pre-work, weeks: [-3, 0]}
+  - {id: T1, name: Foundations, weeks: [1, 11]}
+  - {id: T2, name: Analysis and Derivatives, weeks: [12, 19]}
+  - {id: T3, name: Strategy Research, weeks: [20, 27]}
+  - {id: T4, name: "Risk, Portfolio and Trading Systems", weeks: [28, 38]}
+  - {id: T5, name: AI for Trading, weeks: [39, 47]}
+  - {id: T6, name: Capstone and Career, weeks: [48, 52]}
+
+blocks:                                 # weeks that are not module weeks
+  - {id: R1, term: T1, week: 11, name: "Review, Term 1 exam and Bootcamp 1", guided_hours: 12, bootcamp_hours: 24,
+     covers: [M01, M02, M03, M04, M05]}
+  - {id: R2, term: T3, week: 27, name: "Review, Term exam 2 and Bootcamp 2", guided_hours: 12, bootcamp_hours: 24,
+     covers: [M06, M07, M08, M09, M10, M11, M12]}
+  - {id: R3, term: T5, week: 47, name: "Review, Term exam 3 and Bootcamp 3", guided_hours: 12, bootcamp_hours: 24,
+     covers: [M13, M14, M15, M16, M17, M18, M19, M20, M21, M22, M23]}
+  - {id: CT, term: T5, weeks: [39, 46], name: "Capstone track (proposal, pre-registration, midpoint review)", guided_hours: 16}
+
+modules:
+  - id: M00
+    slug: prework
+    title: "Pre-work: Python, Statistics and Markets Primer"
+    term: T0
+    weeks: [-3, 0]
+    guided_hours: 0
+    self_paced_hours: 40
+    week_themes:
+      - Python basics, Jupyter and VS Code
+      - pandas first steps and Excel-to-Python
+      - Algebra, probability and statistics refresher
+      - How stock markets work; entry assessment
+    labs:
+      - {file: lab_00a_environment_check.py, status: ready, runtime_s: 5, title: Environment check and first chart}
+    library: [cfmat.data, cfmat.analytics.metrics]
+    topics: []
+    prerequisites: []
+
+  - id: M01
+    slug: financial-markets
+    title: Financial Markets, Instruments and Regulation
+    term: T1
+    weeks: [1, 2]
+    week_themes:
+      - Market structure, participants and instruments
+      - Orders, clearing and settlement, costs and regulation
+    labs:
+      - {file: lab_01a_markets_instruments.py, status: ready, runtime_s: 5, title: "Notional, margin, fair value, corporate actions, T+1"}
+    library: [cfmat.derivatives.options, cfmat.microstructure.costs]
+    topics: []
+    prerequisites: [M00]
+
+  - id: M02
+    slug: macroeconomics
+    title: Macroeconomics for Traders
+    term: T1
+    weeks: [3, 4]
+    week_themes:
+      - Growth, inflation and the RBI — how macro moves Indian markets
+      - Rates, the yield curve, the rupee and macro event trading
+    labs:
+      - {file: lab_02a_macro_event_study.py, status: planned, runtime_s: 10, title: "RBI policy days, CPI surprises and the yield curve"}
+    library: [cfmat.analytics.stats]
+    topics: [macroeconomics]
+    prerequisites: [M01]
+
+  - id: M03
+    slug: python-for-finance
+    title: Python for Financial Analysis
+    term: T1
+    weeks: [5, 6]
+    week_themes:
+      - Python, NumPy and pandas for market data
+      - Clean code — functions, tests, Git and packaging
+    labs:
+      - {file: lab_03a_python_for_finance.py, status: ready, runtime_s: 5, title: "Returns, resampling, rolling volatility, drawdowns"}
+    library: [cfmat.data, cfmat.analytics.metrics]
+    topics: []
+    prerequisites: [M00]
+
+  - id: M04
+    slug: statistics-time-series
+    title: Statistics and Time Series for Finance
+    term: T1
+    weeks: [7, 8]
+    week_themes:
+      - Distributions, fat tails, estimation, hypothesis tests and multiple testing
+      - Regression, autocorrelation, stationarity, cointegration and the bootstrap
+    labs:
+      - {file: lab_04a_statistics_time_series.py, status: ready, runtime_s: 10, title: "Fat tails, ADF, Ljung–Box, CAPM, cointegration, bootstrap Sharpe"}
+    library: [cfmat.analytics.metrics, cfmat.analytics.stats]
+    topics: [statistics]
+    prerequisites: [M03]
+
+  - id: M05
+    slug: data-engineering-databases
+    title: Databases and Market Data Engineering
+    term: T1
+    weeks: [9, 10]
+    week_themes:
+      - Relational design, SQL, window functions and time-series storage
+      - Pipelines, data quality, corporate actions and survivorship-free universes
+    labs:
+      - {file: lab_05a_market_database.py, status: ready, runtime_s: 5, title: "SQLite schema, window functions, query plans, data-quality checks"}
+    library: [cfmat.data]
+    topics: [market-data, platform]
+    prerequisites: [M03]
+
+  - id: M06
+    slug: technical-analysis-patterns
+    title: Technical Indicators, Candlestick and Chart Patterns
+    term: T2
+    weeks: [12, 13]
+    week_themes:
+      - Indicators from first principles — and why most are redundant
+      - Candlestick and chart patterns as testable hypotheses
+    labs:
+      - {file: lab_06a_indicators_patterns.py, status: ready, runtime_s: 15, title: "Indicator dashboard, HAC event studies, 20 patterns with FDR control"}
+    library: [cfmat.analytics.indicators, cfmat.analytics.patterns, cfmat.analytics.stats]
+    topics: [technical-patterns, statistics]
+    prerequisites: [M04]
+
+  - id: M07
+    slug: fundamental-factor-investing
+    title: Fundamental Analysis and Factor Investing
+    term: T2
+    weeks: [14, 14]
+    week_themes:
+      - Statements, ratios and cross-sectional factor scores
+    labs:
+      - {file: lab_07a_factors_quantamental.py, status: ready, runtime_s: 15, title: "IC, winsorising, sector neutrality, composites, quintile spreads"}
+    library: [cfmat.analytics.factors]
+    topics: [factor-investing]
+    prerequisites: [M04]
+
+  - id: M08
+    slug: derivatives-pricing-greeks
+    title: Derivatives — Futures, Options Pricing and the Greeks
+    term: T2
+    weeks: [15, 17]
+    week_themes:
+      - Forwards and futures, cost of carry, option payoffs and parity
+      - Binomial trees, Black–Scholes–Merton and the first-order Greeks
+      - Implied volatility, the smile and delta hedging
+    labs:
+      - {file: lab_08a_options_pricing_greeks.py, status: ready, runtime_s: 10, title: "Option chain and Greeks, IV smile, binomial, payoffs, delta hedging"}
+    library: [cfmat.derivatives.options]
+    topics: [fno-greeks]
+    prerequisites: [M01, M04]
+
+  - id: M09
+    slug: fno-strategies-advanced-greeks
+    title: F&O Strategies and Second-Order Greeks
+    term: T2
+    weeks: [18, 19]
+    week_themes:
+      - Second-order Greeks (vanna, volga, charm, speed) and Greek P&L attribution
+      - Futures curves, carry and option structures by market view
+    labs:
+      - {file: lab_09a_second_order_greeks.py, status: planned, runtime_s: 10, title: "Vanna, volga, charm, speed; gamma scalping; P&L attribution"}
+      - {file: lab_09b_futures_options_structures.py, status: ready, runtime_s: 10, title: "Futures curve, cash-and-carry, seven option structures in parallel"}
+    library: [cfmat.derivatives.options, cfmat.derivatives.futures, cfmat.derivatives.option_strategies]
+    topics: [fno-greeks]
+    prerequisites: [M08]
+
+  - id: M10
+    slug: trading-strategies
+    title: Algorithmic Trading Strategies
+    term: T3
+    weeks: [20, 22]
+    week_themes:
+      - Trend following and time-series momentum
+      - Mean reversion and cross-sectional momentum
+      - Statistical arbitrage — pairs and cointegration
+    labs:
+      - {file: lab_10a_trading_strategies.py, status: ready, runtime_s: 10, title: "Trend, momentum, mean reversion, cross-sectional momentum, pairs"}
+    library: [cfmat.strategies.signals, cfmat.backtesting.vectorized]
+    topics: []
+    prerequisites: [M04, M06]
+
+  - id: M11
+    slug: backtesting-research
+    title: Backtesting and Research Methodology
+    term: T3
+    weeks: [23, 24]
+    week_themes:
+      - Backtest engines, Indian costs and the classic biases
+      - Walk-forward testing, the deflated Sharpe ratio and research hygiene
+    labs:
+      - {file: lab_11a_backtesting_costs_walk_forward.py, status: ready, runtime_s: 20, title: "Indian costs, grid search vs walk-forward, deflated Sharpe, event engine"}
+    library: [cfmat.backtesting.vectorized, cfmat.backtesting.event_driven, cfmat.microstructure.costs, cfmat.analytics.metrics]
+    topics: [statistics]
+    prerequisites: [M10]
+
+  - id: M12
+    slug: strategy-studio
+    title: "Strategy Studio: Screeners, Strategy Creator and Parallel Research"
+    term: T3
+    weeks: [25, 26]
+    week_themes:
+      - Screening and instrument selection; the rule language
+      - Strategy Creator, parallel optimisation and F&O signals
+    labs:
+      - {file: lab_12a_screener_instrument_selection.py, status: ready, runtime_s: 10, title: "Parallel screener, regime labels, ranking, pattern scan, shortlist"}
+      - {file: lab_12b_strategy_creator_parallel.py, status: ready, runtime_s: 20, title: "Strategy library and creator, sweeps (serial/thread/process), walk-forward"}
+      - {file: lab_12c_fno_signals_and_filters.py, status: ready, runtime_s: 10, title: "Trend template on futures; regime filters for option structures"}
+    library: [cfmat.studio, cfmat.research.screener, cfmat.infra.parallel, cfmat.backtesting.report]
+    topics: [technical-patterns, fno-greeks, screener, parallel]
+    prerequisites: [M06, M09, M11]
+
+  - id: M13
+    slug: risk-position-sizing
+    title: Risk Management and Position Sizing
+    term: T4
+    weeks: [28, 29]
+    week_themes:
+      - VaR, expected shortfall, VaR backtesting and stress tests
+      - Position sizing, Kelly, volatility targeting and drawdown control
+    labs:
+      - {file: lab_13a_risk_sizing_stress.py, status: ready, runtime_s: 15, title: "VaR/ES, Kupiec, GARCH VaR, sizing, risk of ruin, stress tests"}
+    library: [cfmat.portfolio.risk, cfmat.econometrics.garch]
+    topics: [risk-sizing]
+    prerequisites: [M04, M11]
+
+  - id: M14
+    slug: portfolio-management
+    title: Portfolio Management and Strategy Allocation
+    term: T4
+    weeks: [30, 31]
+    week_themes:
+      - Mean–variance, estimation error, shrinkage and risk parity
+      - Hierarchical risk parity and allocating across strategies
+    labs:
+      - {file: lab_14a_portfolio_construction.py, status: ready, runtime_s: 15, title: "Optimisers out of sample, Ledoit–Wolf, frontier, strategy sleeves"}
+    library: [cfmat.portfolio.construction]
+    topics: [portfolio]
+    prerequisites: [M13]
+
+  - id: M15
+    slug: microstructure-execution
+    title: Market Microstructure and Execution
+    term: T4
+    weeks: [32, 33]
+    week_themes:
+      - Order books, liquidity, adverse selection and market impact
+      - Execution algorithms and transaction-cost analysis
+    labs:
+      - {file: lab_15a_order_book_execution.py, status: ready, runtime_s: 5, title: "Order book, TWAP/VWAP/POV, Almgren–Chriss, impact, shortfall"}
+    library: [cfmat.microstructure]
+    topics: [microstructure]
+    prerequisites: [M11]
+
+  - id: M16
+    slug: market-data-handling
+    title: Market Data Handling
+    term: T4
+    weeks: [34, 34]
+    week_themes:
+      - Feeds, ticks to bars, instrument masters, data quality and storage
+    labs:
+      - {file: lab_16a_market_data_handler.py, status: planned, runtime_s: 10, title: "Tick aggregation, gap and spike checks, continuous futures, Parquet store"}
+    library: [cfmat.data]
+    topics: [market-data]
+    prerequisites: [M05, M15]
+
+  - id: M17
+    slug: trading-platform-compliance
+    title: Trading Platform, Broker APIs and Compliance
+    term: T4
+    weeks: [35, 36]
+    week_themes:
+      - OMS/RMS architecture, broker APIs and paper trading
+      - SEBI's retail-algo framework, audit trails and operational risk
+    labs:
+      - {file: lab_17a_oms_rms_paper_trading.py, status: ready, runtime_s: 5, title: "Paper broker, RMS rejects, throttle, kill switch, trade journal"}
+    library: [cfmat.trading, cfmat.backtesting.event_driven]
+    topics: [platform, risk-sizing]
+    prerequisites: [M11, M13]
+
+  - id: M18
+    slug: monitoring-automation
+    title: Monitoring and Automation with n8n
+    term: T4
+    weeks: [37, 38]
+    week_themes:
+      - "Live monitoring: health checks, drift, P&L attribution and kill switches"
+      - Automation with n8n — alerts, digests and trade journals
+    labs:
+      - {file: lab_18a_n8n_signal_service.py, status: ready, runtime_s: 5, title: Signal service endpoints used by the n8n workflows}
+      - {file: lab_18b_live_monitoring.py, status: planned, runtime_s: 10, title: "Heartbeats, live-vs-backtest drift, alert rules, incident drill"}
+    library: [cfmat.automation]
+    topics: [monitoring, platform, sentiment-news]
+    prerequisites: [M17]
+
+  - id: M19
+    slug: machine-learning
+    title: Machine Learning for Trading
+    term: T5
+    weeks: [39, 40]
+    week_themes:
+      - Features, labels and leakage
+      - Purged cross-validation, walk-forward and model-driven trading
+    labs:
+      - {file: lab_19a_machine_learning.py, status: ready, runtime_s: 30, title: "Features, triple barrier, leakage vs purged CV, walk-forward trading"}
+    library: [cfmat.ml]
+    topics: [machine-learning]
+    prerequisites: [M04, M11]
+
+  - id: M20
+    slug: deep-learning
+    title: Deep Learning for Financial Time Series
+    term: T5
+    weeks: [41, 41]
+    week_themes:
+      - Neural networks for sequences — when they earn their complexity
+    labs:
+      - {file: lab_20a_deep_learning.py, status: ready, runtime_s: 15, title: "Sliding windows, MLP vs logistic on linear and nonlinear signals"}
+    library: [cfmat.ml]
+    topics: [deep-learning]
+    prerequisites: [M19]
+
+  - id: M21
+    slug: reinforcement-learning
+    title: Reinforcement Learning for Trading
+    term: T5
+    weeks: [42, 42]
+    week_themes:
+      - Agents, rewards and costs — Q-learning taken apart
+    labs:
+      - {file: lab_21a_reinforcement_learning.py, status: ready, runtime_s: 30, title: "Q-learning policy, rule baseline, costs in the reward, seed spread"}
+    library: [cfmat.ml.reinforcement]
+    topics: [reinforcement-learning]
+    prerequisites: [M19]
+
+  - id: M22
+    slug: nlp-news-llm-rag
+    title: NLP, News Sentiment, LLMs and RAG
+    term: T5
+    weeks: [43, 44]
+    week_themes:
+      - News, sentiment and event studies
+      - LLMs and retrieval-augmented generation for research
+    labs:
+      - {file: lab_22a_sentiment_rag.py, status: ready, runtime_s: 5, title: "Lexicon and TF-IDF sentiment, RAG with relevance guard, optional Claude"}
+      - {file: lab_22b_news_signal_event_study.py, status: planned, runtime_s: 10, title: "Timestamped news to signals: dedupe, lag, decay, event study"}
+    library: [cfmat.nlp]
+    topics: [sentiment-news, macroeconomics]
+    prerequisites: [M06, M19]
+
+  - id: M23
+    slug: advanced-strategies-hpo
+    title: Advanced Strategies and Hyperparameter Optimisation
+    term: T5
+    weeks: [45, 46]
+    week_themes:
+      - Boosting, hyperparameter optimisation, meta-labelling and regimes
+      - Segment optimisation, strategy ensembles and overfitting control
+    labs:
+      - {file: lab_23a_boosting_hpo.py, status: ready, runtime_s: 60, title: "HGB/XGBoost/LightGBM, random search, Optuna, nested walk-forward, PBO"}
+      - {file: lab_23b_regimes_kalman_garch.py, status: ready, runtime_s: 10, title: "Markov regimes, GARCH volatility targeting, Kalman-filter pairs"}
+      - {file: lab_23c_meta_labeling_ensembles.py, status: ready, runtime_s: 10, title: "Meta-labelling, bet sizing, multi-strategy allocation"}
+      - {file: lab_23d_segment_optimisation.py, status: ready, runtime_s: 60, title: "Day/month/expiry/regime/pattern segments, FDR, per-segment walk-forward"}
+    library: [cfmat.ml.tuning, cfmat.econometrics, cfmat.research.segments]
+    topics: [segment-optimisation, machine-learning, portfolio, statistics]
+    prerequisites: [M14, M19]
+
+  - id: M24
+    slug: capstone-career
+    title: Capstone, Paper Trading, Ethics and Career
+    term: T6
+    weeks: [48, 52]
+    guided_hours: 60
+    week_themes:
+      - Final validation, deployment and paper-trading launch
+      - Paper trading, monitoring and incident drills
+      - Paper trading, reconciliation and risk review
+      - Report, peer review, mock jury and career studio
+      - Demo Day and graduation
+    labs:
+      - {file: lab_24a_capstone_template.py, status: planned, runtime_s: 30, title: "Pre-registration to paper-trading report: a reproducible capstone skeleton"}
+    library: [cfmat]
+    topics: [monitoring, risk-sizing]
+    prerequisites: [M18, M23]
+
+topics:                                  # the 15 areas the programme commits to cover, plus supporting areas
+  - {id: statistics, name: Statistics in finance, required: true}
+  - {id: sentiment-news, name: Sentiment and news analysis, required: true}
+  - {id: risk-sizing, name: Risk management and position sizing, required: true}
+  - {id: segment-optimisation, name: "Strategy optimisation by segment (day, month, regime, pattern)", required: true}
+  - {id: microstructure, name: Market microstructure, required: true}
+  - {id: fno-greeks, name: "Futures and options — Greeks, second-order Greeks and strategies", required: true}
+  - {id: technical-patterns, name: "Technical indicators, chart and candlestick patterns", required: true}
+  - {id: macroeconomics, name: Macroeconomics, required: true}
+  - {id: portfolio, name: Portfolio management methods, required: true}
+  - {id: platform, name: Trading platform structure and infrastructure, required: true}
+  - {id: machine-learning, name: Machine-learning techniques, required: true}
+  - {id: deep-learning, name: Deep-learning techniques, required: true}
+  - {id: reinforcement-learning, name: Reinforcement learning, required: true}
+  - {id: market-data, name: Market data handling, required: true}
+  - {id: monitoring, name: Monitoring systems, required: true}
+  - {id: factor-investing, name: Fundamental and factor investing, required: false}
+  - {id: screener, name: Screeners and instrument selection, required: false}
+  - {id: parallel, name: Threading and multiprocessing for research, required: false}
+
+assessment:
+  components:
+    - {name: Module quizzes (lowest two dropped), weight: 0.10}
+    - {name: Lab submissions, weight: 0.20}
+    - {name: Module assignments, weight: 0.15}
+    - {name: "Term exams (3 × 4 h, proctored)", weight: 0.20}
+    - {name: Capstone, weight: 0.35}
+  capstone_rubric:
+    - {criterion: Hypothesis and pre-registration, marks: 15}
+    - {criterion: Data and engineering, marks: 15}
+    - {criterion: Backtest rigour, marks: 20}
+    - {criterion: Risk management, marks: 15}
+    - {criterion: Paper-trading discipline, marks: 15}
+    - {criterion: Report and viva, marks: 20}
+  bands:
+    - {band: Distinction, min_score: 80, capstone_min: 75}
+    - {band: Merit, min_score: 70, capstone_min: 60}
+    - {band: Pass, min_score: 60, capstone_min: 50}
+  requirements:
+    attendance_min: 0.80
+    bootcamps_required: 3
+
+routes:                                  # learner personas; every learner takes every module
+  - id: quant-researcher
+    name: Quant researcher
+    for: Graduates in maths, statistics, economics or engineering aiming at research roles
+    deepen: [M04, M07, M10, M11, M19, M23]
+    test_out: []
+    capstone: [Multi-factor portfolio, ML meta-labelling, Seasonality and regime atlas]
+  - id: algo-developer
+    name: Algo developer
+    for: Software engineers moving into trading systems
+    deepen: [M05, M15, M16, M17, M18]
+    test_out: [M03]
+    capstone: [End-to-end automated trading system, Execution algorithm and TCA]
+  - id: derivatives-trader
+    name: Derivatives trader
+    for: F&O traders and dealers who want systematic, risk-controlled option strategies
+    deepen: [M08, M09, M12, M13]
+    test_out: [M01]
+    capstone: [Short-volatility options strategy with tail hedges, Screener-to-strategy system]
+  - id: systematic-trader
+    name: Discretionary to systematic trader
+    for: Chart-based traders who want to test and automate their process
+    deepen: [M06, M10, M11, M12, M13]
+    test_out: [M01]
+    capstone: [Index futures trend following with volatility targeting, Screener-to-strategy system]
+  - id: risk-portfolio
+    name: Risk and portfolio analyst
+    for: BFSI professionals in risk, treasury or asset management
+    deepen: [M02, M04, M13, M14, M15]
+    test_out: []
+    capstone: [Regime-aware multi-strategy portfolio, Multi-factor portfolio]
+  - id: ai-engineer
+    name: AI engineer in finance
+    for: Data scientists and ML engineers bringing models to markets
+    deepen: [M19, M20, M21, M22, M23]
+    test_out: [M03]
+    capstone: [News and filings sentiment signal, RAG research assistant for filings, ML meta-labelling]
