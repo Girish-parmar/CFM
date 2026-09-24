@@ -29,7 +29,7 @@ the instalments and the unit economics always add up to the paisa.
 <!-- generated from course/course.yaml by tools/route_manager.py; do not edit -->
 **Included**
 
-- {'736 guided hours': 'live classes, lab clinics, office hours, reviews, bootcamps, capstone studio and 1:1 mentoring'}
+- 736 guided hours: live classes, lab clinics, office hours, reviews, bootcamps, capstone studio and 1:1 mentoring
 - Three 3-day in-person bootcamps with venue, trading-floor simulation, stay (3 nights each, twin sharing) and meals
 - 24 hours of 1:1 mentoring with a practitioner mentor
 - Licensed NSE cash and F&O historical data (education licence) for the programme and 6 months after

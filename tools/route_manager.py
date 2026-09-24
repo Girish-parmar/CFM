@@ -281,6 +281,18 @@ def schema_errors(data: dict) -> list[str]:
     records += [("refund", r) for r in data["fee"]["refund_policy"]]
     records += [("cost", c) for c in data["unit_economics"]["fixed_costs"] + data["unit_economics"]["variable_costs_per_learner"]]
     out = []
+    text_lists = {"fee.inclusions": data["fee"]["inclusions"], "fee.exclusions": data["fee"]["exclusions"],
+                  "program.intakes": data["program"]["intakes"]}
+    for m in data["modules"]:
+        for key in ("week_themes", "library", "topics", "prerequisites"):
+            text_lists[f"{m['id']}.{key}"] = m.get(key, [])
+    for r in data["routes"]:
+        for key in ("deepen", "test_out", "capstone"):
+            text_lists[f"route {r['id']}.{key}"] = r[key]
+    for where, items in text_lists.items():
+        for item in items:
+            if not isinstance(item, str):
+                out.append(f"{where}: {item!r} is not text — quote values that contain ': ' or commas")
     for kind, rec in records:
         extra = set(rec) - SCHEMA[kind]
         if extra:

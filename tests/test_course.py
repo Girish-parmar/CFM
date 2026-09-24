@@ -103,3 +103,9 @@ def test_relative_markdown_links_resolve():
             if not target.startswith(("http://", "https://", "mailto:")) and not (md.parent / target).exists():
                 broken.append(f"{md.relative_to(root)} -> {target}")
     assert broken == []
+
+
+def test_schema_catches_values_parsed_as_mappings(course):
+    data = copy.deepcopy(course.data)
+    data["fee"]["inclusions"][0] = {"736 guided hours": "live classes"}   # unquoted ": " in a YAML list
+    assert any("is not text" in p for p in rm.schema_errors(data))

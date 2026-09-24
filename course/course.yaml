@@ -37,7 +37,7 @@ fee:
   gst_rate: 0.18
   application_fee: 2500.00            # adjusted against the first payment on enrolment
   inclusions:
-    - 736 guided hours: live classes, lab clinics, office hours, reviews, bootcamps, capstone studio and 1:1 mentoring
+    - "736 guided hours: live classes, lab clinics, office hours, reviews, bootcamps, capstone studio and 1:1 mentoring"
     - Three 3-day in-person bootcamps with venue, trading-floor simulation, stay (3 nights each, twin sharing) and meals
     - 24 hours of 1:1 mentoring with a practitioner mentor
     - Licensed NSE cash and F&O historical data (education licence) for the programme and 6 months after
