@@ -15,9 +15,11 @@ import time
 
 import pandas as pd
 
-from cfmat import data, metrics, parallel, report
-from cfmat import strategy_builder as sb
-from cfmat.plotting import savefig
+from cfmat import data, studio
+from cfmat.analytics import metrics
+from cfmat.backtesting import report
+from cfmat.infra import parallel
+from cfmat.infra.plotting import output_dir, savefig
 
 pd.set_option("display.width", 180)
 pd.set_option("display.max_columns", 14)
@@ -33,21 +35,22 @@ print(f"Working instrument: {trend_name} ({len(bars)} bars); range example: {ran
 # ## 1. The strategy library
 
 # %%
-for key, spec in sb.TEMPLATES.items():
+for key, spec in studio.TEMPLATES.items():
     print(f"[{spec.category:<10}] {key:<24} {spec.name}")
-spec = sb.TEMPLATES["range_bollinger_rsi"]
+spec = studio.TEMPLATES["range_bollinger_rsi"]
 print("\nExample — range_bollinger_rsi rules:")
 print("  long entry :", spec.long_entry)
 print("  long exit  :", spec.long_exit)
 print("  short entry:", spec.short_entry)
 print("  stop / time:", spec.stop_atr, "ATR,", spec.max_bars, "bars;  parameters:", spec.params)
-print(f"\nThe rule language knows {len(sb.available_functions())} names, e.g.:", ", ".join(sb.available_functions()[:20]), "…")
+names = studio.available_functions()
+print(f"\nThe rule language knows {len(names)} names, e.g.:", ", ".join(names[:20]), "…")
 
 # %% [markdown]
 # ## 2. Create a strategy: trend filter + pullback + candlestick confirmation
 
 # %%
-my_strategy = sb.StrategySpec(
+my_strategy = studio.StrategySpec(
     name="Uptrend pullback with bullish candle",
     category="custom",
     long_entry=[
@@ -61,15 +64,12 @@ my_strategy = sb.StrategySpec(
     params={"trend": 100, "rsi_len": 5, "oversold": 35, "overbought": 70, "stop": 2.0},
     description="Buy short pullbacks in an established uptrend once buyers show up.",
 )
-path = "labs/output/my_strategy.json"
-import os  # noqa: E402
-
-os.makedirs("labs/output", exist_ok=True)
+path = output_dir() / "my_strategy.json"
 my_strategy.to_json(path)
-loaded = sb.StrategySpec.from_json(path)
+loaded = studio.StrategySpec.from_json(path)
 print("Saved and reloaded:", loaded == my_strategy)
 
-result = sb.backtest(bars, loaded, cost_bps=5, slippage_bps=2)
+result = studio.backtest(bars, loaded, cost_bps=5, slippage_bps=2)
 print(result.stats()[["cagr", "sharpe", "max_drawdown", "trades", "win_rate", "payoff_ratio",
                       "expectancy", "exposure", "max_consecutive_losses", "avg_bars"]].round(3).to_string())
 print("\nLast trades:\n", result.trades.tail(5).to_string(index=False, float_format=lambda v: f"{v:.3f}"))
@@ -80,12 +80,12 @@ print("Chart saved to", savefig(report.plot_backtest(bars, result), "lab21_my_st
 # ## 3. One instrument, many strategies
 
 # %%
-results = {k: sb.backtest(bars, sb.TEMPLATES[k]) for k in
+results = {k: studio.backtest(bars, studio.TEMPLATES[k]) for k in
            ("trend_up_breakout", "trend_supertrend", "trend_ema_cross", "rsi2_pullback", "range_bollinger_rsi")}
 results["my_strategy"] = result
 print(f"On the uptrend {trend_name}:")
 print(report.compare(results).round(3))
-range_results = {k: sb.backtest(universe[range_name], sb.TEMPLATES[k]) for k in
+range_results = {k: studio.backtest(universe[range_name], studio.TEMPLATES[k]) for k in
                  ("trend_up_breakout", "range_bollinger_rsi", "range_box")}
 print(f"\nOn the range-bound {range_name}:")
 print(report.compare(range_results).round(3)[["cagr", "sharpe", "max_drawdown", "trades", "win_rate"]])
@@ -95,12 +95,12 @@ print(report.compare(range_results).round(3)[["cagr", "sharpe", "max_drawdown", 
 
 # %%
 grid = {"entry": [10, 15, 20, 30, 40, 55], "exit": [5, 10, 15, 20], "adx_min": [15, 20, 25], "trend": [50, 100, 200]}
-n_combos = len(sb.expand_grid(grid))
+n_combos = len(studio.expand_grid(grid))
 if __name__ == "__main__":        # process pools need this guard on Windows/macOS
     timings = {}
     for backend, workers in (("serial", 1), ("thread", WORKERS), ("process", WORKERS)):
         t0 = time.perf_counter()
-        table = sb.sweep(bars, sb.TEMPLATES["trend_up_breakout"], grid, workers=workers, backend=backend)
+        table = studio.sweep(bars, studio.TEMPLATES["trend_up_breakout"], grid, workers=workers, backend=backend)
         timings[backend] = time.perf_counter() - t0
     print(f"{n_combos} backtests:", {k: f"{v:.1f}s" for k, v in timings.items()})
     print(f"Speed-up with {WORKERS} processes: {timings['serial'] / timings['process']:.1f}x; "
@@ -113,12 +113,12 @@ if __name__ == "__main__":        # process pools need this guard on Windows/mac
 # %%
 if __name__ == "__main__":
     t0 = time.perf_counter()
-    smart, evaluations = sb.coarse_to_fine(bars, sb.TEMPLATES["trend_up_breakout"], grid, top_k=3,
+    smart, evaluations = studio.coarse_to_fine(bars, studio.TEMPLATES["trend_up_breakout"], grid, top_k=3,
                                            workers=WORKERS, backend="process")
     print(f"Coarse-to-fine: {evaluations} of {n_combos} combinations in {time.perf_counter() - t0:.1f}s")
     print(f"Best Sharpe — full grid {table['sharpe'].iloc[0]:.2f}, coarse-to-fine {smart['sharpe'].iloc[0]:.2f} "
           f"(rank {int((table['sharpe'] > smart['sharpe'].iloc[0]).sum()) + 1} of {n_combos} in the full grid)")
-    best = sb.backtest(bars, sb.TEMPLATES["trend_up_breakout"].resolve(**{k: table.iloc[0][k] for k in grid}))
+    best = studio.backtest(bars, studio.TEMPLATES["trend_up_breakout"].resolve(**{k: table.iloc[0][k] for k in grid}))
     trial_sr = table["sharpe"] / (252 ** 0.5)
     print(f"Deflated Sharpe of the grid winner ({n_combos} trials): "
           f"{metrics.deflated_sharpe_ratio(best.returns, n_combos, trial_sr.var()):.1%}")
@@ -129,7 +129,7 @@ if __name__ == "__main__":
 # %%
 if __name__ == "__main__":
     small_grid = {"entry": [10, 20, 40], "exit": [5, 10, 20], "trend": [50, 100, 200]}
-    oos, chosen = sb.walk_forward(bars, sb.TEMPLATES["trend_up_breakout"], small_grid, train=500, test=250,
+    oos, chosen = studio.walk_forward(bars, studio.TEMPLATES["trend_up_breakout"], small_grid, train=500, test=250,
                                   workers=WORKERS, backend="process")
     print(chosen.to_string(index=False, float_format=lambda v: f"{v:.2f}"))
     print(f"\nWalk-forward out-of-sample Sharpe {metrics.sharpe_ratio(oos):.2f} vs best in-sample "
@@ -139,5 +139,5 @@ if __name__ == "__main__":
 # ## Exercises
 # 1. Write a *short* version of `my_strategy` for downtrends and test it on the
 #    downtrend instruments from Lab 20.
-# 2. Add your own indicator to the language with `@sb.register("my_indicator")`.
+# 2. Add your own indicator to the language with `@studio.register("my_indicator")`.
 # 3. Time the sweep with 1, 2, 4 and 8 processes. Where does the speed-up flatten, and why?

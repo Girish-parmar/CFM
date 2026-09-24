@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from cfmat import options as opt
-from cfmat.plotting import savefig
+from cfmat.derivatives import options as opt
+from cfmat.infra.plotting import savefig
 
 S, r, q = 24_500.0, 0.065, 0.012
 T = 21 / 365           # three weeks to expiry
@@ -46,7 +46,8 @@ strikes = np.arange(22_500, 26_600, 250)
 true_vol = 0.14 + 0.9 * (np.log(strikes / S)) ** 2 - 0.25 * np.log(strikes / S)
 quotes = [opt.bs_price(S, K, T, r, v, "put" if K < S else "call", q) for K, v in zip(strikes, true_vol)]
 iv = [opt.implied_volatility(p, S, K, T, r, "put" if K < S else "call", q) for p, K in zip(quotes, strikes)]
-print(pd.DataFrame({"strike": strikes, "quote": np.round(quotes, 2), "iv_%": np.round(np.array(iv) * 100, 2)}).to_string(index=False))
+smile = pd.DataFrame({"strike": strikes, "quote": np.round(quotes, 2), "iv_%": np.round(np.array(iv) * 100, 2)})
+print(smile.to_string(index=False))
 
 fig, ax = plt.subplots(figsize=(8, 4))
 ax.plot(strikes, np.array(iv) * 100, marker="o")

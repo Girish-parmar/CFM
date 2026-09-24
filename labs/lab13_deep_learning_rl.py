@@ -19,9 +19,10 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from cfmat import backtest as bt
-from cfmat import data, metrics
-from cfmat.rl import QLearningTrader
+from cfmat import data
+from cfmat.analytics import metrics
+from cfmat.backtesting import vectorized as bt
+from cfmat.ml.reinforcement import QLearningTrader
 
 # %% [markdown]
 # ## 1. Sliding windows: the last 20 returns predict the sign of the next one

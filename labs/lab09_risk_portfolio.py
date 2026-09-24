@@ -11,7 +11,9 @@
 # %%
 import pandas as pd
 
-from cfmat import data, indicators, metrics, portfolio, risk
+from cfmat import data, portfolio
+from cfmat.analytics import indicators, metrics
+from cfmat.portfolio import risk
 
 pd.set_option("display.width", 160)
 pd.set_option("display.max_columns", 12)

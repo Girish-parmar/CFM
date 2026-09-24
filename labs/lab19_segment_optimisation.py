@@ -22,10 +22,12 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.inspection import permutation_importance
 
-from cfmat import backtest as bt
-from cfmat import data, metrics, ml, strategies, tuning
-from cfmat import segments as sg
-from cfmat.plotting import savefig
+from cfmat import data, ml, strategies
+from cfmat.analytics import metrics
+from cfmat.backtesting import vectorized as bt
+from cfmat.infra.plotting import savefig
+from cfmat.ml import tuning
+from cfmat.research import segments as sg
 
 pd.set_option("display.width", 170)
 pd.set_option("display.max_columns", 14)
@@ -106,7 +108,8 @@ print("many *backtests on the same data*, as in Lab 16.")
 
 attribution = sg.segment_stats(per_regime, labels[["vol_regime", "weekday"]].shift(1).reindex(per_regime.index), min_obs=20)
 print("\nWhere the per-regime strategy earns (attribution):")
-print(attribution[["family", "segment", "n", "mean_bp", "sharpe"]].sort_values(["family", "segment"]).round(2).to_string(index=False))
+cols = ["family", "segment", "n", "mean_bp", "sharpe"]
+print(attribution[cols].sort_values(["family", "segment"]).round(2).to_string(index=False))
 
 # %% [markdown]
 # ## 4. A calendar and pattern filter (long/flat)

@@ -11,15 +11,17 @@
 import numpy as np
 import pandas as pd
 
-from cfmat import backtest as bt
-from cfmat import data, metrics, strategies
-from cfmat.engine import SmaCrossStrategy, run_event_backtest
+from cfmat import data, strategies
+from cfmat.analytics import metrics
+from cfmat.backtesting import vectorized as bt
+from cfmat.backtesting.event_driven import SmaCrossStrategy, run_event_backtest
+from cfmat.microstructure.costs import IndianCostModel
 
 # %% [markdown]
 # ## 1. What does a trade really cost?
 
 # %%
-model = bt.IndianCostModel()
+model = IndianCostModel()
 examples = [("equity_delivery", 200, 1_500.0), ("equity_intraday", 200, 1_500.0),
             ("futures", 75, 24_500.0), ("options", 75, 120.0)]
 rows = []
@@ -85,7 +87,7 @@ print(f"Deflated Sharpe (300 trials) : {metrics.deflated_sharpe_ratio(best_r, 30
 # %%
 bars = data.ohlcv_from_close(close.iloc[:750], seed=2)
 table, broker = run_event_backtest(bars, SmaCrossStrategy(20, 100, qty=500), cash=100_000,
-                                   cost_model=bt.IndianCostModel(), segment="equity_delivery")
+                                   cost_model=IndianCostModel(), segment="equity_delivery")
 vec = bt.vectorized_backtest(bars["close"], strategies.sma_crossover(bars["close"], 20, 100), 0)
 print(f"Event-driven : {len(broker.fills)} fills, charges ₹{broker.total_charges:,.0f}, "
       f"final equity ₹{table['equity'].iloc[-1]:,.0f}")

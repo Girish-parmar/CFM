@@ -11,8 +11,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from cfmat import data, indicators as ind
-from cfmat.plotting import savefig
+from cfmat import data
+from cfmat.analytics import indicators as ind
+from cfmat.infra.plotting import savefig
 
 bars = data.ohlcv_from_close(data.ar1_prices(1500, phi=0.05, seed=12), seed=12)
 close = bars["close"]

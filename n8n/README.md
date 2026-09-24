@@ -1,6 +1,6 @@
 # n8n Workflows (Module 15)
 
-Three workflows that connect n8n to the CFMAT signal service (`cfmat/signal_server.py`).
+Three workflows that connect n8n to the CFMAT signal service (`cfmat/automation/signal_service.py`).
 
 | File | Trigger | Flow |
 |---|---|---|
@@ -14,7 +14,7 @@ All three were imported into n8n 2.40 and executed against the signal service wh
 
 ```bash
 pip install -e .
-python -m cfmat.signal_server --host 127.0.0.1 --port 8000
+python -m cfmat.automation.signal_service --host 127.0.0.1 --port 8000
 curl "http://127.0.0.1:8000/signal?symbol=NIFTYDEMO"
 ```
 

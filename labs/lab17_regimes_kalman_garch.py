@@ -13,10 +13,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from cfmat import advanced as adv
-from cfmat import backtest as bt
-from cfmat import data, metrics, risk, strategies
-from cfmat.plotting import savefig
+from cfmat import data, econometrics, strategies
+from cfmat.analytics import metrics
+from cfmat.backtesting import vectorized as bt
+from cfmat.infra.plotting import savefig
+from cfmat.portfolio import risk
 
 pd.set_option("display.width", 160)
 COST_BPS = 5
@@ -36,9 +37,9 @@ def summary(returns: pd.Series) -> dict:
 market = data.regime_prices(2500, seed=5)             # 'regime' column = truth, for grading only
 rets = metrics.simple_returns(market["close"])
 train_end = 1250
-params = adv.fit_markov_regimes(rets.iloc[:train_end])
-filtered = adv.markov_regime_probabilities(rets, params)
-smoothed = adv.markov_regime_probabilities(rets, params, smoothed=True)
+params = econometrics.fit_markov_regimes(rets.iloc[:train_end])
+filtered = econometrics.markov_regime_probabilities(rets, params)
+smoothed = econometrics.markov_regime_probabilities(rets, params, smoothed=True)
 truth = market["regime"].reindex(filtered.index)
 print(f"Estimated volatility: calm {filtered['vol_calm'].iloc[0]:.1%}, turbulent {filtered['vol_turbulent'].iloc[0]:.1%} "
       "(true 12% / 35%)")
@@ -49,10 +50,14 @@ test = filtered.index[train_end:]
 close = market["close"].reindex(filtered.index)
 risk_off_filtered = (filtered.p_turbulent < 0.5).astype(float)
 risk_off_smoothed = (smoothed.p_turbulent < 0.5).astype(float)
+def test_period_summary(position):
+    return summary(bt.vectorized_backtest(close, position, COST_BPS)["strategy_return"].loc[test])
+
+
 table = pd.DataFrame({
-    "buy & hold": summary(bt.vectorized_backtest(close, pd.Series(1.0, index=close.index), COST_BPS)["strategy_return"].loc[test]),
-    "regime filter (filtered, honest)": summary(bt.vectorized_backtest(close, risk_off_filtered, COST_BPS)["strategy_return"].loc[test]),
-    "regime filter (smoothed, LOOK-AHEAD)": summary(bt.vectorized_backtest(close, risk_off_smoothed, COST_BPS)["strategy_return"].loc[test]),
+    "buy & hold": test_period_summary(pd.Series(1.0, index=close.index)),
+    "regime filter (filtered, honest)": test_period_summary(risk_off_filtered),
+    "regime filter (smoothed, LOOK-AHEAD)": test_period_summary(risk_off_smoothed),
 }).T
 print(table.round(3))
 print("The smoothed row is what a careless backtest reports. It uses future returns to label today.")
@@ -71,10 +76,10 @@ print("Chart saved to", savefig(fig, "lab17_regimes"))
 # %%
 g = data.garch_prices(3000, omega=2e-6, alpha=0.08, beta=0.90, seed=7)
 g_rets = metrics.simple_returns(g["close"])
-fit = adv.garch11_fit(g_rets)
+fit = econometrics.garch11_fit(g_rets)
 print(f"alpha {fit['alpha']:.3f} (true 0.080), beta {fit['beta']:.3f} (true 0.900), "
       f"long-run vol {fit['long_run_vol']:.1%} (true {np.sqrt(2e-6 / 0.02 * 252):.1%})")
-forecast = adv.garch11_forecast(g_rets, fit)
+forecast = econometrics.garch11_forecast(g_rets, fit)
 true_next = g["sigma"].reindex(g_rets.index).shift(-1)
 print(f"Correlation of the GARCH forecast with the true next-day volatility: {forecast.corr(true_next):.3f}")
 
@@ -84,8 +89,8 @@ print(f"Correlation of the GARCH forecast with the true next-day volatility: {fo
 # and (b) a GARCH forecast fitted on the training half only.
 
 # %%
-garch_params = adv.garch11_fit(rets.iloc[:train_end])
-w_garch = adv.vol_target_weights(adv.garch11_forecast(rets, garch_params), target_vol=0.12)
+garch_params = econometrics.garch11_fit(rets.iloc[:train_end])
+w_garch = econometrics.vol_target_weights(econometrics.garch11_forecast(rets, garch_params), target_vol=0.12)
 w_real = risk.volatility_target_leverage(rets, target_vol=0.12, lookback=20)
 vol_table = pd.DataFrame({
     "buy & hold": table.loc["buy & hold"],
@@ -104,7 +109,7 @@ print("Vol management pays when high volatility comes with poor returns (as here
 pair = data.drifting_pair(1500, beta_start=1.2, beta_end=1.9, seed=2)
 static = strategies.pairs_signals(pair["y"], pair["x"], formation=250, window=30)
 rolling_beta = strategies.rolling_hedge_ratio(pair["y"], pair["x"], 120)
-kal = adv.kalman_pairs_signals(pair["y"], pair["x"], delta=1e-6, obs_var=10.0, entry_z=1.5)
+kal = econometrics.kalman_pairs_signals(pair["y"], pair["x"], delta=1e-6, obs_var=10.0, entry_z=1.5)
 after = pair.index[250:]
 print("Mean absolute hedge-ratio error after the formation year:")
 print(f"  fixed OLS {(static['beta'] - pair['true_beta']).abs().loc[after].mean():.3f} | "

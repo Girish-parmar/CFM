@@ -21,7 +21,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from cfmat import data, metrics, ml, tuning
+from cfmat import data, ml
+from cfmat.analytics import metrics
+from cfmat.ml import tuning
 
 pd.set_option("display.width", 160)
 pd.set_option("display.max_columns", 12)

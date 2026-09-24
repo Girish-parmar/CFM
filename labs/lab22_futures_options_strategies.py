@@ -17,10 +17,12 @@
 import numpy as np
 import pandas as pd
 
-from cfmat import data, futures as fu, metrics, parallel
-from cfmat import options_backtest as ob
-from cfmat import strategy_builder as sb
-from cfmat.plotting import plt, savefig
+from cfmat import data, studio
+from cfmat.analytics import metrics
+from cfmat.derivatives import futures as fu
+from cfmat.derivatives import option_strategies
+from cfmat.infra import parallel
+from cfmat.infra.plotting import plt, savefig
 
 pd.set_option("display.width", 180)
 pd.set_option("display.max_columns", 14)
@@ -50,7 +52,7 @@ print(f"\n{int(curve['is_expiry'].sum())} monthly expiries; average basis {view[
 
 # %%
 capital = 2_000_000
-signal = sb.backtest(bars, sb.TEMPLATES["trend_supertrend"]).position          # +1 / −1 / 0, decided the day before
+signal = studio.backtest(bars, studio.TEMPLATES["trend_supertrend"]).position          # +1 / −1 / 0, decided the day before
 lots_per_signal = fu.lots_for_capital(capital, curve["near"].iloc[0], LOT, margin_rate=0.12, max_margin_use=0.3)
 daily, summary = fu.backtest_futures(curve, signal * lots_per_signal, lot_size=LOT, capital=capital, margin_rate=0.12)
 print(f"Trading {lots_per_signal} lot(s) per signal on ₹{capital:,.0f} capital")
@@ -65,7 +67,7 @@ print(f"Buy & hold the index: Sharpe {metrics.sharpe_ratio(spot.pct_change().dro
 # ## 3. Cash-and-carry arbitrage: can it beat costs?
 
 # %%
-from cfmat.backtest import IndianCostModel, SegmentRates  # noqa: E402
+from cfmat.microstructure.costs import IndianCostModel, SegmentRates
 
 free = IndianCostModel(segments={k: SegmentRates(0, 0, 0, 0, 0, 0) for k in
                                  ("equity_delivery", "equity_intraday", "futures", "options")}, sebi_fee=0, gst=0)
@@ -98,10 +100,10 @@ if __name__ == "__main__":        # process pools need this guard on Windows/mac
     import time
 
     t0 = time.perf_counter()
-    results = ob.run_many(spot, iv, configs, workers=WORKERS, backend="process")
+    results = option_strategies.run_many(spot, iv, configs, workers=WORKERS, backend="process")
     print(f"7 option backtests in {time.perf_counter() - t0:.1f}s on {WORKERS} processes")
     table = pd.DataFrame({k: r.summary() for k, r in results.items()}).T
-    table["view"] = [ob.VIEW[k] for k in table.index]
+    table["view"] = [option_strategies.VIEW[k] for k in table.index]
     print(table[["trades", "win_rate", "total_pnl", "worst_trade", "profit_factor", "avg_return_on_margin", "view"]]
           .round(3).to_string())
     print("\nSellers collect the volatility premium most weeks and give much of it back in turbulent spells;")
@@ -113,7 +115,7 @@ if __name__ == "__main__":        # process pools need this guard on Windows/mac
 
 # %%
 if __name__ == "__main__":
-    ev = sb.Evaluator(bars)
+    ev = studio.Evaluator(bars)
     filters = {
         "iron_condor": ev.boolean("adx(14) < 20 and er(20) < 0.3"),                  # range-bound
         "short_straddle": ev.boolean("adx(14) < 20 and vol(20) < 20"),               # quiet market
@@ -122,7 +124,7 @@ if __name__ == "__main__":
         "bear_put_spread": ev.boolean("close < sma(50) and supertrend_dir(10, 3) == -1"),
     }
     filtered_cfg = {f"{k} (filtered)": {**configs[k], "entry_filter": f} for k, f in filters.items()}
-    filtered = ob.run_many(spot, iv, filtered_cfg, workers=WORKERS, backend="process")
+    filtered = option_strategies.run_many(spot, iv, filtered_cfg, workers=WORKERS, backend="process")
     rows = []
     for k in filters:
         a, b = results[k].summary(), filtered[f"{k} (filtered)"].summary()

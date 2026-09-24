@@ -13,10 +13,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.metrics import precision_score, recall_score
 
-from cfmat import advanced as adv
-from cfmat import backtest as bt
-from cfmat import data, metrics, ml, portfolio, strategies, tuning
-from cfmat.plotting import savefig
+from cfmat import data, econometrics, ml, portfolio, strategies
+from cfmat.analytics import metrics
+from cfmat.backtesting import vectorized as bt
+from cfmat.infra.plotting import savefig
+from cfmat.ml import tuning
 
 pd.set_option("display.width", 160)
 COST_BPS = 5
@@ -93,15 +94,16 @@ revert_px = data.ar1_prices(n, phi=-0.15, seed=6, start=start)
 pair = data.drifting_pair(n, seed=2, start=start)
 regime_px = data.regime_prices(n, seed=9, start=start)["close"]
 regime_rets = metrics.simple_returns(regime_px)
-garch = adv.garch11_fit(regime_rets.iloc[:500])
+garch = econometrics.garch11_fit(regime_rets.iloc[:500])
 
 sleeves = pd.DataFrame({
     "trend": bt.vectorized_backtest(trend_px, strategies.time_series_momentum(trend_px, 60), COST_BPS)["strategy_return"],
     "reversal": bt.vectorized_backtest(revert_px, strategies.rsi_reversal(revert_px, 2, 10, 90), COST_BPS)["strategy_return"],
-    "kalman_pair": bt.pairs_backtest(pair["y"], pair["x"], adv.kalman_pairs_signals(pair["y"], pair["x"]),
+    "kalman_pair": bt.pairs_backtest(pair["y"], pair["x"], econometrics.kalman_pairs_signals(pair["y"], pair["x"]),
                                      capital=1_000_000, cost_bps=COST_BPS)["strategy_return"],
-    "vol_managed": bt.vectorized_backtest(regime_px, adv.vol_target_weights(adv.garch11_forecast(regime_rets, garch)),
-                                          COST_BPS)["strategy_return"],
+    "vol_managed": bt.vectorized_backtest(
+        regime_px, econometrics.vol_target_weights(econometrics.garch11_forecast(regime_rets, garch)), COST_BPS
+    )["strategy_return"],
 }).fillna(0.0)
 live = sleeves.index[500:]                                   # after every sleeve's warm-up and the GARCH fit
 print("Sleeve correlations:\n", sleeves.loc[live].corr().round(2))
@@ -116,7 +118,8 @@ print(table.round(3))
 
 w_hrp = portfolio.rolling_allocation(sleeves, method="hrp", lookback=126, rebalance=21)
 fig, axes = plt.subplots(2, 1, figsize=(10, 7))
-pd.DataFrame({m: metrics.equity_curve(r.loc[live]) for m, r in combos.items()}).plot(ax=axes[0], title="Portfolio equity by allocation rule")
+equity = pd.DataFrame({m: metrics.equity_curve(r.loc[live]) for m, r in combos.items()})
+equity.plot(ax=axes[0], title="Portfolio equity by allocation rule")
 w_hrp.loc[live].plot.area(ax=axes[1], title="HRP weights over time", legend=True)
 print("Chart saved to", savefig(fig, "lab18_ensemble"))
 

@@ -18,8 +18,9 @@ from sklearn.model_selection import KFold, cross_val_score
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from cfmat import backtest as bt
-from cfmat import data, metrics, ml
+from cfmat import data, ml
+from cfmat.analytics import metrics
+from cfmat.backtesting import vectorized as bt
 
 HORIZON = 3
 # Synthetic prices with planted one-day momentum (AR(1) coefficient 0.2), so there

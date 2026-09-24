@@ -1,13 +1,22 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "cfmat"
-version = "1.0.0"
+version = "2.0.0"
 description = "Course library for the Certificate in Financial Market and Algorithmic Trading (CFMAT)"
 readme = "README.md"
+license = "LicenseRef-Proprietary"
+license-files = ["LICENSE"]
+authors = [{ name = "CFMAT course team" }]
 requires-python = ">=3.10"
+classifiers = [
+    "Private :: Do Not Upload",
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Education",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
 dependencies = [
     "numpy>=1.26",
     "pandas>=2.2",
@@ -20,12 +29,47 @@ dependencies = [
 [project.optional-dependencies]
 data = ["yfinance>=0.2.40"]
 boost = ["xgboost>=2.0", "lightgbm>=4.0", "optuna>=3.4"]
-llm = ["anthropic"]
-dl = ["torch"]
-dev = ["pytest>=8"]
+llm = ["anthropic>=0.40"]
+dl = ["torch>=2.2"]
+dev = ["pytest>=8", "pyyaml>=6", "ruff>=0.6", "pre-commit>=3.5"]
 
-[tool.setuptools]
-packages = ["cfmat"]
+[project.scripts]
+cfmat-signal-service = "cfmat.automation.signal_service:main"
+
+[tool.setuptools.packages.find]
+include = ["cfmat*"]
+
+[tool.setuptools.package-data]
+"cfmat.data" = ["samples/*.csv", "samples/*.md", "samples/filings/*.md"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra --strict-markers"
+markers = [
+    "lab: runs a complete lab script (slow; select with -m lab, skip with -m 'not lab')",
+]
+filterwarnings = ["error::FutureWarning:cfmat.*"]
+
+[tool.ruff]
+line-length = 130
+target-version = "py310"
+extend-exclude = ["build", ".migrate_tmp"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "C4", "NPY", "RUF"]
+ignore = [
+    "RUF001", "RUF002", "RUF003",  # typographic characters (−, ×, ₹, →) are intentional in course text
+    "B905",                        # zip(strict=) would change behaviour of existing code paths
+    "RUF005", "C408", "SIM108",    # style preferences, not defects
+]
+
+[tool.ruff.lint.per-file-ignores]
+"curriculum/**/*.py" = ["E402", "RUF059", "B007", "E741"]  # notebooks-as-scripts: imports near first use
+"labs/**/*.py" = ["E402", "RUF059", "B007", "E741"]
+"tests/**/*.py" = ["RUF059", "NPY002"]  # tests check behaviour around the legacy global RNG
+"cfmat/analytics/patterns.py" = ["E741", "RUF059"]  # o, h, l, c = OHLC columns
+"cfmat/backtesting/rule_engine.py" = ["E741"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["cfmat"]

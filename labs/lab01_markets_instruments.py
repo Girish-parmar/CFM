@@ -13,7 +13,7 @@
 # %%
 import pandas as pd
 
-from cfmat.options import futures_fair_value
+from cfmat.derivatives.options import futures_fair_value
 
 # %% [markdown]
 # ## 1. Contract notional, margin and leverage

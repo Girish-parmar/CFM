@@ -14,9 +14,10 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from cfmat import backtest as bt
-from cfmat import data, metrics, strategies
-from cfmat.plotting import savefig
+from cfmat import data, strategies
+from cfmat.analytics import metrics
+from cfmat.backtesting import vectorized as bt
+from cfmat.infra.plotting import savefig
 
 COST_BPS = 5
 trend_series = data.ar1_prices(1500, phi=0.10, seed=5)     # has momentum

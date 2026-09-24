@@ -8,7 +8,7 @@
 # 4. Import the workflows in `n8n/` and wire them to Telegram.
 #
 # For the n8n part, run the service in a terminal instead:
-#     python -m cfmat.signal_server --host 0.0.0.0 --port 8000
+#     python -m cfmat.automation.signal_service --host 0.0.0.0 --port 8000
 # and follow `n8n/README.md`.
 
 # %%
@@ -18,9 +18,8 @@ import threading
 import urllib.request
 from pathlib import Path
 
-from cfmat import broker as brk
-from cfmat import nlp
-from cfmat.signal_server import make_server
+from cfmat import nlp, trading
+from cfmat.automation.signal_service import make_server
 
 db_path = Path(tempfile.mkdtemp()) / "trade_journal.sqlite"
 server = make_server("127.0.0.1", 0, db_path)          # port 0 = pick any free port
@@ -61,12 +60,12 @@ for item in digest["items"]:
 # ## 3. What the "Trade journal" webhook stores
 
 # %%
-paper = brk.PaperBroker(cash=500_000, slippage_bps=1)
+paper = trading.PaperBroker(cash=500_000, slippage_bps=1)
 paper.update_price("DEMOSTOCK", 1_250.0)
-paper.place_order(brk.Order("DEMOSTOCK", brk.BUY, 100))
+paper.place_order(trading.Order("DEMOSTOCK", trading.BUY, 100))
 paper.update_price("DEMOSTOCK", 1_262.5)
-paper.place_order(brk.Order("DEMOSTOCK", brk.SELL, 100))
-journal = brk.TradeJournal()
+paper.place_order(trading.Order("DEMOSTOCK", trading.SELL, 100))
+journal = trading.TradeJournal()
 for fill in paper.fills:
     row = journal.record(fill) | {"strategy": "lab15-demo"}
     print("POST /journal", row, "→", call("/journal", row))

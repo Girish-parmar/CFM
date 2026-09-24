@@ -18,7 +18,8 @@ from scipy import stats
 from statsmodels.stats.diagnostic import acorr_ljungbox
 from statsmodels.tsa.stattools import adfuller, coint
 
-from cfmat import data, metrics
+from cfmat import data
+from cfmat.analytics import metrics
 
 rng = np.random.default_rng(7)
 

@@ -1,0 +1,50 @@
+"""Market data (Modules 3, 5).
+
+synthetic  reproducible generators with documented, planted properties
+loaders    CSV and free-API loaders for real data
+samples/   fictional headlines and filings used by the NLP labs (package data)
+"""
+
+from .loaders import (
+    download_prices,
+    load_ohlcv_csv,
+)
+from .synthetic import (
+    ARCHETYPES,
+    SECTORS,
+    ar1_prices,
+    cointegrated_pair,
+    drifting_pair,
+    garch_prices,
+    gbm_prices,
+    implied_vol_series,
+    instrument_universe,
+    intraday_volume_profile,
+    ohlcv,
+    ohlcv_from_close,
+    regime_prices,
+    seasonal_prices,
+    trading_days,
+    universe,
+)
+
+__all__ = [
+    "ARCHETYPES",
+    "SECTORS",
+    "ar1_prices",
+    "cointegrated_pair",
+    "download_prices",
+    "drifting_pair",
+    "garch_prices",
+    "gbm_prices",
+    "implied_vol_series",
+    "instrument_universe",
+    "intraday_volume_profile",
+    "load_ohlcv_csv",
+    "ohlcv",
+    "ohlcv_from_close",
+    "regime_prices",
+    "seasonal_prices",
+    "trading_days",
+    "universe",
+]

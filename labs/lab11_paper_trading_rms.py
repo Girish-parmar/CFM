@@ -16,8 +16,8 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 
-from cfmat import backtest as bt
-from cfmat import broker as brk
+from cfmat import trading
+from cfmat.microstructure.costs import IndianCostModel
 
 rng = np.random.default_rng(11)
 
@@ -30,7 +30,7 @@ bars = pd.Series(price, index=minutes, name="close")
 # ## 1. Risk limits and the paper broker
 
 # %%
-limits = brk.RiskLimits(
+limits = trading.RiskLimits(
     max_order_qty=600,
     max_order_value=1_500_000,
     max_position_qty=600,
@@ -39,10 +39,10 @@ limits = brk.RiskLimits(
     price_band_pct=0.02,
     allowed_symbols={"DEMOSTOCK"},
 )
-rms = brk.RiskManager(limits)
-paper = brk.PaperBroker(cash=2_500_000, risk=rms, slippage_bps=1.5,
-                        cost_model=bt.IndianCostModel(), segment="equity_intraday")
-journal = brk.TradeJournal()
+rms = trading.RiskManager(limits)
+paper = trading.PaperBroker(cash=2_500_000, risk=rms, slippage_bps=1.5,
+                        cost_model=IndianCostModel(), segment="equity_intraday")
+journal = trading.TradeJournal()
 
 # %% [markdown]
 # ## 2. RMS checks in action
@@ -51,16 +51,16 @@ journal = brk.TradeJournal()
 paper.update_price("DEMOSTOCK", bars.iloc[0], minutes[0])
 paper.update_price("OTHER", 500.0, minutes[0])
 tests = [
-    ("unknown symbol", brk.Order("OTHER", brk.BUY, 10)),
-    ("too large", brk.Order("DEMOSTOCK", brk.BUY, 800)),
-    ("fat finger limit", brk.Order("DEMOSTOCK", brk.BUY, 10, brk.LIMIT, bars.iloc[0] * 1.10)),
+    ("unknown symbol", trading.Order("OTHER", trading.BUY, 10)),
+    ("too large", trading.Order("DEMOSTOCK", trading.BUY, 800)),
+    ("fat finger limit", trading.Order("DEMOSTOCK", trading.BUY, 10, trading.LIMIT, bars.iloc[0] * 1.10)),
 ]
 for label, order in tests:
     result = paper.place_order(order, minutes[0])
     print(f"{label:<18} → {result.status:<8} {result.reject_reason}")
 
 burst_time = datetime(2026, 1, 5, 9, 16, 0)
-statuses = [paper.place_order(brk.Order("DEMOSTOCK", brk.BUY, 1), burst_time).status for _ in range(12)]
+statuses = [paper.place_order(trading.Order("DEMOSTOCK", trading.BUY, 1), burst_time).status for _ in range(12)]
 print(f"12 orders in the same second → {statuses.count('FILLED')} filled, {statuses.count('REJECTED')} throttled")
 paper.square_off_all(burst_time)
 for fill in paper.fills:
@@ -86,9 +86,9 @@ for ts, px in bars.iloc[16:].items():
     window = bars.loc[:ts].iloc[-16:-1]
     pos = paper.position("DEMOSTOCK")
     if px > window.max() and pos <= 0:
-        paper.place_order(brk.Order("DEMOSTOCK", brk.BUY, 300 - pos), ts)
+        paper.place_order(trading.Order("DEMOSTOCK", trading.BUY, 300 - pos), ts)
     elif px < window.min() and pos >= 0:
-        paper.place_order(brk.Order("DEMOSTOCK", brk.SELL, 300 + pos), ts)
+        paper.place_order(trading.Order("DEMOSTOCK", trading.SELL, 300 + pos), ts)
 
 for fill in paper.fills[len(journal.rows):]:
     journal.record(fill)
@@ -109,9 +109,9 @@ print(fills.tail(4).to_string(index=False))
 paper.start_new_day()
 t0 = pd.Timestamp("2026-01-06 09:15")
 paper.update_price("DEMOSTOCK", bars.iloc[-1], t0)
-paper.place_order(brk.Order("DEMOSTOCK", brk.BUY, 500), t0)
+paper.place_order(trading.Order("DEMOSTOCK", trading.BUY, 500), t0)
 paper.update_price("DEMOSTOCK", bars.iloc[-1] * 0.97, t0 + pd.Timedelta(minutes=1))
-blocked = paper.place_order(brk.Order("DEMOSTOCK", brk.BUY, 10), t0 + pd.Timedelta(minutes=1))
+blocked = paper.place_order(trading.Order("DEMOSTOCK", trading.BUY, 10), t0 + pd.Timedelta(minutes=1))
 print(f"Day P&L ₹{paper.day_pnl():,.0f} → order {blocked.status}: {blocked.reject_reason}")
 paper.square_off_all(t0 + pd.Timedelta(minutes=2))
 print(f"After square-off: positions {paper.positions() or 'none'}, kill switch on = {rms.kill_switch}")

@@ -19,10 +19,10 @@ import time
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from cfmat import data, parallel
-from cfmat import screener as sc
-from cfmat import strategy_builder as sb
-from cfmat.plotting import savefig
+from cfmat import data, studio
+from cfmat.infra import parallel
+from cfmat.infra.plotting import savefig
+from cfmat.research import screener as sc
 
 pd.set_option("display.width", 180)
 pd.set_option("display.max_columns", 14)
@@ -106,10 +106,10 @@ if __name__ == "__main__":
 
 # %%
 if __name__ == "__main__":
-    specs = {k: sb.TEMPLATES[k] for k in ("trend_up_breakout", "trend_down_breakdown", "trend_supertrend",
+    specs = {k: studio.TEMPLATES[k] for k in ("trend_up_breakout", "trend_down_breakdown", "trend_supertrend",
                                           "range_bollinger_rsi", "range_box", "either_way_squeeze")}
     t0 = time.perf_counter()
-    matrix = sb.strategy_matrix(universe, specs, workers=WORKERS, backend="process")
+    matrix = studio.strategy_matrix(universe, specs, workers=WORKERS, backend="process")
     print(f"{len(matrix)} backtests in {time.perf_counter() - t0:.1f}s")
     matrix["regime"] = matrix["symbol"].map(table["regime"])
     fit = matrix.pivot_table(index="regime", columns="strategy", values="sharpe", aggfunc="mean")

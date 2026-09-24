@@ -12,8 +12,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from cfmat import data, execution
-from cfmat.plotting import savefig
+from cfmat import data, microstructure
+from cfmat.infra.plotting import savefig
 
 rng = np.random.default_rng(10)
 TICK = 0.05
@@ -26,7 +26,7 @@ def to_tick(price: float) -> float:
 # ## 1. A limit order book with random order flow
 
 # %%
-book = execution.OrderBook()
+book = microstructure.OrderBook()
 for i in range(1, 6):                      # seed five levels either side of 1,000
     book.add_limit("BUY", to_tick(1000 - TICK * i), int(rng.integers(50, 300)))
     book.add_limit("SELL", to_tick(1000 + TICK * i), int(rng.integers(50, 300)))
@@ -62,9 +62,9 @@ qty = 200_000
 profile = data.intraday_volume_profile(25)
 market_volume = profile * 4_000_000        # forecast daily volume 40 lakh shares
 sched = pd.DataFrame({
-    "TWAP": execution.twap_schedule(qty, 25),
-    "VWAP": execution.vwap_schedule(qty, profile),
-    "POV 10%": execution.pov_schedule(qty, market_volume, 0.10),
+    "TWAP": microstructure.twap_schedule(qty, 25),
+    "VWAP": microstructure.vwap_schedule(qty, profile),
+    "POV 10%": microstructure.pov_schedule(qty, market_volume, 0.10),
 }, index=pd.date_range("2026-01-05 09:15", periods=25, freq="15min").strftime("%H:%M"))
 print(sched.head(4), "\n...\n", sched.tail(2))
 print("Totals:", sched.sum().to_dict())
@@ -80,8 +80,8 @@ sigma, eta, gamma = 0.95, 2.5e-6, 2.5e-7  # impact parameters from the paper's w
 frontier = []
 fig, ax = plt.subplots(1, 2, figsize=(11, 4))
 for lam in (0.0, 1e-7, 1e-6, 1e-5):
-    path = execution.almgren_chriss_trajectory(X, horizon, n, sigma, eta, gamma, lam)
-    cost = execution.almgren_chriss_cost(path, horizon, sigma, eta, gamma)
+    path = microstructure.almgren_chriss_trajectory(X, horizon, n, sigma, eta, gamma, lam)
+    cost = microstructure.almgren_chriss_cost(path, horizon, sigma, eta, gamma)
     frontier.append({"lambda": lam, **cost})
     ax[0].plot(np.linspace(0, horizon, n + 1), path, label=f"λ={lam:g}")
 print(pd.DataFrame(frontier).to_string(index=False, formatters={
@@ -100,7 +100,7 @@ print("Chart saved to", savefig(fig, "lab10_almgren_chriss"))
 adv, daily_vol = 4_000_000, 0.018
 for q in (20_000, 200_000, 800_000):
     print(f"Order {q:>7,} shares ({q / adv:5.1%} of ADV) → expected impact "
-          f"{execution.square_root_impact_bps(q, adv, daily_vol):5.1f} bps")
+          f"{microstructure.square_root_impact_bps(q, adv, daily_vol):5.1f} bps")
 
 decision = 1_000.0
 path = decision * np.exp(np.cumsum(rng.normal(0.0002, 0.0015, 25)))
@@ -109,9 +109,9 @@ for i, (slice_qty, px) in enumerate(zip(sched["VWAP"], path)):
     if i >= 22:           # pretend the algo stopped early
         break
     # square-root law applied per bucket: bucket volatility and bucket volume
-    impact = execution.square_root_impact_bps(slice_qty, market_volume[i], daily_vol / np.sqrt(25)) / 1e4
+    impact = microstructure.square_root_impact_bps(slice_qty, market_volume[i], daily_vol / np.sqrt(25)) / 1e4
     fills.append((int(slice_qty), px * (1 + impact)))
-print(pd.Series(execution.implementation_shortfall("BUY", decision, fills, qty, path[-1])).round(2))
+print(pd.Series(microstructure.implementation_shortfall("BUY", decision, fills, qty, path[-1])).round(2))
 
 # %% [markdown]
 # ## Exercises

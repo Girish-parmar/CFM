@@ -11,8 +11,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from cfmat import data, metrics
-from cfmat.plotting import savefig
+from cfmat import data
+from cfmat.analytics import metrics
+from cfmat.infra.plotting import savefig
 
 USE_REAL_DATA = False
 SYMBOL = "^NSEI"

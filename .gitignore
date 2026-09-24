@@ -5,7 +5,18 @@ __pycache__/
 .ipynb_checkpoints/
 .venv/
 venv/
+build/
 labs/output/
 *.sqlite
 *.db
 .env
+
+# learner data: only the README is tracked
+data/*
+!data/README.md
+
+# tooling
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
