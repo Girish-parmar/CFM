@@ -5,29 +5,65 @@
 Order management for paper and live trading (M17).
 
 ```text
-orders        order and fill records
+orders        order and fill records, order types and time in force
 risk_checks   pre-trade risk management (RMS) and kill switch
-paper_broker  broker interface and a simulated broker
-journal       trade journal
+paper_broker  broker interface (with a fill stream) and a simulated broker
+oms           order management system: state machine, stops, bracket/OCO, audit trail, reconciliation
+journal       trade journal: fills, round trips, R-multiples, MAE/MFE, statistics, persistence
 ```
 
 ### `cfmat.trading.journal`
 
-Trade journal: fills as plain records for pandas, SQL or webhooks (M17, M18).
+Trade journal: record fills, rebuild them into trades and review the trades (M17).
 
 | Name | Signature | Summary |
 |---|---|---|
-| `TradeJournal` | `class TradeJournal(rows: list[dict] = <factory>) -> None` | Collects fills as plain dicts, ready for pandas, SQL or an n8n webhook. |
-| `TradeJournal.record` | `record(self, fill: Fill) -> dict` | Append a fill as a plain record and return it. |
+| `excursions` | `def excursions(trips: pd.DataFrame, bars: pd.DataFrame \| dict[str, pd.DataFrame]) -> pd.DataFrame` | Add MAE and MFE (per share, in price units and in R) from high/low bars. |
+| `round_trips` | `def round_trips(fills: Iterable[dict] \| pd.DataFrame, include_open: bool = False) -> pd.DataFrame` | Group fills into flat-to-flat trades per symbol. |
+| `trade_breakdown` | `def trade_breakdown(trips: pd.DataFrame, by: str) -> pd.DataFrame` | Closed-trade statistics per group. |
+| `trade_summary` | `def trade_summary(trips: pd.DataFrame) -> dict[str, float]` | Review numbers for closed trades: hit rate, payoff, expectancy (₹ and R), SQN, costs, streaks. |
+| `TradeJournal` | `class TradeJournal(rows: list[dict] = <factory>) -> None` | Fills plus notes: what happened, and what you planned and thought. |
+| `TradeJournal.annotate` | `annotate(self, order_id: int, **notes) -> int` | Add notes to every fill of a broker order (plan before, review after); returns rows changed. |
+| `TradeJournal.record` | `record(self, fill: Fill, **notes) -> dict` | Store one fill, with optional notes such as ``setup``, ``stop`` or ``tags``; returns the row. |
+| `TradeJournal.round_trips` | `round_trips(self, include_open: bool = False) -> pd.DataFrame` | The fills grouped into flat-to-flat trades (see the module docstring). |
+| `TradeJournal.save` | `save(self, path: str \| Path) -> Path` | Write every fill to ``.csv`` or to SQLite (``.sqlite``/``.db``), replacing the file's journal. |
+| `TradeJournal.to_frame` | `to_frame(self) -> pd.DataFrame` | The fills as a table, one row per fill, notes as extra columns. |
+
+### `cfmat.trading.oms`
+
+Order management system (OMS): the layer between a strategy and the broker (M17).
+
+| Name | Signature | Summary |
+|---|---|---|
+| `InvalidTransition` | `class InvalidTransition(...)` | Raised when code tries to move an order along an edge the state machine does not allow. |
+| `ManagedOrder` | `class ManagedOrder(client_id: str, symbol: str, side: str, qty: int, order_type: str = 'MARKET', limit_price: float \| None = None, stop_price: float \| None = None, tif: str = 'DAY', tag: str = '', group_id: str = '', role: str = '', status: str = 'NEW', filled_qty: int = 0, avg_fill_price: float = 0.0, reject_reason: str = '', broker_ids: list[int] = <factory>, created_at: datetime \| None = None, updated_at: datetime \| None = None) -> None` | One order as the OMS tracks it; the broker may see several orders over its life (cancel/replace). |
+| `OrderEvent` | `class OrderEvent(seq: int, timestamp: datetime \| None, client_id: str, event: str, status: str, detail: str = '') -> None` | One row of the audit trail. |
+| `OrderGroup` | `class OrderGroup(group_id: str, kind: str, legs: list[str], parent: str \| None = None, qty: int = 0) -> None` | Linked orders: a bracket (entry + stop + target) or a one-cancels-other set. |
+| `OrderManager` | `class OrderManager(broker: BrokerAdapter, id_prefix: str = 'CFM') -> None` | Order management system in front of a ``BrokerAdapter``. |
+| `OrderManager.amend` | `amend(self, client_id: str, qty: int \| None = None, limit_price: float \| None = None, stop_price: float \| None = None, timestamp: datetime \| None = None) -> ManagedOrder` | Change quantity or prices of an active order (cancel/replace at the broker). |
+| `OrderManager.cancel` | `cancel(self, client_id: str, reason: str = 'cancelled by user', timestamp: datetime \| None = None) -> bool` | Cancel an active order (the unfilled part); False if it had already finished. |
+| `OrderManager.cancel_group` | `cancel_group(self, group_id: str, reason: str = 'group cancelled by user', timestamp: datetime \| None = None) -> int` | Cancel every active order of a bracket or OCO; returns how many were cancelled. |
+| `OrderManager.end_of_day` | `end_of_day(self, timestamp: datetime \| None = None) -> list[str]` | Expire every active DAY order; GTC orders carry over. Returns the expired ids. |
+| `OrderManager.events_frame` | `events_frame(self) -> pd.DataFrame` | The audit trail: one row per event, in order. |
+| `OrderManager.flatten` | `flatten(self, timestamp: datetime \| None = None) -> None` | Cancel every active order, then close all positions (the broker's square-off if it has one). |
+| `OrderManager.get` | `get(self, client_id: str) -> ManagedOrder` | The order with this client id. |
+| `OrderManager.on_price` | `on_price(self, symbol: str, price: float, timestamp: datetime \| None = None) -> None` | New last price: the paper broker fills working orders, then pending stops trigger. |
+| `OrderManager.open_orders` | `open_orders(self, symbol: str \| None = None) -> list[ManagedOrder]` | Active orders, optionally for one symbol. |
+| `OrderManager.orders_frame` | `orders_frame(self) -> pd.DataFrame` | Every order as one row (the order book of the OMS). |
+| `OrderManager.reconcile` | `reconcile(self) -> pd.DataFrame` | Differences between the OMS and the broker; an empty frame means they agree. |
+| `OrderManager.submit` | `submit(self, symbol: str, side: str, qty: int, order_type: str = 'MARKET', limit_price: float \| None = None, stop_price: float \| None = None, tif: str = 'DAY', client_id: str \| None = None, tag: str = '', timestamp: datetime \| None = None) -> ManagedOrder` | Create and route one order; resubmitting a ``client_id`` returns the original order. |
+| `OrderManager.submit_bracket` | `submit_bracket(self, symbol: str, side: str, qty: int, stop_loss: float, take_profit: float, entry_type: str = 'MARKET', entry_price: float \| None = None, tif: str = 'DAY', client_id: str \| None = None, tag: str = '', timestamp: datetime \| None = None) -> OrderGroup` | Entry plus a protective stop and a profit target that activate as the entry fills. |
+| `OrderManager.submit_oco` | `submit_oco(self, legs: Iterable[dict], tif: str = 'GTC', tag: str = '', timestamp: datetime \| None = None) -> OrderGroup` | One-cancels-other: when one leg fills, the others shrink to what is left or cancel. |
 
 ### `cfmat.trading.orders`
 
-Order and fill records shared by brokers and risk checks (M17).
+Order and fill records shared by brokers, risk checks and the OMS (M17).
 
 | Name | Signature | Summary |
 |---|---|---|
 | `Fill` | `class Fill(order_id: int, symbol: str, side: str, qty: int, price: float, timestamp: datetime \| None, charges: float) -> None` | An execution: price, quantity and charges. |
-| `Order` | `class Order(symbol: str, side: str, qty: int, order_type: str = 'MARKET', limit_price: float \| None = None, algo_id: str = 'CFMAT-DEMO', id: int = 0, status: str = 'NEW', reject_reason: str = '') -> None` | An order request and its lifecycle status. |
+| `opposite` | `def opposite(side: str) -> str` | The other side: BUY for SELL and SELL for BUY. |
+| `Order` | `class Order(symbol: str, side: str, qty: int, order_type: str = 'MARKET', limit_price: float \| None = None, algo_id: str = 'CFMAT-DEMO', id: int = 0, status: str = 'NEW', reject_reason: str = '', filled_qty: int = 0, avg_fill_price: float = 0.0) -> None` | An order as the broker sees it, with its lifecycle status and fill progress. |
 
 ### `cfmat.trading.paper_broker`
 
@@ -36,20 +72,23 @@ Broker interface and a simulated (paper) broker (M17).
 | Name | Signature | Summary |
 |---|---|---|
 | `BrokerAdapter` | `class BrokerAdapter()` | The surface every broker integration implements. |
+| `BrokerAdapter.add_fill_listener` | `add_fill_listener(self, callback: Callable[[Fill], None]) -> None` | Call ``callback(fill)`` for every execution (the broker's order-update stream). |
 | `BrokerAdapter.cancel_order` | `cancel_order(self, order_id: int) -> bool` | Cancel an open order; False if it is not open. |
 | `BrokerAdapter.equity` | `equity(self) -> float` | Cash plus marked-to-market positions. |
+| `BrokerAdapter.open_order_ids` | `open_order_ids(self) -> set[int] \| None` | Ids of orders working at the broker, or None if the adapter cannot report them. |
 | `BrokerAdapter.place_order` | `place_order(self, order: Order, timestamp: datetime \| None = None) -> Order` | Send an order; returns it with its id and status. |
 | `BrokerAdapter.positions` | `positions(self) -> dict[str, int]` | Open positions by symbol. |
-| `PaperBroker` | `class PaperBroker(cash: float = 1000000.0, risk: RiskManager \| None = None, slippage_bps: float = 2.0, cost_model: IndianCostModel \| None = None, segment: str = 'equity_intraday') -> None` | Simulated broker: fills against the last price you feed it. |
-| `PaperBroker.cancel_order` | `cancel_order(self, order_id: int) -> bool` | Cancel an open order; False if it is not open. |
+| `PaperBroker` | `class PaperBroker(cash: float = 1000000.0, risk: RiskManager \| None = None, slippage_bps: float = 2.0, cost_model: IndianCostModel \| None = None, segment: str = 'equity_intraday', max_fill_qty: int \| None = None) -> None` | Simulated broker: fills against the last price you feed it. |
+| `PaperBroker.cancel_order` | `cancel_order(self, order_id: int) -> bool` | Cancel the unfilled part of a working order; False if it is not working. |
 | `PaperBroker.day_pnl` | `day_pnl(self) -> float` | Equity change since the start of the day. |
 | `PaperBroker.equity` | `equity(self) -> float` | Cash plus positions marked at the last price. |
-| `PaperBroker.place_order` | `place_order(self, order: Order, timestamp: datetime \| None = None) -> Order` | Risk-check and execute or rest an order at the last price (with slippage). |
+| `PaperBroker.open_order_ids` | `open_order_ids(self) -> set[int]` | Ids of orders still working (open or partly filled). |
+| `PaperBroker.place_order` | `place_order(self, order: Order, timestamp: datetime \| None = None) -> Order` | Risk-check the order, then fill it (fully or partly) or leave it working. |
 | `PaperBroker.position` | `position(self, symbol: str) -> int` | Signed quantity held in ``symbol``. |
 | `PaperBroker.positions` | `positions(self) -> dict[str, int]` | Non-zero positions by symbol. |
-| `PaperBroker.square_off_all` | `square_off_all(self, timestamp: datetime \| None = None) -> None` | Flatten every position with market orders (bypasses the risk throttle). |
+| `PaperBroker.square_off_all` | `square_off_all(self, timestamp: datetime \| None = None) -> None` | Cancel working orders and flatten every position at the last price (bypasses risk checks). |
 | `PaperBroker.start_new_day` | `start_new_day(self) -> None` | Reset the day's P&L baseline and the kill switch. |
-| `PaperBroker.update_price` | `update_price(self, symbol: str, price: float, timestamp: datetime \| None = None) -> None` | New last price: fill marketable resting orders and run the mark-to-market loss check. |
+| `PaperBroker.update_price` | `update_price(self, symbol: str, price: float, timestamp: datetime \| None = None) -> None` | New last price: fill working orders it reaches and run the mark-to-market loss check. |
 
 ### `cfmat.trading.risk_checks`
 
