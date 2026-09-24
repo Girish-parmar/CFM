@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cfmat"
+version = "1.0.0"
+description = "Course library for the Certificate in Financial Market and Algorithmic Trading (CFMAT)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "scipy>=1.11",
+    "scikit-learn>=1.4",
+    "statsmodels>=0.14",
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+data = ["yfinance>=0.2.40"]
+llm = ["anthropic"]
+dl = ["torch"]
+dev = ["pytest>=8"]
+
+[tool.setuptools]
+packages = ["cfmat"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

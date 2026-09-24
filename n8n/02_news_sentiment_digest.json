@@ -1,0 +1,169 @@
+{
+  "id": "CfmatNewsDigest2",
+  "name": "CFMAT 02 - Morning news sentiment digest",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "45 8 * * 1-5"
+            }
+          ]
+        }
+      },
+      "id": "7edbdfdb-4c56-5ced-b06c-111097d86c83",
+      "name": "Weekdays 08:45 IST",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://REPLACE-WITH-A-FEED-YOU-ARE-PERMITTED-TO-USE/rss.xml",
+        "options": {}
+      },
+      "id": "38c68f2f-3251-5040-9745-b2f7a2462431",
+      "name": "Read market news RSS",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const texts = $input.all().slice(0, 25).map(item => item.json.title).filter(Boolean);\nreturn [{ json: { texts } }];"
+      },
+      "id": "5c1c3664-51e3-5f4a-b917-6cb806680ab9",
+      "name": "Collect headlines",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8000/sentiment",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ texts: $json.texts }) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "d86298f6-253b-56af-bf90-5760d5d4cc76",
+      "name": "Score sentiment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\nconst ranked = [...d.items].sort((a, b) => b.score - a.score);\nconst line = i => `${i.score >= 0 ? '+' : ''}${i.score.toFixed(2)}  ${i.text}`;\nconst text = [\n  `Morning sentiment digest: ${d.count} headlines, average ${d.average_score}`,\n  '', 'Most positive:', ...ranked.slice(0, 3).map(line),\n  '', 'Most negative:', ...ranked.slice(-3).reverse().map(line),\n  '', 'Educational paper-trading alert from the CFMAT course. Not investment advice.',\n].join('\\n');\nreturn [{ json: { text } }];"
+      },
+      "id": "f1364bd8-f5ca-5525-bfd7-0da1ab455214",
+      "name": "Format digest",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "REPLACE_WITH_YOUR_CHAT_ID",
+        "text": "={{ $json.text }}",
+        "additionalFields": {}
+      },
+      "id": "1b100e8e-b672-5017-8da7-57c9a234e985",
+      "name": "Send digest",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1100,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Weekdays 08:45 IST": {
+      "main": [
+        [
+          {
+            "node": "Read market news RSS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read market news RSS": {
+      "main": [
+        [
+          {
+            "node": "Collect headlines",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect headlines": {
+      "main": [
+        [
+          {
+            "node": "Score sentiment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score sentiment": {
+      "main": [
+        [
+          {
+            "node": "Format digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format digest": {
+      "main": [
+        [
+          {
+            "node": "Send digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Before the open, reads a news RSS feed, scores headlines with the CFMAT lexicon endpoint and posts a ranked digest to Telegram."
+  },
+  "pinData": {},
+  "tags": []
+}

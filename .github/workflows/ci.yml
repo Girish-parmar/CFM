@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install
+        run: pip install -e ".[dev]"
+      - name: Unit tests and lab smoke tests
+        run: pytest -q
+      - name: Validate n8n workflow JSON
+        run: |
+          python - <<'PY'
+          import json, pathlib
+          for f in sorted(pathlib.Path("n8n").glob("*.json")):
+              wf = json.loads(f.read_text())
+              names = {n["name"] for n in wf["nodes"]}
+              for src, outs in wf["connections"].items():
+                  assert src in names, (f.name, src)
+                  for branch in outs["main"]:
+                      for link in branch:
+                          assert link["node"] in names, (f.name, link["node"])
+              print(f"{f.name}: {len(names)} nodes OK")
+          PY

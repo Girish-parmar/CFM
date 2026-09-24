@@ -1,0 +1,179 @@
+{
+  "id": "CfmatTradeJrnl03",
+  "name": "CFMAT 03 - Trade journal webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cfmat-trade-fill",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "6ae3ae46-560c-5e49-805d-02c43c943b1f",
+      "name": "Fill received",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "35b0cc92-85b9-5eb8-b3ed-74ca4324f8dd"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "b8487fed-70c5-5310-a674-5ca7fef05bea",
+              "leftValue": "={{ ['BUY', 'SELL'].includes(String($json.body.side || '').toUpperCase()) }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "rightValue": ""
+            },
+            {
+              "id": "345aaddf-82e7-59ee-a5f5-a74edd3f8e54",
+              "leftValue": "={{ Number($json.body.qty) }}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              },
+              "rightValue": 0
+            },
+            {
+              "id": "773a254d-7020-5ea9-af88-483a77710fca",
+              "leftValue": "={{ Number($json.body.price) }}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              },
+              "rightValue": 0
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "a6b5f7a7-5ec7-54d8-a23c-8d84c542f15b",
+      "name": "Valid fill?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:8000/journal",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "93eda35d-c4f2-525d-87a7-d93c7dcba0db",
+      "name": "Store in journal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ stored: true, rows: $json.rows }) }}",
+        "options": {}
+      },
+      "id": "1fab9954-9980-5a82-b12e-dd04ed6aa407",
+      "name": "Respond stored",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"stored\": false, \"error\": \"side must be BUY or SELL; qty and price must be positive\"}",
+        "options": {
+          "responseCode": 400
+        }
+      },
+      "id": "a51f9656-b3cd-5653-8818-c1fdaa5edf7d",
+      "name": "Respond invalid",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        460,
+        420
+      ]
+    }
+  ],
+  "connections": {
+    "Fill received": {
+      "main": [
+        [
+          {
+            "node": "Valid fill?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid fill?": {
+      "main": [
+        [
+          {
+            "node": "Store in journal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond invalid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store in journal": {
+      "main": [
+        [
+          {
+            "node": "Respond stored",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Receives fills from a paper-trading bot, validates them and stores them in the CFMAT SQLite trade journal through the signal service."
+  },
+  "pinData": {},
+  "tags": []
+}

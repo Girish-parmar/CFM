@@ -1,0 +1,195 @@
+{
+  "id": "CfmatSignalAlrt1",
+  "name": "CFMAT 01 - Daily signal alert",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "45 15 * * 1-5"
+            }
+          ]
+        }
+      },
+      "id": "e4f6a4e2-ea50-5d76-9872-fefcbe285d8e",
+      "name": "Weekdays 15:45 IST",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Symbols to check after the close. Edit this list.\nreturn ['NIFTYDEMO', 'BANKDEMO', 'ITDEMO'].map(symbol => ({ json: { symbol } }));"
+      },
+      "id": "e96453c5-6c3f-5bf8-96ca-9d3871fc8994",
+      "name": "Watchlist",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:8000/signal",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "symbol",
+              "value": "={{ $json.symbol }}"
+            },
+            {
+              "name": "fast",
+              "value": "20"
+            },
+            {
+              "name": "slow",
+              "value": "50"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "e0d63d7c-f176-5890-b66e-bad97ee3bcd8",
+      "name": "Get signal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "d9905dfc-2740-5c3e-aa1a-8c9c7e16d5f5",
+              "leftValue": "={{ $json.changed }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "rightValue": ""
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "6e32bb42-3b8d-518b-a24a-c91eb326ed31",
+      "name": "Signal changed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        660,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "REPLACE_WITH_YOUR_CHAT_ID",
+        "text": "=CFMAT signal: {{ $json.symbol }} -> {{ $json.action }}\nClose {{ $json.close }} | SMA20 {{ $json.fast_sma }} | SMA50 {{ $json.slow_sma }}\nBar date {{ $json.date }}\nEducational paper-trading alert from the CFMAT course. Not investment advice.",
+        "additionalFields": {}
+      },
+      "id": "8d7482ef-1a86-58bd-8d87-b3a8a325c8be",
+      "name": "Send Telegram alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "4226be3a-006e-564e-b8fb-a0c2d6358b4d",
+      "name": "No change",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        900,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Weekdays 15:45 IST": {
+      "main": [
+        [
+          {
+            "node": "Watchlist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Watchlist": {
+      "main": [
+        [
+          {
+            "node": "Get signal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get signal": {
+      "main": [
+        [
+          {
+            "node": "Signal changed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Signal changed?": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No change",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "After the NSE close, asks the CFMAT signal service for each watchlist symbol and sends a Telegram message only when the SMA-crossover state flips."
+  },
+  "pinData": {},
+  "tags": []
+}
