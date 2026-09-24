@@ -233,6 +233,58 @@ def drifting_pair(
     return pd.DataFrame({"y": y, "x": x, "true_beta": beta}, index=trading_days(n, start))
 
 
+def seasonal_prices(
+    n: int = 3000,
+    base_drift: float = 0.06,
+    sigma: tuple[float, float] = (0.12, 0.30),
+    phi: tuple[float, float] = (0.2, -0.2),
+    p_stay: tuple[float, float] = (0.98, 0.98),
+    weekday_effect: dict[int, float] | None = None,
+    turn_of_month: float = 0.0015,
+    tom_days: tuple[int, int] = (1, 3),
+    streak_len: int = 3,
+    streak_bounce: float = 0.0020,
+    seed: int | None = None,
+    start: str = "2014-01-01",
+) -> pd.DataFrame:
+    """Daily OHLCV with *planted* calendar, regime and pattern effects.
+
+    Daily return r_t = base drift
+        + ``weekday_effect[weekday of t]`` (default: Monday −12 bp, Friday +12 bp)
+        + ``turn_of_month`` if t is among the last ``tom_days[0]`` or first
+          ``tom_days[1]`` trading days of a month
+        + ``streak_bounce`` if the previous ``streak_len`` days all closed down
+        + phi[k] · r_{t−1} (momentum in the calm regime, reversal in the turbulent one)
+        + noise with the regime's volatility ``sigma[k]``.
+    Month-of-year and the other weekdays carry no effect, so they are useful
+    decoys for multiple-testing exercises. Column ``regime`` is the hidden
+    state (for grading only). Real calendar effects are smaller and less stable.
+    """
+    effects = {0: -0.0012, 4: 0.0012} if weekday_effect is None else weekday_effect
+    rng = np.random.default_rng(seed)
+    idx = trading_days(n, start)
+    months = idx.to_period("M")
+    pos_from_start = pd.Series(1, index=idx).groupby(months).cumsum().to_numpy()
+    pos_from_end = pd.Series(1, index=idx).iloc[::-1].groupby(months[::-1]).cumsum().iloc[::-1].to_numpy()
+    tom = (pos_from_end <= tom_days[0]) | (pos_from_start <= tom_days[1])
+    weekday = idx.weekday.to_numpy()
+    dt = 1.0 / TRADING_DAYS
+    states = np.zeros(n, dtype=int)
+    for t in range(1, n):
+        states[t] = states[t - 1] if rng.random() < p_stay[states[t - 1]] else 1 - states[t - 1]
+    r = np.zeros(n)
+    base = base_drift * dt
+    for t in range(1, n):
+        k = states[t]
+        streak = t > streak_len and np.all(r[t - streak_len : t] < 0)
+        r[t] = (base + effects.get(int(weekday[t]), 0.0) + turn_of_month * tom[t] + streak_bounce * streak
+                + phi[k] * (r[t - 1] - base) + sigma[k] * np.sqrt(dt) * rng.normal())
+    close = pd.Series(100.0 * np.exp(np.cumsum(r)), index=idx, name="close")
+    bars = ohlcv_from_close(close, seed=None if seed is None else seed + 1)
+    bars["regime"] = states
+    return bars
+
+
 def intraday_volume_profile(n_buckets: int = 25) -> np.ndarray:
     """U-shaped share of daily volume per bucket (sums to 1).
 

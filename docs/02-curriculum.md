@@ -22,10 +22,10 @@
 | 13 | [Deep Learning and Reinforcement Learning](../modules/module-13-deep-rl/README.md) | 4 | 29–30 | 20 | lab13 |
 | 14 | [NLP, LLMs and RAG for Financial Research](../modules/module-14-nlp-llm-rag/README.md) | 4 | 31–32 | 20 | lab14 |
 | 15 | [Automation with n8n and AI Agents](../modules/module-15-n8n-automation/README.md) | 4 | 33 | 10 | lab15 + `n8n/` |
-| 16 | [Advanced Strategies and Hyperparameter Optimisation](../modules/module-16-advanced-strategies/README.md) | 4 | 34–35 | 20 | lab16, lab17, lab18 |
-| 17 | [Capstone, Paper Trading, Ethics and Career](../modules/module-17-capstone-career/README.md) | 5 | 36–42 | 70 | capstone |
-| – | 1:1 mentoring (6 sessions × 2 h) | all | 1–42 | 12 | – |
-| | **Total guided hours** | | | **480** | |
+| 16 | [Advanced Strategies and Hyperparameter Optimisation](../modules/module-16-advanced-strategies/README.md) | 4 | 34–36 | 30 | lab16, lab17, lab18, lab19 |
+| 17 | [Capstone, Paper Trading, Ethics and Career](../modules/module-17-capstone-career/README.md) | 5 | 37–43 | 70 | capstone |
+| – | 1:1 mentoring (6 sessions × 2 h) | all | 1–43 | 12 | – |
+| | **Total guided hours** | | | **490** | |
 
 ## Module summaries
 
@@ -67,7 +67,7 @@
 
 **M15 Automation with n8n and AI Agents (10 h).** Workflow automation concepts; n8n nodes, triggers, credentials and expressions; scheduled data pipelines; signal alerts to Telegram or Slack; news digests; trade-journal webhooks; error handling and monitoring; AI agent nodes and tool calling; security of self-hosted automations.
 
-**M16 Advanced Strategies and Hyperparameter Optimisation (20 h).** Gradient boosting (HistGradientBoosting, XGBoost, LightGBM) for trading; hyperparameter optimisation with random search and Bayesian optimisation (Optuna) scored by purged cross-validation; nested walk-forward tuning; Deflated Sharpe Ratio and Probability of Backtest Overfitting (CSCV); Markov regime switching with filtered probabilities; GARCH volatility forecasting and volatility-managed portfolios; Kalman-filter pairs trading; meta-labelling and bet sizing; portfolios of strategies with inverse-volatility, risk-parity and HRP allocation.
+**M16 Advanced Strategies and Hyperparameter Optimisation (30 h).** Gradient boosting (HistGradientBoosting, XGBoost, LightGBM) for trading; hyperparameter optimisation with random search and Bayesian optimisation (Optuna) scored by purged cross-validation; nested walk-forward tuning; Deflated Sharpe Ratio and Probability of Backtest Overfitting (CSCV); Markov regime switching with filtered probabilities; GARCH volatility forecasting and volatility-managed portfolios; Kalman-filter pairs trading; meta-labelling and bet sizing; portfolios of strategies with inverse-volatility, risk-parity and HRP allocation; strategy optimisation by segment (weekday, month, turn of month, expiry week, volatility and trend regime, price pattern) with false-discovery control, per-segment walk-forward parameters and segment features in boosted models.
 
 ### Term 5: Capstone and Career
 

@@ -1,4 +1,4 @@
-# Academic Calendar (42 weeks)
+# Academic Calendar (43 weeks)
 
 **Weekly rhythm (IST)**
 
@@ -69,20 +69,21 @@ Python basics (variables, control flow, functions, lists and dictionaries, files
 | 32 | M14 | LLMs and RAG architecture | Evaluation, hallucination, prompt injection, cost | Lab 14 | Quiz 14 |
 | 33 | M15 | n8n fundamentals; scheduled pipelines | Alerts, webhooks, AI agents; security | Lab 15 + workflows | Quiz 15 |
 | 34 | M16 | Gradient boosting for trading | Hyperparameter optimisation: purged CV, Optuna, nested walk-forward, DSR, PBO | Lab 16 | – |
-| 35 | M16 | Regimes, GARCH, Kalman filters | Meta-labelling and strategy portfolios | Labs 17–18 | Quiz 16; **Mini-project 3**; capstone topic approved |
+| 35 | M16 | Regimes, GARCH, Kalman filters | Meta-labelling and strategy portfolios | Labs 17–18 | – |
+| 36 | M16 | Segmenting a strategy: calendar, regime, pattern; multiple testing | Per-segment optimisation; boosting with segment features | Lab 19 | Quiz 16; **Mini-project 3**; capstone topic approved |
 
 ## Term 5: Capstone and Career
 
 | Week | Saturday | Sunday | Lab clinics / other | Milestone |
 |---|---|---|---|---|
-| 36 | Research design and pre-registration | Trading psychology and discipline | Mentor 1:1 | Pre-registration committed |
-| 37 | Data and engineering reviews | Professional ethics; market abuse rules | Code review clinic | Engineering review |
-| 38 | Research reviews | Career studio: CV and GitHub portfolio | Deployment clinic; paper trading starts | Research review |
-| 39 | Paper-trading stand-ups | Career studio: interviews and quant puzzles | Incident drills | Weekly journal |
-| 40 | Paper-trading stand-ups | Employer connect session | Mock interviews | Weekly journal |
-| 41 | Paper-trading wrap-up; reconciliation | Peer review of reports | Presentation rehearsal | Draft report |
-| 42 | **Demo Day** (jury) | Graduation and hiring-partner showcase | – | Final report and viva |
+| 37 | Research design and pre-registration | Trading psychology and discipline | Mentor 1:1 | Pre-registration committed |
+| 38 | Data and engineering reviews | Professional ethics; market abuse rules | Code review clinic | Engineering review |
+| 39 | Research reviews | Career studio: CV and GitHub portfolio | Deployment clinic; paper trading starts | Research review |
+| 40 | Paper-trading stand-ups | Career studio: interviews and quant puzzles | Incident drills | Weekly journal |
+| 41 | Paper-trading stand-ups | Employer connect session | Mock interviews | Weekly journal |
+| 42 | Paper-trading wrap-up; reconciliation | Peer review of reports | Presentation rehearsal | Draft report |
+| 43 | **Demo Day** (jury) | Graduation and hiring-partner showcase | – | Final report and viva |
 
 ## Mentoring schedule
 
-Six 2-hour 1:1 sessions: Weeks 4, 10, 18, 27, 36 and 40.
+Six 2-hour 1:1 sessions: Weeks 4, 10, 18, 27, 37 and 41.

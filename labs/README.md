@@ -1,6 +1,6 @@
 # Labs
 
-One lab per technical module (three for the advanced Module 16). Each lab is a Python script in Jupytext "percent" format: run it as a script, or open it as a notebook in JupyterLab/VS Code (`pip install jupytext`, then *Open With → Notebook*). Charts are saved to `labs/output/`.
+One lab per technical module (four for the advanced Module 16). Each lab is a Python script in Jupytext "percent" format: run it as a script, or open it as a notebook in JupyterLab/VS Code (`pip install jupytext`, then *Open With → Notebook*). Charts are saved to `labs/output/`.
 
 | Lab | Module | Topics | Runtime* |
 |---|---|---|---|
@@ -22,6 +22,7 @@ One lab per technical module (three for the advanced Module 16). Each lab is a P
 | [lab16_boosting_hyperparameter_tuning.py](lab16_boosting_hyperparameter_tuning.py) | M16 | HGB/XGBoost/LightGBM, random search, Optuna, nested walk-forward, Deflated Sharpe, PBO | ~60 s |
 | [lab17_regimes_kalman_garch.py](lab17_regimes_kalman_garch.py) | M16 | Markov regimes (filtered vs smoothed), GARCH vol targeting, Kalman-filter pairs | < 5 s |
 | [lab18_meta_labeling_ensembles.py](lab18_meta_labeling_ensembles.py) | M16 | Meta-labelling, bet sizing, multi-strategy allocation (inverse-vol, risk parity, HRP) | < 5 s |
+| [lab19_segment_optimisation.py](lab19_segment_optimisation.py) | M16 | Day/month/turn-of-month/expiry/regime/pattern segments, Benjamini–Hochberg, per-regime walk-forward optimisation, boosting with segment features | ~50 s |
 
 *On a typical laptop.
 

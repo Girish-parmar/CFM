@@ -31,6 +31,12 @@ def time_series_momentum(close: pd.Series, lookback: int = 126, allow_short: boo
     return pos.fillna(0.0)
 
 
+def short_term_signal(close: pd.Series, lookback: int = 1, direction: int = 1) -> pd.Series:
+    """Follow (``direction=+1``, momentum) or fade (``direction=-1``, reversal)
+    the sign of the last ``lookback``-day move. Long/short every day."""
+    return (direction * np.sign(close.pct_change(lookback))).fillna(0.0)
+
+
 def bollinger_mean_reversion(
     close: pd.Series, window: int = 20, entry_z: float = 2.0, exit_z: float = 0.5
 ) -> pd.Series:

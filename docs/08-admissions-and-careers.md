@@ -51,7 +51,7 @@ Offers are made on the combined score. Applicants who hold a CFA Level II+, FRM 
 
 Career support runs throughout the program and for 12 months after graduation.
 
-- **Career studio** (Weeks 38–40): CV and LinkedIn reviews, a GitHub portfolio that shows labs and the capstone, quant interview preparation (probability puzzles, statistics, coding, market questions), mock interviews with practitioners.
+- **Career studio** (Weeks 39–41): CV and LinkedIn reviews, a GitHub portfolio that shows labs and the capstone, quant interview preparation (probability puzzles, statistics, coding, market questions), mock interviews with practitioners.
 - **Employer connect**: hiring-partner sessions, Demo Day showcase, and a curated job board.
 - **Alumni network**: an alumni community, quarterly meet-ups, and access to updated course content for two years.
 

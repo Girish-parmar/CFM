@@ -51,12 +51,12 @@ The application fee is non-refundable. Refunds are paid within 30 days to the or
 
 | Component | Included for every learner |
 |---|---|
-| Live instruction | 330 hours of faculty-led module sessions and lab clinics, plus 20 hours of review and exams |
+| Live instruction | 340 hours of faculty-led module sessions and lab clinics, plus 20 hours of review and exams |
 | In-person bootcamps | Two 3-day bootcamps (48 hours) with a trading-floor simulation, venue and meals (travel and stay not included) |
 | Capstone studio | 70 hours of project workshops, reviews, psychology and ethics sessions, career studio and Demo Day |
 | 1:1 mentoring | 12 hours with a practitioner mentor (6 × 2 h) |
 | Teaching assistants | One TA for every 15 learners, for lab clinics, code review and doubt clearing |
-| Course codebase | The `cfmat` library, 18 labs, n8n workflows and tests, kept by the learner |
+| Course codebase | The `cfmat` library, 19 labs, n8n workflows and tests, kept by the learner |
 | Market data | Licensed historical data for NSE cash and F&O for the duration of the program (education licence) |
 | Compute | Cloud lab environment, GPU hours for Modules 13 and 16, and a static-IP server for capstone paper trading |
 | Certification prep | Vouchers for two NISM exams (Series VIII Equity Derivatives and Series XV Research Analyst) |
@@ -66,7 +66,7 @@ The application fee is non-refundable. Refunds are paid within 30 days to the or
 
 ## Why ₹5 lakh is a fair price
 
-- **Cost per guided hour.** ₹4,25,000 ÷ 480 guided hours ≈ **₹885 per hour** before GST (≈ ₹1,045 including GST) for small-group, practitioner-led teaching with lab support.
+- **Cost per guided hour.** ₹4,25,000 ÷ 490 guided hours ≈ **₹867 per hour** before GST (≈ ₹1,024 including GST) for small-group, practitioner-led teaching with lab support.
 - **Depth.** It covers five areas that are normally sold separately: markets and derivatives, Python and databases, quantitative research and backtesting, risk and execution, and AI (ML, tuned gradient boosting, DL, NLP/RAG, automation), plus an advanced-strategies module (regime switching, GARCH, Kalman filters, meta-labelling, multi-strategy portfolios).
 - **Infrastructure most learners cannot buy alone.** Licensed exchange data, a static-IP trading server, GPU compute and a trading-floor simulation.
 - **Evidence of skill, not only a certificate.** Every graduate leaves with a public GitHub portfolio, a pre-registered and reproducible research report, and a 4-week paper-trading track record reviewed by an industry jury.
@@ -80,16 +80,16 @@ Indicative planning numbers for one cohort. All cost lines are assumptions to re
 | Gross fee revenue (ex-GST) | ₹1,02,00,000 | ₹1,27,50,000 | ₹1,70,00,000 |
 | Scholarships and discounts (10%) | −₹10,20,000 | −₹12,75,000 | −₹17,00,000 |
 | **Net revenue** | **₹91,80,000** | **₹1,14,75,000** | **₹1,53,00,000** |
-| Fixed delivery costs (below) | −₹64,84,000 | −₹64,84,000 | −₹70,84,000 |
+| Fixed delivery costs (below) | −₹65,44,000 | −₹65,44,000 | −₹71,44,000 |
 | Per-learner costs (₹51,000 each) | −₹12,24,000 | −₹15,30,000 | −₹20,40,000 |
 | Marketing and admissions (15% of net) | −₹13,77,000 | −₹17,21,250 | −₹22,95,000 |
-| **Surplus** | **₹95,000 (1%)** | **₹17,39,750 (15%)** | **₹38,81,000 (25%)** |
+| **Surplus** | **₹35,000 (0.4%)** | **₹16,79,750 (15%)** | **₹38,21,000 (25%)** |
 
-Fixed delivery costs per cohort (₹64.84 lakh for up to 30 learners; a third TA adds ₹6 lakh above 30):
+Fixed delivery costs per cohort (₹65.44 lakh for up to 30 learners; a third TA adds ₹6 lakh above 30):
 
 | Line | Assumption | Amount |
 |---|---|---|
-| Core faculty | 350 h × ₹6,000 | ₹21,00,000 |
+| Core faculty | 360 h × ₹6,000 | ₹21,60,000 |
 | Capstone studio and workshops | 70 h × ₹5,000 | ₹3,50,000 |
 | Bootcamp faculty | 48 h × ₹8,000 | ₹3,84,000 |
 | Bootcamp venue, floor simulation, meals | 2 × ₹3,50,000 | ₹7,00,000 |

@@ -2,7 +2,7 @@
 
 | Term | Weeks | Hours | Labs |
 |---|---|---|---|
-| 4 · AI and Automation | 34–35 | 20 (4 live × 3 h + 4 clinics × 2 h) | [`lab16_boosting_hyperparameter_tuning.py`](../../labs/lab16_boosting_hyperparameter_tuning.py), [`lab17_regimes_kalman_garch.py`](../../labs/lab17_regimes_kalman_garch.py), [`lab18_meta_labeling_ensembles.py`](../../labs/lab18_meta_labeling_ensembles.py) |
+| 4 · AI and Automation | 34–36 | 30 (6 live × 3 h + 6 clinics × 2 h) | [`lab16_boosting_hyperparameter_tuning.py`](../../labs/lab16_boosting_hyperparameter_tuning.py), [`lab17_regimes_kalman_garch.py`](../../labs/lab17_regimes_kalman_garch.py), [`lab18_meta_labeling_ensembles.py`](../../labs/lab18_meta_labeling_ensembles.py), [`lab19_segment_optimisation.py`](../../labs/lab19_segment_optimisation.py) |
 
 Prerequisites: Modules 7, 8, 9 and 12. Optional packages: `pip install xgboost lightgbm optuna` (`xgboost-cpu` is a small CPU-only build).
 
@@ -16,6 +16,7 @@ Prerequisites: Modules 7, 8, 9 and 12. Optional packages: `pip install xgboost l
 6. Trade pairs with a Kalman-filter hedge ratio that adapts as the relationship drifts.
 7. Use meta-labelling to filter and size the trades of a primary strategy.
 8. Combine uncorrelated strategy sleeves with inverse-volatility, risk-parity and HRP allocation re-estimated from trailing data.
+9. Segment history by weekday, month, turn of month, expiry week, volatility and trend regime, and price pattern without look-ahead; test every segment with false-discovery-rate control; optimise parameters per segment walk-forward; and feed segment labels to a boosted model.
 
 ## Session plan
 
@@ -28,7 +29,11 @@ Prerequisites: Modules 7, 8, 9 and 12. Optional packages: `pip install xgboost l
 | L3 | Regimes, volatility and adaptive hedges (Sat, W35) | Markov-switching models; Hamilton filter vs Kim smoother (and why the smoother is look-ahead); GARCH(1,1) estimation and forecasting; volatility-managed portfolios; Kalman filters for time-varying hedge ratios |
 | L4 | Meta-labelling and strategy portfolios (Sun, W35) | Primary vs secondary models; meta-labels from triple barriers; precision, recall and bet sizing; building a book of uncorrelated sleeves; inverse-vol, risk parity and HRP across strategies; capacity and decay |
 | C3 | Clinic (Tue, W35) | Lab 17: regime filter, GARCH vol targeting, Kalman pairs |
-| C4 | Clinic (Thu, W35) | Lab 18: meta-labelling and strategy ensembles; Mini-project 3 surgery |
+| C4 | Clinic (Thu, W35) | Lab 18: meta-labelling and strategy ensembles |
+| L5 | Segmenting a strategy (Sat, W36) | Calendar anomalies (weekday, turn of month, month of year, expiry week) and their history of fading after publication; volatility and trend regimes; price and candle-free patterns (streaks, breakouts, big moves, inside days, NR7, gaps); timing rules so labels are known at the decision close; the multiple-testing problem and Benjamini–Hochberg; stability across sub-periods |
+| L6 | Optimising and boosting by segment (Sun, W36) | Per-segment parameter optimisation vs one global set, walk-forward; segment attribution of P&L; long/flat segment filters (and why "worse than average" is not "negative"); segment labels as features in a tuned gradient-boosting model; grouped feature importance |
+| C5 | Clinic (Tue, W36) | Lab 19: segment statistics, weekday × regime heatmap, per-regime walk-forward optimisation |
+| C6 | Clinic (Thu, W36) | Lab 19: segment filter and boosting with segment features; Mini-project 3 surgery |
 
 ## What the labs show (on synthetic data with planted effects)
 
@@ -37,12 +42,13 @@ Prerequisites: Modules 7, 8, 9 and 12. Optional packages: `pip install xgboost l
 | 16 | Untuned boosting scores *worse* than a coin flip on log loss; tuned boosting finds the regime-dependent signal that logistic regression misses; nested walk-forward Sharpe is lower than the "best-of-search" Sharpe on the same dates; the edge survives the Deflated Sharpe Ratio and has a low PBO |
 | 17 | The filtered regime strategy cuts drawdown versus buy & hold; the smoothed version looks far better only because it peeks at the future; GARCH recovers known parameters and vol-targeting improves Sharpe; the Kalman hedge ratio tracks a drifting beta far better than fixed or rolling OLS |
 | 18 | Meta-labelling raises the precision of a trend follower and cuts its drawdown; allocation across four uncorrelated sleeves beats every single sleeve on a risk-adjusted basis, with HRP/risk parity ahead of equal weights |
+| 19 | Segment statistics recover the planted weekday, turn-of-month and streak effects while month-of-year decoys drop out after Benjamini–Hochberg; one parameter set per volatility regime beats one global set out of sample; a strict calendar filter adds little; adding segment features to the tuned boosted model raises its out-of-sample Sharpe |
 
 Results on real market data will be weaker. The labs are built so that you can see each method work when an effect exists, and then check honestly whether it exists in real data.
 
-## Assignment (feeds Mini-project 3, due Week 35)
+## Assignment (feeds Mini-project 3, due Week 36)
 
-Take the ML strategy from Module 12. Tune a gradient-boosted model with nested walk-forward (random search or Optuna), report the in-sample vs nested out-of-sample gap, the Deflated Sharpe Ratio with the total number of configurations you tried, and the PBO. Then add one of: a regime filter, GARCH volatility targeting, or a meta-labelling layer, and show whether it helps out of sample.
+Take the ML strategy from Module 12. Tune a gradient-boosted model with nested walk-forward (random search or Optuna), report the in-sample vs nested out-of-sample gap, the Deflated Sharpe Ratio with the total number of configurations you tried, and the PBO. Then add one of: a regime filter, GARCH volatility targeting, a meta-labelling layer, or segment features / per-segment parameters, and show whether it helps out of sample.
 
 ## Readings
 
@@ -53,7 +59,9 @@ Take the ML strategy from Module 12. Tune a gradient-boosted model with nested w
 - Hamilton (1989), "A New Approach to the Economic Analysis of Nonstationary Time Series and the Business Cycle".
 - Bollerslev (1986), "Generalized Autoregressive Conditional Heteroskedasticity"; Moreira and Muir (2017), "Volatility-Managed Portfolios".
 - Ernest P. Chan, *Algorithmic Trading*: chapter 3 (Kalman filter pairs).
+- French (1980), "Stock Returns and the Weekend Effect"; Ariel (1987), "A Monthly Effect in Stock Returns"; McLean and Pontiff (2016), "Does Academic Research Destroy Stock Return Predictability?".
+- Benjamini and Hochberg (1995), "Controlling the False Discovery Rate".
 
 ## Assessment
 
-Quiz 16; Labs 16–18; Mini-project 3.
+Quiz 16; Labs 16–19; Mini-project 3.

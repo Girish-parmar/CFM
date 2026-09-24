@@ -2,7 +2,7 @@
 
 | Term | Weeks | Hours |
 |---|---|---|
-| 5 · Capstone and Career | 36–42 | 70 (studio sessions, reviews, workshops, Demo Day) |
+| 5 · Capstone and Career | 37–43 | 70 (studio sessions, reviews, workshops, Demo Day) |
 
 ## Learning outcomes
 
@@ -16,13 +16,13 @@
 
 | Week | Studio (Sat) | Workshop (Sun) | Clinics |
 |---|---|---|---|
-| 36 | Research design and pre-registration | Trading psychology and discipline | Mentor 1:1 |
-| 37 | Data and engineering reviews | Ethics: insider trading, front-running, spoofing, confidentiality | Code review |
-| 38 | Research reviews; paper trading starts | Career studio: CV, LinkedIn, GitHub portfolio | Deployment |
-| 39 | Paper-trading stand-up | Career studio: interviews and quant puzzles | Incident drills |
-| 40 | Paper-trading stand-up | Employer connect | Mock interviews |
-| 41 | Reconciliation and wrap-up | Peer review of reports | Rehearsal |
-| 42 | **Demo Day** | Graduation and hiring showcase | – |
+| 37 | Research design and pre-registration | Trading psychology and discipline | Mentor 1:1 |
+| 38 | Data and engineering reviews | Ethics: insider trading, front-running, spoofing, confidentiality | Code review |
+| 39 | Research reviews; paper trading starts | Career studio: CV, LinkedIn, GitHub portfolio | Deployment |
+| 40 | Paper-trading stand-up | Career studio: interviews and quant puzzles | Incident drills |
+| 41 | Paper-trading stand-up | Employer connect | Mock interviews |
+| 42 | Reconciliation and wrap-up | Peer review of reports | Rehearsal |
+| 43 | **Demo Day** | Graduation and hiring showcase | – |
 
 Project options, timeline and rules: [../../docs/05-capstone-projects.md](../../docs/05-capstone-projects.md). Rubric: [../../docs/04-assessment-and-certification.md](../../docs/04-assessment-and-certification.md).
 
@@ -31,7 +31,7 @@ Project options, timeline and rules: [../../docs/05-capstone-projects.md](../../
 ```
 capstone/
 ├── README.md              # question, how to reproduce, results summary
-├── PREREGISTRATION.md     # committed in Week 36, before any testing
+├── PREREGISTRATION.md     # committed in Week 37, before any testing
 ├── data/                  # scripts only; raw licensed data is not committed
 ├── src/                   # features, signals, strategy, risk
 ├── tests/                 # pytest: no look-ahead, risk limits, cost model

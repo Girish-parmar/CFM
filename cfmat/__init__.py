@@ -18,6 +18,7 @@ Each sub-module maps to one or more course modules:
     nlp         Financial sentiment, retrieval and RAG (Module 14)
     tuning      Gradient boosting and hyperparameter optimisation (Module 16)
     advanced    Markov regimes, GARCH, Kalman-filter pairs (Module 16)
+    segments    Strategy analysis and optimisation by day, month, regime, pattern (Module 16)
     signal_server  HTTP endpoint used by the n8n workflows (Module 15)
     plotting    Saves lab charts to labs/output
 
