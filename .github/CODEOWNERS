@@ -1,0 +1,8 @@
+# Default owner for everything in the repository
+*                         @girish-parmar
+
+# The programme: fees, calendar, compliance and the manifest need the owner's review
+/course/                  @girish-parmar
+/course/course.yaml       @girish-parmar
+/course/03-fee-plan.md    @girish-parmar
+/course/09-compliance-and-risk-disclosures.md  @girish-parmar
