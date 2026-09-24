@@ -16,7 +16,7 @@ SUBPACKAGES = sorted(p.name for p in (ROOT / "cfmat").iterdir() if (p / "__init_
 
 def test_expected_subpackages():
     assert SUBPACKAGES == ["analytics", "automation", "backtesting", "data", "derivatives", "econometrics", "infra",
-                           "microstructure", "ml", "nlp", "portfolio", "research", "strategies", "trading"]
+                           "microstructure", "ml", "nlp", "portfolio", "research", "strategies", "trading", "viz"]
 
 
 @pytest.mark.parametrize("name", [*SUBPACKAGES, "studio", "automation.signal_service", "infra.plotting"])

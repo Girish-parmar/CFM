@@ -6,7 +6,7 @@ Generated from `cfmat` 2.0.0. Regenerate with `make docs`.
 
 | Package | Summary |
 |---|---|
-| [`cfmat.analytics`](analytics.md) | Market analytics: returns and performance metrics, technical indicators, candlestick and chart patterns, statistical tests and factor tools (M04, M06, M07). |
+| [`cfmat.analytics`](analytics.md) | Market analytics: returns and performance, indicators, patterns, momentum and volatility, relative performance, statistical tests and factor tools (M04, M06, M07, M10, M11). |
 | [`cfmat.automation`](automation.md) | Automation: the HTTP signal service and trade journal used by n8n (M18). |
 | [`cfmat.backtesting`](backtesting.md) | Backtesting engines and reports (M11, M12). Costs live in ``cfmat.microstructure.costs``. |
 | [`cfmat.data`](data.md) | Market data (M03, M05). |
@@ -20,4 +20,5 @@ Generated from `cfmat` 2.0.0. Regenerate with `make docs`.
 | [`cfmat.research`](research.md) | Research tools (M12, M23). |
 | [`cfmat.strategies`](strategies.md) | Strategies as code and as data (M10, M12). |
 | [`cfmat.trading`](trading.md) | Order management for paper and live trading (M17). |
+| [`cfmat.viz`](viz.md) | Charts for research, backtests and trading reviews (M06, M10, M11, M14, M17). |
 | [`cfmat.studio`](studio.md) | Strategy Studio: one namespace for the Strategy Creator workflow (M12). |
