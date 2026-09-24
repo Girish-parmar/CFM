@@ -1,6 +1,6 @@
 # Curriculum
 
-17 modules across five terms. Each module has a detailed lesson plan in [`modules/`](../modules) and, for technical modules, runnable labs in [`labs/`](../labs) built on the course library [`cfmat`](../cfmat).
+18 modules across five terms. Each module has a detailed lesson plan in [`modules/`](../modules) and, for technical modules, runnable labs in [`labs/`](../labs) built on the course library [`cfmat`](../cfmat).
 
 | # | Module | Term | Weeks | Hours | Lab |
 |---|---|---|---|---|---|
@@ -23,9 +23,10 @@
 | 14 | [NLP, LLMs and RAG for Financial Research](../modules/module-14-nlp-llm-rag/README.md) | 4 | 31–32 | 20 | lab14 |
 | 15 | [Automation with n8n and AI Agents](../modules/module-15-n8n-automation/README.md) | 4 | 33 | 10 | lab15 + `n8n/` |
 | 16 | [Advanced Strategies and Hyperparameter Optimisation](../modules/module-16-advanced-strategies/README.md) | 4 | 34–36 | 30 | lab16, lab17, lab18, lab19 |
-| 17 | [Capstone, Paper Trading, Ethics and Career](../modules/module-17-capstone-career/README.md) | 5 | 37–43 | 70 | capstone |
-| – | 1:1 mentoring (6 sessions × 2 h) | all | 1–43 | 12 | – |
-| | **Total guided hours** | | | **490** | |
+| 17 | [Strategy Studio: Screeners, Strategy Creator, F&O Backtesting, Parallel Research](../modules/module-17-strategy-studio/README.md) | 5 | 37–38 | 20 | lab20, lab21, lab22 |
+| 18 | [Capstone, Paper Trading, Ethics and Career](../modules/module-18-capstone-career/README.md) | 5 | 39–45 | 70 | capstone |
+| – | 1:1 mentoring (6 sessions × 2 h) | all | 1–45 | 12 | – |
+| | **Total guided hours** | | | **510** | |
 
 ## Module summaries
 
@@ -69,9 +70,11 @@
 
 **M16 Advanced Strategies and Hyperparameter Optimisation (30 h).** Gradient boosting (HistGradientBoosting, XGBoost, LightGBM) for trading; hyperparameter optimisation with random search and Bayesian optimisation (Optuna) scored by purged cross-validation; nested walk-forward tuning; Deflated Sharpe Ratio and Probability of Backtest Overfitting (CSCV); Markov regime switching with filtered probabilities; GARCH volatility forecasting and volatility-managed portfolios; Kalman-filter pairs trading; meta-labelling and bet sizing; portfolios of strategies with inverse-volatility, risk-parity and HRP allocation; strategy optimisation by segment (weekday, month, turn of month, expiry week, volatility and trend regime, price pattern) with false-discovery control, per-segment walk-forward parameters and segment features in boosted models.
 
-### Term 5: Capstone and Career
+### Term 5: Strategy Studio, Capstone and Career
 
-**M17 Capstone, Paper Trading, Ethics and Career (70 h).** Pre-registered strategy research; walk-forward backtest with costs and the Deflated Sharpe Ratio; four weeks of live paper trading with risk limits; trading psychology and discipline; professional ethics and market-abuse rules (insider trading, front-running, spoofing); career studio (CV, GitHub portfolio, interviews, quant puzzles); Demo Day with an industry jury.
+**M17 Strategy Studio (20 h).** Screeners and instrument selection (trend strength and fit, volatility squeeze, liquidity, beta, regime labels, composite ranking, pattern scans, correlation-aware shortlists); candlestick and chart-structure patterns without look-ahead; a rule-based Strategy Creator over indicators, prices, patterns and parameters with a library of trend-up, trend-down, both-way, range-bound, either-way and pattern strategies; trade-level backtesting with stops, targets, trailing stops, time exits and full reports; futures backtesting with lots, margin, rollover and basis arbitrage; option-structure backtesting with Greeks, targets, stops and regime filters; parallel research with process and thread pools, coarse-to-fine search and walk-forward validation.
+
+**M18 Capstone, Paper Trading, Ethics and Career (70 h).** Pre-registered strategy research; walk-forward backtest with costs and the Deflated Sharpe Ratio; four weeks of live paper trading with risk limits; trading psychology and discipline; professional ethics and market-abuse rules (insider trading, front-running, spoofing); career studio (CV, GitHub portfolio, interviews, quant puzzles); Demo Day with an industry jury.
 
 ## Teaching approach
 

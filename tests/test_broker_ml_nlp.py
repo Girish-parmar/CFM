@@ -10,7 +10,6 @@ from sklearn.linear_model import LogisticRegression
 
 from cfmat import broker as brk
 from cfmat import data, ml, nlp, rl, signal_server
-from cfmat.metrics import simple_returns
 
 
 def test_paper_broker_accounting_round_trip():

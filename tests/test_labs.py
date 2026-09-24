@@ -12,7 +12,7 @@ LABS = sorted((ROOT / "labs").glob("lab*.py"))
 
 
 def test_all_labs_present():
-    assert len(LABS) == 19
+    assert len(LABS) == 22
 
 
 @pytest.mark.parametrize("lab", LABS, ids=lambda p: p.stem)

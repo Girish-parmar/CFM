@@ -51,7 +51,7 @@ Offers are made on the combined score. Applicants who hold a CFA Level II+, FRM 
 
 Career support runs throughout the program and for 12 months after graduation.
 
-- **Career studio** (Weeks 39–41): CV and LinkedIn reviews, a GitHub portfolio that shows labs and the capstone, quant interview preparation (probability puzzles, statistics, coding, market questions), mock interviews with practitioners.
+- **Career studio** (Weeks 41–43): CV and LinkedIn reviews, a GitHub portfolio that shows labs and the capstone, quant interview preparation (probability puzzles, statistics, coding, market questions), mock interviews with practitioners.
 - **Employer connect**: hiring-partner sessions, Demo Day showcase, and a curated job board.
 - **Alumni network**: an alumni community, quarterly meet-ups, and access to updated course content for two years.
 
@@ -60,12 +60,12 @@ Career support runs throughout the program and for 12 months after graduation.
 | Role | Typical employers | Most relevant modules |
 |---|---|---|
 | Quantitative analyst / junior quant researcher | Prop firms, hedge funds, AMCs, PMS | M03, M07, M08, M09, M12, M16 |
-| Algorithmic-trading developer | Brokers, prop firms, algo platforms | M02, M04, M10, M11, M15 |
+| Algorithmic-trading developer | Brokers, prop firms, algo platforms | M02, M04, M10, M11, M15, M17 |
 | Trading-systems / low-latency engineer (entry) | Brokers, exchanges, prop firms | M04, M10, M11 |
-| Derivatives or risk analyst | Banks, brokers, clearing members, AMCs | M01, M06, M09 |
+| Derivatives or risk analyst | Banks, brokers, clearing members, AMCs | M01, M06, M09, M17 |
 | Execution / TCA analyst | Institutional brokers, AMCs | M10 |
 | Data scientist (finance) | Fintechs, banks, research firms | M12, M13, M14, M16 |
 | AI engineer for financial research | Fintechs, research and ratings firms | M14, M15 |
-| Systematic trader | Proprietary trading firms | M06–M11, M16, capstone |
+| Systematic trader | Proprietary trading firms | M06–M11, M16, M17, capstone |
 
 **We do not guarantee placement, salaries or trading profits.** Career outcomes depend on the learner's performance, background, location and market conditions. Any placement statistics the institute publishes should be audited, show the base (number of learners who sought placement) and the reporting period, and must not be presented as a promise.

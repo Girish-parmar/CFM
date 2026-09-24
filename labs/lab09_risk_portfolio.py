@@ -9,7 +9,6 @@
 # 4. Run a scenario stress test.
 
 # %%
-import numpy as np
 import pandas as pd
 
 from cfmat import data, indicators, metrics, portfolio, risk

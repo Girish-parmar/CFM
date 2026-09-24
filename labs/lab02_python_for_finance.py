@@ -10,7 +10,6 @@
 # %%
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 
 from cfmat import data, metrics
 from cfmat.plotting import savefig

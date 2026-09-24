@@ -10,6 +10,7 @@ This page lists the regulatory points a trading-education provider in India must
   - Case studies and live examples that name a security use data at least three months old.
   - Labs use synthetic data or historical data, and never present results as a view on what a security will do.
   - No "stock of the week", no live calls, no screenshots of the instructor's own trades, no Telegram or WhatsApp tip groups.
+  - Screener results, strategy signals and alerts built in the course (Modules 15 and 17) stay inside the classroom and learners' own research. They must not be published or shared as lists of securities to buy or sell.
 - Any partnership or referral arrangement with a SEBI-registered broker or other regulated entity must be reviewed against the rules on association with unregistered persons before it is signed.
 
 ## 2. SEBI's retail algorithmic trading framework
@@ -73,7 +74,7 @@ Placement data, if published, must be audited and show the base and period (see 
 
 ## 9. Professional conduct taught in the program
 
-Module 17 covers the SEBI (Prohibition of Insider Trading) Regulations, 2015, the SEBI (Prohibition of Fraudulent and Unfair Trade Practices relating to Securities Market) Regulations, 2003 (including spoofing, layering, front-running and circular trading), and the confidentiality duties of anyone working with order flow or client data.
+Module 18 covers the SEBI (Prohibition of Insider Trading) Regulations, 2015, the SEBI (Prohibition of Fraudulent and Unfair Trade Practices relating to Securities Market) Regulations, 2003 (including spoofing, layering, front-running and circular trading), and the confidentiality duties of anyone working with order flow or client data.
 
 ## Standard disclaimer (for the website, brochure, LMS and every lab)
 

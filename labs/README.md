@@ -1,6 +1,6 @@
 # Labs
 
-One lab per technical module (four for the advanced Module 16). Each lab is a Python script in Jupytext "percent" format: run it as a script, or open it as a notebook in JupyterLab/VS Code (`pip install jupytext`, then *Open With → Notebook*). Charts are saved to `labs/output/`.
+One lab per technical module (four for the advanced Module 16, three for the Strategy Studio in Module 17). Each lab is a Python script in Jupytext "percent" format: run it as a script, or open it as a notebook in JupyterLab/VS Code (`pip install jupytext`, then *Open With → Notebook*). Charts are saved to `labs/output/`.
 
 | Lab | Module | Topics | Runtime* |
 |---|---|---|---|
@@ -23,6 +23,9 @@ One lab per technical module (four for the advanced Module 16). Each lab is a Py
 | [lab17_regimes_kalman_garch.py](lab17_regimes_kalman_garch.py) | M16 | Markov regimes (filtered vs smoothed), GARCH vol targeting, Kalman-filter pairs | < 5 s |
 | [lab18_meta_labeling_ensembles.py](lab18_meta_labeling_ensembles.py) | M16 | Meta-labelling, bet sizing, multi-strategy allocation (inverse-vol, risk parity, HRP) | < 5 s |
 | [lab19_segment_optimisation.py](lab19_segment_optimisation.py) | M16 | Day/month/turn-of-month/expiry/regime/pattern segments, Benjamini–Hochberg, per-regime walk-forward optimisation, boosting with segment features | ~50 s |
+| [lab20_screener_instrument_selection.py](lab20_screener_instrument_selection.py) | M17 | Parallel screener, regime labels, presets and custom filters, ranking, pattern scan, diversified shortlist, strategy-fit matrix | ~5 s |
+| [lab21_strategy_creator_parallel.py](lab21_strategy_creator_parallel.py) | M17 | Strategy library, rule-based Strategy Creator, trade reports, serial vs thread vs process sweeps, coarse-to-fine, walk-forward | ~15 s |
+| [lab22_futures_options_strategies.py](lab22_futures_options_strategies.py) | M17 | Futures curve and rollover, futures trend strategy, basis arbitrage, seven option structures in parallel, regime filters | ~6 s |
 
 *On a typical laptop.
 

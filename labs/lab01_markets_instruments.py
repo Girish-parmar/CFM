@@ -11,7 +11,6 @@
 # circulars. They are parameters here: always check the current NSE/BSE notices.
 
 # %%
-import numpy as np
 import pandas as pd
 
 from cfmat.options import futures_fair_value

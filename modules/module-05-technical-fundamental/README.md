@@ -6,11 +6,12 @@
 
 ## Learning outcomes
 
-1. Compute common indicators from first principles and explain what each measures.
-2. Turn a chart rule into a testable hypothesis and evaluate it with an event study and standard errors.
-3. Read financial statements and compute valuation, profitability, leverage and cash-flow ratios.
-4. Explain the main equity factors (value, quality, momentum, low volatility, size) and the evidence for them.
-5. Build a multi-factor score with standardisation, winsorisation and sector neutralisation.
+1. Compute common indicators from first principles (moving averages, RSI, MACD, Bollinger, ATR, ADX, Supertrend, stochastic) and explain what each measures.
+2. Detect candlestick patterns and chart structures (swing points, double tops/bottoms, consolidation, squeeze) with `cfmat.patterns`, and explain why swing-based patterns are only known with a delay.
+3. Turn a chart rule into a testable hypothesis and evaluate it with an event study and standard errors.
+4. Read financial statements and compute valuation, profitability, leverage and cash-flow ratios.
+5. Explain the main equity factors (value, quality, momentum, low volatility, size) and the evidence for them.
+6. Build a multi-factor score with standardisation, winsorisation and sector neutralisation.
 
 ## Session plan
 

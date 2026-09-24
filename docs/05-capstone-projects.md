@@ -1,18 +1,18 @@
 # Capstone Projects
 
-The capstone (Module 17, Weeks 37–43) is where learners show they can do the whole job: form a hypothesis, test it honestly, control its risk, run it live on paper, and defend it to practitioners. Work is individual; pairs are allowed for the two infrastructure-heavy projects (7 and 10) with a larger scope.
+The capstone (Module 18, Weeks 39–45) is where learners show they can do the whole job: form a hypothesis, test it honestly, control its risk, run it live on paper, and defend it to practitioners. Work is individual; pairs are allowed for the two infrastructure-heavy projects (7 and 10) with a larger scope.
 
 ## Timeline
 
 | Week | Milestone | Deliverable |
 |---|---|---|
-| 36 | Topic approved by mentor | One-page proposal |
-| 37 | **Pre-registration** | Hypothesis, economic rationale, data, universe, rules, parameters to search, the full list of trials, success criteria (committed to Git before any testing) |
-| 38 | Data and engineering review | Reproducible pipeline, tests passing, data-quality report |
-| 39 | Research review | Walk-forward backtest with costs, Deflated Sharpe Ratio, stress tests, risk limits |
-| 39–42 | **Live paper trading (4 weeks)** | Strategy running on a static-IP server through `PaperBroker` or a broker sandbox, with RMS limits, kill switch and daily journal |
-| 42 | Draft report | Peer review by two classmates |
-| 43 | **Demo Day** | 15-minute presentation and 10-minute viva before an industry jury; final report and repository |
+| 38 | Topic approved by mentor | One-page proposal (usually built on the Module 17 pipeline) |
+| 39 | **Pre-registration** | Hypothesis, economic rationale, data, universe, rules, parameters to search, the full list of trials, success criteria (committed to Git before any testing) |
+| 40 | Data and engineering review | Reproducible pipeline, tests passing, data-quality report |
+| 41 | Research review | Walk-forward backtest with costs, Deflated Sharpe Ratio, stress tests, risk limits |
+| 41–44 | **Live paper trading (4 weeks)** | Strategy running on a static-IP server through `PaperBroker` or a broker sandbox, with RMS limits, kill switch and daily journal |
+| 44 | Draft report | Peer review by two classmates |
+| 45 | **Demo Day** | 15-minute presentation and 10-minute viva before an industry jury; final report and repository |
 
 ## Project options
 
@@ -31,7 +31,9 @@ The capstone (Module 17, Weeks 37–43) is where learners show they can do the w
 
 12. **Seasonality and regime atlas.** Map a strategy's performance by weekday, month, turn of month, expiry week, volatility regime and pattern on 15+ years of Indian data; keep only segments that survive false-discovery control and both halves of the sample; then test per-segment parameters and a boosted model with segment features, walk-forward.
 
-Learners may propose their own topic if the mentor approves it by Week 36.
+13. **Screener-to-strategy system.** A screen that selects instruments by regime, a rule-based strategy per regime built in the Strategy Creator, and a futures or options implementation, all validated walk-forward with parallel sweeps and an honest trial count.
+
+Learners may propose their own topic if the mentor approves it by Week 38.
 
 ## Minimum technical requirements
 

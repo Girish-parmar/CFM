@@ -19,6 +19,13 @@ Each sub-module maps to one or more course modules:
     tuning      Gradient boosting and hyperparameter optimisation (Module 16)
     advanced    Markov regimes, GARCH, Kalman-filter pairs (Module 16)
     segments    Strategy analysis and optimisation by day, month, regime, pattern (Module 16)
+    patterns    Candlestick and chart-structure patterns (Modules 5, 17)
+    screener    Instrument screening, regime labels, ranking, diversification (Module 17)
+    strategy_builder  Rule-based Strategy Creator, trade-level backtester, templates (Module 17)
+    report      Backtest reports, trade statistics, charts (Module 17)
+    futures     Futures curve, rollover-aware backtests, basis arbitrage (Module 17)
+    options_backtest  Multi-leg option strategy backtester (Module 17)
+    parallel    Thread/process pools for faster research (Module 17)
     signal_server  HTTP endpoint used by the n8n workflows (Module 15)
     plotting    Saves lab charts to labs/output
 

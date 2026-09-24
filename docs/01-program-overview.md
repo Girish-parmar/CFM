@@ -5,11 +5,11 @@ A 10-month, hybrid, practitioner-led program that takes learners from how market
 
 | | |
 |---|---|
-| Duration | 10 months (43 weeks) + 4 weeks of self-paced pre-work |
+| Duration | about 10½ months (45 weeks) + 4 weeks of self-paced pre-work |
 | Format | Hybrid: live online weekend classes, weekday lab clinics, two 3-day in-person bootcamps |
 | Weekly commitment | about 10 hours live/guided + 6 hours self-study |
-| Guided learning | 490 hours (see breakdown below) |
-| Total learning effort | about 790 hours including pre-work and self-study |
+| Guided learning | 510 hours (see breakdown below) |
+| Total learning effort | about 820 hours including pre-work and self-study |
 | Cohort size | 30 target, 40 maximum |
 | Program fee | ₹4,25,000 + 18% GST = **₹5,01,500** (details in [03-fee-structure-and-value.md](03-fee-structure-and-value.md)) |
 | Credential | Certificate with verifiable credential ID; grades of Distinction, Merit or Pass |
@@ -51,7 +51,8 @@ By the end of the program a learner can:
 11. Build NLP and RAG pipelines that extract information from news and filings and answer questions with citations.
 12. Automate data pipelines, alerts and reports with n8n and AI agents.
 13. Tune gradient-boosted models (XGBoost, LightGBM) with nested walk-forward hyperparameter optimisation, and build advanced strategies: regime switching, GARCH volatility management, Kalman-filter pairs, meta-labelling, multi-strategy portfolios, and strategies optimised by day, month, regime and pattern.
-14. Present an original, pre-registered, reproducible strategy research project to an industry jury.
+14. Screen and select instruments, create rule-based strategies from indicators, patterns and parameters, and backtest them on stocks, futures and options, using parallel processing to research faster.
+15. Present an original, pre-registered, reproducible strategy research project to an industry jury.
 
 ## Program structure
 
@@ -62,19 +63,19 @@ By the end of the program a learner can:
 | 2. Trading and Strategy Design | 10–19 | M05 Technical/Fundamental, M06 Derivatives, M07 Strategies, M08 Backtesting | 100 |
 | 3. Risk, Portfolio and Execution | 20–26 | M09 Risk and Portfolio, M10 Microstructure and Execution, M11 Infrastructure and Compliance; Bootcamp 2 | 60 + 10 + 24 |
 | 4. AI and Automation | 27–36 | M12 Machine Learning, M13 Deep and Reinforcement Learning, M14 NLP/LLMs/RAG, M15 n8n Automation, M16 Advanced Strategies and Hyperparameter Optimisation | 100 |
-| 5. Capstone and Career | 37–43 | M17 Capstone, paper trading, ethics, psychology, career studio, Demo Day | 70 |
-| Throughout | 1–43 | 1:1 mentoring (6 × 2 h) | 12 |
-| **Total guided** | | | **490** |
+| 5. Strategy Studio, Capstone and Career | 37–45 | M17 Strategy Studio (screeners, strategy creator, F&O backtesting, parallel research), M18 Capstone, paper trading, ethics, psychology, career studio, Demo Day | 90 |
+| Throughout | 1–45 | 1:1 mentoring (6 × 2 h) | 12 |
+| **Total guided** | | | **510** |
 
 Full syllabus: [02-curriculum.md](02-curriculum.md). Week-by-week plan: [06-academic-calendar.md](06-academic-calendar.md).
 
 ## What makes it worth ₹5 lakh
 
-- 490 guided hours, about ₹867 per hour before GST, taught by practitioners from trading desks, AMCs, brokers and fintechs.
+- 510 guided hours, about ₹833 per hour before GST, taught by practitioners from trading desks, AMCs, brokers and fintechs.
 - Small cohorts (maximum 40) with a teaching assistant for every 15 learners.
 - Two in-person bootcamps with a trading-floor simulation.
 - Licensed market data, cloud lab, GPU hours and a static-IP paper-trading server for each learner.
-- A tested course codebase (`cfmat`) with 19 labs that learners keep and extend, including advanced labs on tuned XGBoost/LightGBM, regime switching, Kalman filters, GARCH, meta-labelling and segment (day/month/regime/pattern) optimisation.
+- A tested course codebase (`cfmat`) with 22 labs that learners keep and extend, including advanced labs on tuned XGBoost/LightGBM, regime switching, Kalman filters, GARCH, meta-labelling and segment optimisation, and a Strategy Studio (screener, strategy creator, futures and options backtesters, parallel engine).
 - 12 hours of 1:1 mentoring, a 4-week live paper-trading capstone and an industry jury.
 - NISM exam vouchers, career services, and two years of alumni access to updated content.
 

@@ -285,6 +285,88 @@ def seasonal_prices(
     return bars
 
 
+ARCHETYPES = ("uptrend", "downtrend", "range", "volatile", "squeeze")
+SECTORS = ("BANK", "TECH", "PHRM", "AUTO", "ENRG", "FMCG", "METL", "INFR")
+
+
+def instrument_universe(
+    n: int = 40, n_days: int = 756, seed: int | None = None, start: str = "2023-01-02"
+) -> tuple[dict[str, pd.DataFrame], pd.DataFrame]:
+    """A universe of fictional instruments with known behaviour, for screeners.
+
+    Each instrument is one of ``ARCHETYPES``: steady uptrend, steady downtrend,
+    range-bound (mean-reverting price), volatile (large swings, no drift) or
+    squeeze (range-bound, with volatility collapsing over the last ~60 days).
+    Prices start between ₹50 and ₹3,000 and daily turnover varies from under
+    ₹1 crore to several hundred crore. Returns ({symbol: OHLCV}, metadata);
+    metadata holds the true archetype for grading only.
+    """
+    rng = np.random.default_rng(seed)
+    universe, meta = {}, []
+    idx = trading_days(n_days, start)
+    for i in range(n):
+        kind = ARCHETYPES[i % len(ARCHETYPES)]
+        sector = SECTORS[int(rng.integers(len(SECTORS)))]
+        symbol = f"{sector}{i + 1:02d}"
+        s0 = float(np.exp(rng.uniform(np.log(50), np.log(3000))))
+        dt = 1.0 / TRADING_DAYS
+        if kind in ("uptrend", "downtrend"):
+            mu = rng.uniform(0.30, 0.50) * (1 if kind == "uptrend" else -1)
+            sigma = rng.uniform(0.18, 0.28)
+            r = rng.normal(mu * dt, sigma * np.sqrt(dt), n_days)
+            logp = np.log(s0) + np.cumsum(r)
+        elif kind == "volatile":
+            r = rng.normal(0.0, rng.uniform(0.50, 0.70) * np.sqrt(dt), n_days)
+            logp = np.log(s0) + np.cumsum(r)
+        else:
+            sigma = np.full(n_days, rng.uniform(0.20, 0.30) * np.sqrt(dt))
+            if kind == "squeeze":
+                sigma[-60:] *= np.linspace(1.0, 0.2, 60)
+            theta = rng.uniform(0.05, 0.10)
+            logp = np.empty(n_days)
+            logp[0] = np.log(s0)
+            for t in range(1, n_days):
+                logp[t] = logp[t - 1] + theta * (np.log(s0) - logp[t - 1]) + sigma[t] * rng.normal()
+        close = pd.Series(np.exp(logp), index=idx, name="close")
+        bars = ohlcv_from_close(close, seed=int(rng.integers(1_000_000)))
+        if kind == "squeeze":   # keep the day ranges consistent with the collapsing volatility
+            scale = pd.Series(np.r_[np.ones(n_days - 60), np.linspace(1.0, 0.2, 60)], index=idx)
+            for col in ("open", "high", "low"):
+                bars[col] = bars["close"] + (bars[col] - bars["close"]) * scale
+        turnover_cr = float(np.exp(rng.normal(np.log(20), 1.5)))
+        bars["volume"] = (turnover_cr * 1e7 / bars["close"] * np.exp(rng.normal(0, 0.3, n_days))).round()
+        universe[symbol] = bars
+        meta.append({"symbol": symbol, "sector": sector, "archetype": kind, "turnover_cr": turnover_cr})
+    return universe, pd.DataFrame(meta).set_index("symbol")
+
+
+def implied_vol_series(
+    close: pd.Series,
+    premium: float = 0.15,
+    noise_vol_pts: float = 1.5,
+    floor: float = 0.08,
+    seed: int | None = None,
+) -> pd.Series:
+    """A synthetic at-the-money implied-volatility index for ``close``.
+
+    IV = EWMA realised volatility × (1 + ``premium``) + mean-reverting noise.
+    The premium makes option selling profitable on average (the volatility risk
+    premium) while IV still jumps when the market turns turbulent. Uses data
+    up to each bar only.
+    """
+    rng = np.random.default_rng(seed)
+    r = np.log(close).diff().fillna(0.0).to_numpy()
+    var = np.empty(len(r))
+    var[0] = r[1:60].var() if len(r) > 60 else 0.0001
+    for t in range(1, len(r)):
+        var[t] = 0.94 * var[t - 1] + 0.06 * r[t] ** 2
+    noise = np.zeros(len(r))
+    for t in range(1, len(r)):
+        noise[t] = 0.9 * noise[t - 1] + rng.normal(0, noise_vol_pts / 100)
+    iv = np.sqrt(var * TRADING_DAYS) * (1 + premium) + noise
+    return pd.Series(np.maximum(iv, floor), index=close.index, name="iv")
+
+
 def intraday_volume_profile(n_buckets: int = 25) -> np.ndarray:
     """U-shaped share of daily volume per bucket (sums to 1).
 

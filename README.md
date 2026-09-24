@@ -5,9 +5,9 @@ A 10-month, practitioner-led program that takes learners from how markets work t
 | | |
 |---|---|
 | **Program fee** | ₹4,25,000 + 18% GST = **₹5,01,500** (pay-in-full, instalment, EMI and scholarship options) |
-| **Duration** | 43 weeks + 4 weeks of pre-work · January and July intakes |
+| **Duration** | 45 weeks + 4 weeks of pre-work · January and July intakes |
 | **Format** | Hybrid: live weekend classes, weekday lab clinics, two 3-day in-person bootcamps |
-| **Guided learning** | 490 hours (340 module + 20 review/exam + 48 bootcamp + 70 capstone + 12 mentoring) |
+| **Guided learning** | 510 hours (360 module + 20 review/exam + 48 bootcamp + 70 capstone + 12 mentoring) |
 | **Cohort** | 30 target, 40 maximum; 1 TA per 15 learners; 1 mentor per 5 learners |
 | **Outcome** | Certificate (Distinction / Merit / Pass) with verifiable credential ID, a GitHub portfolio, and a pre-registered capstone with 4 weeks of live paper trading |
 
@@ -18,11 +18,11 @@ A 10-month, practitioner-led program that takes learners from how markets work t
 | Document | Contents |
 |---|---|
 | [01 Program overview](docs/01-program-overview.md) | Purpose, audience, learning outcomes, structure, value |
-| [02 Curriculum](docs/02-curriculum.md) | All 17 modules with hours, summaries and texts |
+| [02 Curriculum](docs/02-curriculum.md) | All 18 modules with hours, summaries and texts |
 | [03 Fee structure and value](docs/03-fee-structure-and-value.md) | ₹5 lakh pricing, payment plans, scholarships, refunds, what is included, unit economics |
 | [04 Assessment and certification](docs/04-assessment-and-certification.md) | Weights, capstone rubric, grade bands, integrity and AI-use policy |
 | [05 Capstone projects](docs/05-capstone-projects.md) | Timeline, 10 project options, technical requirements, jury |
-| [06 Academic calendar](docs/06-academic-calendar.md) | Week-by-week plan for all 43 weeks |
+| [06 Academic calendar](docs/06-academic-calendar.md) | Week-by-week plan for all 45 weeks |
 | [07 Faculty and infrastructure](docs/07-faculty-and-infrastructure.md) | Faculty model, lab stack, data, compute, support |
 | [08 Admissions and careers](docs/08-admissions-and-careers.md) | Eligibility, selection, sample test, interview rubric, career services |
 | [09 Compliance and disclaimers](docs/09-compliance-and-disclaimers.md) | SEBI education and algo rules, risk disclosure, marketing, data, privacy, GST |
@@ -35,7 +35,7 @@ A 10-month, practitioner-led program that takes learners from how markets work t
 | 2 · Trading and Strategy Design (W10–19) | [05 Technical/Fundamental](modules/module-05-technical-fundamental/README.md) · [06 Derivatives and Options](modules/module-06-derivatives-options/README.md) · [07 Strategies](modules/module-07-trading-strategies/README.md) · [08 Backtesting](modules/module-08-backtesting/README.md) |
 | 3 · Risk, Portfolio and Execution (W20–26) | [09 Risk and Portfolio](modules/module-09-risk-portfolio/README.md) · [10 Microstructure and Execution](modules/module-10-microstructure-execution/README.md) · [11 Infrastructure and Compliance](modules/module-11-infrastructure-compliance/README.md) · Bootcamp 2 |
 | 4 · AI and Automation (W27–36) | [12 Machine Learning](modules/module-12-machine-learning/README.md) · [13 Deep and Reinforcement Learning](modules/module-13-deep-rl/README.md) · [14 NLP, LLMs and RAG](modules/module-14-nlp-llm-rag/README.md) · [15 n8n Automation](modules/module-15-n8n-automation/README.md) · [16 Advanced Strategies and Hyperparameter Optimisation](modules/module-16-advanced-strategies/README.md) |
-| 5 · Capstone and Career (W37–43) | [17 Capstone, Paper Trading, Ethics and Career](modules/module-17-capstone-career/README.md) |
+| 5 · Strategy Studio, Capstone and Career (W37–45) | [17 Strategy Studio: Screeners, Strategy Creator, F&O Backtesting, Parallel Research](modules/module-17-strategy-studio/README.md) · [18 Capstone, Paper Trading, Ethics and Career](modules/module-18-capstone-career/README.md) |
 
 ## Course codebase
 
@@ -45,8 +45,11 @@ cfmat/          course library (tested): data, metrics, indicators, options, str
                 broker (OMS/RMS/paper broker), ml, rl, nlp (sentiment + RAG), signal_server,
                 tuning (XGBoost/LightGBM/HGB, random + Optuna search, nested walk-forward, PBO),
                 advanced (Markov regimes, GARCH, Kalman-filter pairs),
-                segments (day/month/regime/pattern analysis and optimisation)
-labs/           19 hands-on labs (run as scripts or notebooks)
+                segments (day/month/regime/pattern analysis and optimisation),
+                Strategy Studio: screener, patterns (candlestick + chart), strategy_builder
+                (rule-based creator + backtester + templates), report, futures, options_backtest,
+                parallel (thread/process pools)
+labs/           22 hands-on labs (run as scripts or notebooks)
 n8n/            3 importable n8n workflows (signal alerts, news digest, trade-journal webhook)
 data/           fictional headlines and annual-report excerpts for the NLP/RAG lab
 tests/          unit tests for the library + smoke tests that run every lab
@@ -57,8 +60,9 @@ tests/          unit tests for the library + smoke tests that run every lab
 ```bash
 python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
 pip install -e ".[dev,boost]"                         # boost: xgboost, lightgbm, optuna; also data, llm
-pytest -q                                             # library tests + all 19 labs
+pytest -q                                             # library tests + all 22 labs
 python labs/lab16_boosting_hyperparameter_tuning.py
+python labs/lab21_strategy_creator_parallel.py        # Strategy Studio: build, backtest, optimise in parallel
 python -m cfmat.signal_server --port 8000             # service used by the n8n workflows
 ```
 

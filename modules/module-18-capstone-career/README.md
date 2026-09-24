@@ -1,8 +1,8 @@
-# Module 17 — Capstone, Paper Trading, Ethics and Career
+# Module 18 — Capstone, Paper Trading, Ethics and Career
 
 | Term | Weeks | Hours |
 |---|---|---|
-| 5 · Capstone and Career | 37–43 | 70 (studio sessions, reviews, workshops, Demo Day) |
+| 5 · Strategy Studio, Capstone and Career | 39–45 | 70 (studio sessions, reviews, workshops, Demo Day) |
 
 ## Learning outcomes
 
@@ -16,13 +16,13 @@
 
 | Week | Studio (Sat) | Workshop (Sun) | Clinics |
 |---|---|---|---|
-| 37 | Research design and pre-registration | Trading psychology and discipline | Mentor 1:1 |
-| 38 | Data and engineering reviews | Ethics: insider trading, front-running, spoofing, confidentiality | Code review |
-| 39 | Research reviews; paper trading starts | Career studio: CV, LinkedIn, GitHub portfolio | Deployment |
-| 40 | Paper-trading stand-up | Career studio: interviews and quant puzzles | Incident drills |
-| 41 | Paper-trading stand-up | Employer connect | Mock interviews |
-| 42 | Reconciliation and wrap-up | Peer review of reports | Rehearsal |
-| 43 | **Demo Day** | Graduation and hiring showcase | – |
+| 39 | Research design and pre-registration | Trading psychology and discipline | Mentor 1:1 |
+| 40 | Data and engineering reviews | Ethics: insider trading, front-running, spoofing, confidentiality | Code review |
+| 41 | Research reviews; paper trading starts | Career studio: CV, LinkedIn, GitHub portfolio | Deployment |
+| 42 | Paper-trading stand-up | Career studio: interviews and quant puzzles | Incident drills |
+| 43 | Paper-trading stand-up | Employer connect | Mock interviews |
+| 44 | Reconciliation and wrap-up | Peer review of reports | Rehearsal |
+| 45 | **Demo Day** | Graduation and hiring showcase | – |
 
 Project options, timeline and rules: [../../docs/05-capstone-projects.md](../../docs/05-capstone-projects.md). Rubric: [../../docs/04-assessment-and-certification.md](../../docs/04-assessment-and-certification.md).
 
@@ -31,9 +31,9 @@ Project options, timeline and rules: [../../docs/05-capstone-projects.md](../../
 ```
 capstone/
 ├── README.md              # question, how to reproduce, results summary
-├── PREREGISTRATION.md     # committed in Week 37, before any testing
+├── PREREGISTRATION.md     # committed in Week 39, before any testing
 ├── data/                  # scripts only; raw licensed data is not committed
-├── src/                   # features, signals, strategy, risk
+├── src/                   # features, signals, strategy (Strategy Creator specs), risk
 ├── tests/                 # pytest: no look-ahead, risk limits, cost model
 ├── notebooks/             # exploration (not the source of truth)
 ├── paper_trading/         # config, RMS limits, daily journal exports
