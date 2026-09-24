@@ -3,23 +3,29 @@ name: CI
 on:
   push:
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
+  lint:
+    name: Lint and data files
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.10", "3.12"]
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
-          cache: pip
-      - name: Install
-        run: pip install -e ".[dev]" xgboost-cpu lightgbm optuna
-      - name: Unit tests and lab smoke tests
-        run: pytest -q
+          python-version: "3.11"
+      - name: Ruff
+        run: pip install ruff==0.15.8 && ruff check .
+      - name: Whitespace and line endings
+        run: git diff --check $(git hash-object -t tree /dev/null) HEAD -- . ':!*.png'
       - name: Validate n8n workflow JSON
         run: |
           python - <<'PY'
@@ -27,10 +33,99 @@ jobs:
           for f in sorted(pathlib.Path("n8n").glob("*.json")):
               wf = json.loads(f.read_text())
               names = {n["name"] for n in wf["nodes"]}
+              assert wf.get("id"), (f.name, "workflow id missing")
               for src, outs in wf["connections"].items():
                   assert src in names, (f.name, src)
                   for branch in outs["main"]:
                       for link in branch:
                           assert link["node"] in names, (f.name, link["node"])
               print(f"{f.name}: {len(names)} nodes OK")
+          PY
+
+  course:
+    name: Course manifest and generated docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install
+        run: pip install -c constraints.txt -e ".[dev]"
+      - name: Manifest check (structure, weeks, hours, fees, routes, generated tables)
+        run: python tools/route_manager.py check
+      - name: API reference is up to date
+        run: python tools/gen_api_docs.py --check
+
+  unit:
+    name: Unit tests (Python ${{ matrix.python-version }}${{ matrix.pinned && ', pinned' || '' }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: "3.10"
+            pinned: false
+          - python-version: "3.11"
+            pinned: true
+          - python-version: "3.12"
+            pinned: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install (pinned)
+        if: matrix.pinned
+        run: pip install -c constraints.txt -e ".[dev]" xgboost-cpu lightgbm optuna
+      - name: Install (latest compatible)
+        if: ${{ !matrix.pinned }}
+        run: pip install -e ".[dev]" xgboost-cpu lightgbm optuna
+      - name: Unit tests
+        run: pytest -m "not lab"
+
+  labs:
+    name: Labs (every ready lab, pinned)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install
+        run: pip install -c constraints.txt -e ".[dev]" xgboost-cpu lightgbm optuna
+      - name: Run labs
+        env:
+          OMP_NUM_THREADS: "2"
+        run: pytest -m lab
+
+  package:
+    name: Wheel installs and works outside the repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build
+        run: pip wheel --no-deps . -w dist
+      - name: Install into a clean virtual environment and import
+        run: |
+          python -m venv /tmp/venv
+          /tmp/venv/bin/pip install dist/*.whl
+          cd /tmp
+          /tmp/venv/bin/python - <<'PY'
+          import cfmat
+          from cfmat.infra.paths import SAMPLE_DATA_DIR
+          from cfmat import nlp
+          assert (SAMPLE_DATA_DIR / "sample_headlines.csv").exists()
+          assert len(nlp.load_filings()) >= 3
+          print("cfmat", cfmat.__version__, "installed with sample data")
           PY

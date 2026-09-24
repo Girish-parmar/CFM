@@ -1,0 +1,180 @@
+#!/usr/bin/env python3
+"""Generate the API reference in docs/reference/ from the cfmat package itself.
+
+    python tools/gen_api_docs.py            write docs/reference/*.md
+    python tools/gen_api_docs.py --check    fail if the files are out of date (CI)
+
+One page per subpackage (plus ``cfmat.studio``): every public module, class and
+function with its signature and the first paragraph of its docstring. Everything
+comes from the code, so the reference cannot drift from it.
+"""
+
+from __future__ import annotations
+
+import argparse
+import importlib
+import inspect
+import pkgutil
+import sys
+import textwrap
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+OUT = ROOT / "docs" / "reference"
+sys.path.insert(0, str(ROOT))
+
+import cfmat  # noqa: E402
+
+SKIP_MODULES = {"cfmat.infra.plotting"}  # selects a matplotlib backend on import; documented by hand below
+
+
+def first_paragraph(obj) -> str:
+    doc = inspect.getdoc(obj) or ""
+    para = doc.split("\n\n")[0].strip()
+    return " ".join(para.split())
+
+
+def _annotation(a) -> str:
+    return a if isinstance(a, str) else inspect.formatannotation(a)
+
+
+def signature(obj) -> str:
+    """Signature with annotations shown as written (they are strings under postponed evaluation)."""
+    try:
+        sig = inspect.signature(obj)
+    except (TypeError, ValueError):
+        return "(...)"
+    P = inspect.Parameter
+    parts, star_done = [], False
+    params = list(sig.parameters.values())
+    for i, p in enumerate(params):
+        if p.kind is P.KEYWORD_ONLY and not star_done:
+            parts.append("*")
+            star_done = True
+        name = {P.VAR_POSITIONAL: f"*{p.name}", P.VAR_KEYWORD: f"**{p.name}"}.get(p.kind, p.name)
+        star_done |= p.kind is P.VAR_POSITIONAL
+        text = name + (f": {_annotation(p.annotation)}" if p.annotation is not P.empty else "")
+        if p.default is not P.empty:
+            text += (" = " if p.annotation is not P.empty else "=") + repr(p.default)
+        parts.append(text)
+        nxt = params[i + 1] if i + 1 < len(params) else None
+        if p.kind is P.POSITIONAL_ONLY and (nxt is None or nxt.kind is not P.POSITIONAL_ONLY):
+            parts.append("/")
+    ret = f" -> {_annotation(sig.return_annotation)}" if sig.return_annotation is not P.empty else ""
+    return f"({', '.join(parts)}){ret}"
+
+
+def public_members(module, own_only: bool = True) -> list[tuple[str, object]]:
+    names = getattr(module, "__all__", None)
+    members = []
+    for name, obj in vars(module).items():
+        if name.startswith("_") or (names is not None and name not in names):
+            continue
+        if (inspect.isfunction(obj) or inspect.isclass(obj)) and (not own_only or obj.__module__ == module.__name__):
+            members.append((name, obj))
+    return sorted(members, key=lambda kv: kv[0].lower())
+
+
+def document_facade(module) -> list[str]:
+    """A module that only re-exports names: list them with the module that defines them."""
+    lines = ["| Name | Kind | Defined in | Summary |", "|---|---|---|---|"]
+    for name, obj in public_members(module, own_only=False):
+        kind = "class" if inspect.isclass(obj) else "function"
+        page = obj.__module__.split(".")[1]
+        summary = first_paragraph(obj).replace("|", "\\|") or "–"
+        lines.append(f"| `{name}` | {kind} | [`{obj.__module__}`]({page}.md) | {summary} |")
+    constants = [n for n in getattr(module, "__all__", []) if not callable(getattr(module, n))]
+    if constants:
+        lines += ["", "Constants: " + ", ".join(f"`{n}`" for n in constants) + "."]
+    return [*lines, ""]
+
+
+def document_module(module) -> list[str]:
+    lines = [f"### `{module.__name__}`", "", first_paragraph(module) or "_No module docstring._", ""]
+    members = public_members(module)
+    if not members:
+        return lines
+    lines += ["| Name | Signature | Summary |", "|---|---|---|"]
+    for name, obj in members:
+        kind = "class" if inspect.isclass(obj) else "def"
+        sig = signature(obj).replace("|", "\\|")
+        summary = first_paragraph(obj).replace("|", "\\|") or "–"
+        lines.append(f"| `{name}` | `{kind} {name}{sig}` | {summary} |")
+        if inspect.isclass(obj):
+            for mname, meth in sorted(vars(obj).items()):
+                if mname.startswith("_") or not callable(meth):
+                    continue
+                msig = signature(meth).replace("|", "\\|")
+                msum = first_paragraph(meth).replace("|", "\\|") or "–"
+                lines.append(f"| `{name}.{mname}` | `{mname}{msig}` | {msum} |")
+    lines.append("")
+    return lines
+
+
+def subpackages() -> list[str]:
+    pkgs = sorted(m.name for m in pkgutil.iter_modules(cfmat.__path__) if m.ispkg)
+    return [*pkgs, "studio"]
+
+
+def render_page(name: str) -> str:
+    package = importlib.import_module(f"cfmat.{name}")
+    lines = [f"# `cfmat.{name}`", "", "<!-- generated by tools/gen_api_docs.py; do not edit -->", "",
+             first_paragraph(package), ""]
+    doc = inspect.getdoc(package) or ""
+    rest = textwrap.dedent(doc.split("\n\n", 1)[1]).strip("\n") if "\n\n" in doc else ""
+    if rest:
+        lines += ["```text", rest.rstrip(), "```", ""]
+    if hasattr(package, "__path__"):
+        modules = sorted(m.name for m in pkgutil.iter_modules(package.__path__) if not m.ispkg)
+        for mod in modules:
+            full = f"cfmat.{name}.{mod}"
+            if full in SKIP_MODULES:
+                lines += [f"### `{full}`", "", "Chart helper: `savefig(fig, name)` saves a PNG into "
+                          "`cfmat.infra.paths.output_dir()` and closes the figure. Importing it selects a "
+                          "non-interactive matplotlib backend outside notebooks.", ""]
+                continue
+            lines += document_module(importlib.import_module(full))
+    else:
+        lines += document_facade(package)
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def render_index(names: list[str]) -> str:
+    lines = ["# API reference", "", "<!-- generated by tools/gen_api_docs.py; do not edit -->", "",
+             f"Generated from `cfmat` {cfmat.__version__}. Regenerate with `make docs`.", "",
+             "| Package | Summary |", "|---|---|"]
+    for name in names:
+        package = importlib.import_module(f"cfmat.{name}")
+        lines.append(f"| [`cfmat.{name}`]({name}.md) | {first_paragraph(package)} |")
+    return "\n".join(lines) + "\n"
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    parser.add_argument("--check", action="store_true", help="fail if files are out of date")
+    args = parser.parse_args(argv)
+    names = subpackages()
+    pages = {OUT / f"{n}.md": render_page(n) for n in names}
+    pages[OUT / "README.md"] = render_index(names)
+    stale = []
+    if not args.check:
+        OUT.mkdir(parents=True, exist_ok=True)
+    for path, text in pages.items():
+        current = path.read_text(encoding="utf-8") if path.exists() else None
+        if current != text:
+            stale.append(path)
+            if not args.check:
+                path.write_text(text, encoding="utf-8")
+    extra = sorted(set(OUT.glob("*.md")) - set(pages)) if OUT.exists() else []
+    if args.check:
+        for path in stale + extra:
+            print(f"error: {path.relative_to(ROOT)} is out of date; run: python tools/gen_api_docs.py")
+        return 1 if stale or extra else 0
+    for path in extra:
+        path.unlink()
+    print(f"API reference: {len(pages)} pages, {len(stale)} updated")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

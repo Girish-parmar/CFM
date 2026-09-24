@@ -1,0 +1,35 @@
+# Install once with `pip install pre-commit && pre-commit install`.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: [--maxkb=500]
+      - id: detect-private-key
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.8
+    hooks:
+      - id: ruff
+        args: [--fix]
+  - repo: local
+    hooks:
+      - id: course-check
+        name: course manifest and generated docs
+        entry: python tools/route_manager.py check
+        language: system
+        pass_filenames: false
+        files: ^(course/|curriculum/|tools/route_manager\.py|README\.md)
+      - id: api-docs-check
+        name: API reference is up to date
+        entry: python tools/gen_api_docs.py --check
+        language: system
+        pass_filenames: false
+        files: ^(cfmat/|tools/gen_api_docs\.py)

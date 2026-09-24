@@ -1,15 +1,6 @@
-# Core stack used by every lab (Python 3.10+)
-numpy>=1.26
-pandas>=2.2
-scipy>=1.11
-scikit-learn>=1.4
-statsmodels>=0.14
-matplotlib>=3.8
-pytest>=8
-
-# Optional extras (install when the module asks for them)
-# yfinance>=0.2.40   # Module 2/4: download real NSE/BSE/US prices
-# anthropic          # Module 14: LLM answer step of the RAG lab
-# torch              # Module 13: LSTM exercise
-# xgboost lightgbm optuna   # Module 16: boosting and hyperparameter optimisation
-#                           (xgboost-cpu is a much smaller CPU-only build of xgboost)
+# One command for learners (Python 3.11+), from the repository root:
+#     pip install -r requirements.txt
+# Dependencies are declared in pyproject.toml; constraints.txt pins the tested versions.
+# On Python 3.10 use: pip install -e ".[dev,boost]"
+-c constraints.txt
+-e .[dev,boost]

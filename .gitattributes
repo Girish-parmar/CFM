@@ -1,0 +1,11 @@
+# Normalise line endings in the repository; check out with LF everywhere.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.pdf binary
+*.sqlite binary
+*.parquet binary
+
+# Show generated files collapsed in GitHub diffs
+docs/reference/*.md linguist-generated=true
