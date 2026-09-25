@@ -40,9 +40,9 @@ Where everything lives, how files are named, and where to go for common tasks.
 
 | Subpackage | Owns | Depends on |
 |---|---|---|
-| `analytics` | metrics, performance (tearsheets), indicators, patterns, momentum, volatility, relative (CAPM, RS, rotation), stats, factors | numpy, pandas, scipy, statsmodels |
+| `analytics` | metrics, performance (tearsheets), indicators, patterns, momentum, volatility, relative (CAPM, RS, rotation), stats, factors, rates (bonds, Nelson–Siegel), macro (release sessions, vintages, regimes) | numpy, pandas, scipy, statsmodels |
 | `infra` | parallel map, paths, plotting | stdlib, matplotlib |
-| `data` | synthetic generators, loaders and quality checks, Alpaca/IBKR providers, the `fetch` command, sample data | analytics, infra (+ optional yfinance, alpaca-py, ib_async) |
+| `data` | synthetic generators, loaders and quality checks, the market data handler (tick validation, bars, instrument master, continuous futures, storage and replay), Alpaca/IBKR providers, the `fetch` command, sample data | analytics, infra (+ optional yfinance, alpaca-py, ib_async) |
 | `derivatives` | options, futures, option-structure backtests | analytics, microstructure, infra |
 | `strategies` | signal functions, rule language, specs, templates | analytics |
 | `microstructure` | order book, schedules, TCA, Indian costs | numpy, pandas |
@@ -52,8 +52,8 @@ Where everything lives, how files are named, and where to go for common tasks.
 | `portfolio` | risk, construction | numpy, pandas, scipy |
 | `econometrics` | Kalman, GARCH, regimes | analytics, strategies |
 | `ml` | features, labels, validation, sizing, tuning, RL | analytics, scikit-learn (+ optional boosters) |
-| `nlp` | sentiment, RAG, LLM step | scikit-learn, infra (+ optional anthropic) |
-| `automation` | signal service, journal store | analytics, data, nlp, infra |
+| `nlp` | sentiment, news events and signals, RAG, LLM step | analytics, scikit-learn, infra (+ optional anthropic) |
+| `automation` | signal service, journal store, live monitoring and alerts | analytics, data, nlp, infra |
 | `viz` | price, performance and analysis charts | analytics, portfolio, infra |
 | `studio` (module) | one namespace for the Strategy Creator workflow | strategies, backtesting |
 
