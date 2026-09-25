@@ -26,7 +26,7 @@ session per module; learner feedback after every module (target ≥ 4.3 / 5); a 
 
 | Layer | Tools | Notes |
 |---|---|---|
-| Programming | Python 3.11+, VS Code, JupyterLab, the `cfmat` library; scikit-learn, statsmodels, XGBoost, LightGBM, Optuna | Labs are Jupytext percent scripts: run as scripts, open as notebooks |
+| Programming | Python 3.11 or 3.12 (see the [setup guide](12-setup-and-run-guide.md)), VS Code, JupyterLab, the `cfmat` library; scikit-learn, statsmodels, XGBoost, LightGBM, Optuna | Labs are Jupytext percent scripts: run as scripts, open as notebooks |
 | Version control and CI | Git, GitHub Classroom; GitHub Actions | Every lab submitted as a pull request; peer review; CI runs lint, tests and labs |
 | Databases | SQLite (labs), PostgreSQL + TimescaleDB (tick data), DuckDB + Parquet (research) | Shared read-only research database with licensed data |
 | Market data | Licensed historical NSE cash and F&O data (EOD and intraday) for the programme and 6 months after | Redistribution not allowed; see compliance |
@@ -43,7 +43,7 @@ session per module; learner feedback after every module (target ≥ 4.3 / 5); a 
 git clone <course repository>
 cd CFM
 python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
-pip install -r requirements.txt                          # tested versions (Python 3.11+)
+pip install -r requirements.txt                          # tested versions (Python 3.11 or 3.12)
 # or: pip install -e ".[dev,boost]"                      # latest compatible versions
 make check                                               # lint, unit tests, manifest check
 python curriculum/m00-prework/lab_00a_environment_check.py

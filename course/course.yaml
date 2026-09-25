@@ -194,7 +194,7 @@ modules:
       - Python, NumPy and pandas for market data
       - Clean code — functions, tests, Git and packaging
     labs:
-      - {file: lab_03a_python_for_finance.py, status: ready, runtime_s: 5, title: "Returns, resampling, rolling volatility, drawdowns"}
+      - {file: lab_03a_python_for_finance.py, status: ready, runtime_s: 5, extras: [data], title: "Returns, resampling, rolling volatility, drawdowns"}
     library: [cfmat.data, cfmat.analytics.metrics]
     topics: []
     prerequisites: [M00]
@@ -438,7 +438,7 @@ modules:
     week_themes:
       - Neural networks for sequences — when they earn their complexity
     labs:
-      - {file: lab_20a_deep_learning.py, status: ready, runtime_s: 15, title: "Sliding windows, MLP vs logistic on linear and nonlinear signals"}
+      - {file: lab_20a_deep_learning.py, status: ready, runtime_s: 15, extras: [dl], title: "Sliding windows, MLP vs logistic on linear and nonlinear signals"}
     library: [cfmat.ml]
     topics: [deep-learning]
     prerequisites: [M19]
@@ -465,7 +465,7 @@ modules:
       - News, sentiment and event studies
       - LLMs and retrieval-augmented generation for research
     labs:
-      - {file: lab_22a_sentiment_rag.py, status: ready, runtime_s: 5, title: "Lexicon and TF-IDF sentiment, RAG with relevance guard, optional Claude"}
+      - {file: lab_22a_sentiment_rag.py, status: ready, runtime_s: 5, extras: [llm], title: "Lexicon and TF-IDF sentiment, RAG with relevance guard, optional Claude"}
       - {file: lab_22b_news_signal_event_study.py, status: planned, runtime_s: 10, title: "Timestamped news to signals: dedupe, lag, decay, event study"}
     library: [cfmat.nlp]
     topics: [sentiment-news, macroeconomics]
@@ -480,7 +480,7 @@ modules:
       - Boosting, hyperparameter optimisation, meta-labelling and regimes
       - Segment optimisation, strategy ensembles and overfitting control
     labs:
-      - {file: lab_23a_boosting_hpo.py, status: ready, runtime_s: 60, title: "HGB/XGBoost/LightGBM, random search, Optuna, nested walk-forward, PBO"}
+      - {file: lab_23a_boosting_hpo.py, status: ready, runtime_s: 60, extras: [boost], title: "HGB/XGBoost/LightGBM, random search, Optuna, nested walk-forward, PBO"}
       - {file: lab_23b_regimes_kalman_garch.py, status: ready, runtime_s: 10, title: "Markov regimes, GARCH volatility targeting, Kalman-filter pairs"}
       - {file: lab_23c_meta_labeling_ensembles.py, status: ready, runtime_s: 10, title: "Meta-labelling, bet sizing, multi-strategy allocation"}
       - {file: lab_23d_segment_optimisation.py, status: ready, runtime_s: 60, title: "Day/month/expiry/regime/pattern segments, FDR, per-segment walk-forward"}

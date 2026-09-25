@@ -26,7 +26,7 @@ is the most common reason learners fall behind in Term 1.
 
 By Week 0 you can:
 
-1. Install Python 3.11+, create a virtual environment, install the course package and run a lab from VS Code or JupyterLab.
+1. Install Python 3.11 (or 3.12), create a virtual environment, install the course package and run a lab from VS Code or JupyterLab.
 2. Write short Python programs with variables, lists, dictionaries, loops, functions and f-strings.
 3. Load a CSV into pandas, select rows and columns, compute a new column and plot it.
 4. Compute a mean, standard deviation, percentile and correlation, and explain what a p-value is (and is not).
@@ -35,6 +35,7 @@ By Week 0 you can:
 ## Before you start
 
 - Hardware: a laptop with at least 8 GB RAM and 4 cores (16 GB recommended), admin rights to install software.
+- Follow the [setup and run guide](../../course/12-setup-and-run-guide.md) (Steps 1–6) before the Week −3 install clinic.
 - Accounts: GitHub (free), the course LMS invitation, and the course Slack or Discord.
 - Time: about 10 hours a week for 4 weeks. Block the time in your calendar now.
 

@@ -109,3 +109,12 @@ def test_schema_catches_values_parsed_as_mappings(course):
     data = copy.deepcopy(course.data)
     data["fee"]["inclusions"][0] = {"736 guided hours": "live classes"}   # unquoted ": " in a YAML list
     assert any("is not text" in p for p in rm.schema_errors(data))
+
+
+def test_lab_extras_must_be_optional_dependencies_in_pyproject(course):
+    assert set(rm.pip_extras()) == {"data", "boost", "llm", "dl"}
+    broken = rm.Course(copy.deepcopy(course.data))
+    lab = broken.modules["M23"].labs[0]
+    broken.modules["M23"].labs[0] = rm.Lab(lab.file, lab.status, lab.runtime_s, lab.title, lab.module, ("gpu",))
+    errors, _ = rm.check(broken)
+    assert any("extras ['gpu']" in e for e in errors)

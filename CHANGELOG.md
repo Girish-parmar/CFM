@@ -3,6 +3,21 @@
 All notable changes to the course and its library. Versions follow [Semantic Versioning](https://semver.org/)
 for the `cfmat` library; the course edition is recorded in `course/course.yaml`.
 
+## [Unreleased]
+
+### Added
+- `course/12-setup-and-run-guide.md`: which Python to install and how on Windows, macOS and
+  Linux; the virtual environment; the must and optional install steps; the environment check;
+  the order to run every lab (generated from the manifest); optional extras, services and API
+  keys; using the library in your own code; a weekly routine; commands without `make`;
+  troubleshooting.
+- Lab entries in `course/course.yaml` can name the optional pip extras that unlock a section or
+  exercise (`extras: [boost]`); the route manager checks them against `pyproject.toml` and
+  renders the `run-order` table.
+
+### Changed
+- Docs recommend Python 3.11 or 3.12 (the tested pins) instead of "3.11+".
+
 ## [2.1.0] — 2026-09-25
 
 ### Added

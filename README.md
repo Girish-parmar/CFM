@@ -27,7 +27,7 @@ to tell an edge from a lucky backtest.
 | If you are… | Read |
 |---|---|
 | Deciding whether to join | [Mission](course/00-mission.md) · [Programme overview](course/01-program-overview.md) · [Fee plan (₹10,00,000.00)](course/03-fee-plan.md) · [Learning routes](course/10-learning-routes.md) |
-| A learner | [Curriculum](curriculum/README.md) · [Academic calendar](course/04-academic-calendar.md) · [Assessment](course/05-assessment-and-certification.md) · [Capstone](course/06-capstone.md) |
+| A learner | [Setup and run guide](course/12-setup-and-run-guide.md) · [Curriculum](curriculum/README.md) · [Academic calendar](course/04-academic-calendar.md) · [Assessment](course/05-assessment-and-certification.md) · [Capstone](course/06-capstone.md) |
 | Faculty or programme staff | [Course handbook](course/README.md) · [Operations runbook](course/11-operations-runbook.md) · [Devil's-advocate audit](audit/2026-09-devils-advocate-review.md) |
 | A developer | [Repository map](docs/REPO_MAP.md) · [API reference](docs/reference/README.md) · [Contributing](CONTRIBUTING.md) · [Decision records](docs/adr/) |
 
@@ -85,9 +85,12 @@ data/         your own price files (git-ignored)
 
 ## Quick start
 
+New to Python or virtual environments? Follow the [setup and run guide](course/12-setup-and-run-guide.md):
+which Python to install, the environment, the must and optional steps, and the order to run the labs.
+
 ```bash
 python -m venv .venv && source .venv/bin/activate      # Windows: .venv\Scripts\activate
-pip install -r requirements.txt                          # tested versions (Python 3.11+)
+pip install -r requirements.txt                          # tested versions (Python 3.11 or 3.12)
 make check                                               # lint, unit tests, manifest + docs checks
 python curriculum/m00-prework/lab_00a_environment_check.py
 python tools/route_manager.py week 25                    # what happens in Week 25

@@ -34,6 +34,7 @@ manager, so they always agree with the manifest and with the repository.
 | [09 · Compliance and risk disclosures](09-compliance-and-risk-disclosures.md) | SEBI rules, advertising, data, privacy, disclaimers |
 | [10 · Learning routes](10-learning-routes.md) | Six learner personas and how to follow a route |
 | [11 · Operations runbook](11-operations-runbook.md) | Running a cohort week by week |
+| [12 · Setup and run guide](12-setup-and-run-guide.md) | Install Python, the environment and the library; run the labs in order; optional extras |
 | [Module guides](../curriculum/README.md) | Micro-level plans for every module and lab |
 | [Devil's-advocate audit](../audit/2026-09-devils-advocate-review.md) | What was missing or wrong, what we fixed, what is still open |
 

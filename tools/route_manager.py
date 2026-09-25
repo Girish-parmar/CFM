@@ -61,6 +61,7 @@ class Lab:
     runtime_s: int
     title: str
     module: Module
+    extras: tuple[str, ...] = ()      # optional pip extras (pyproject) that unlock sections or exercises
 
     @property
     def path(self) -> Path:
@@ -135,7 +136,8 @@ class Course:
                          guided_hours=int(m.get("guided_hours", default_hours)),
                          self_paced_hours=int(m.get("self_paced_hours", 0)))
             mod.labs = [Lab(file=lab["file"], status=lab["status"], runtime_s=int(lab.get("runtime_s", 0)),
-                            title=lab["title"], module=mod) for lab in m.get("labs", [])]
+                            title=lab["title"], module=mod, extras=tuple(lab.get("extras", [])))
+                        for lab in m.get("labs", [])]
             self.modules[mod.id] = mod
 
     @classmethod
@@ -247,7 +249,7 @@ def economics(course: Course, learners: int, total_override=None) -> dict[str, D
 # ---------------------------------------------------------------------------
 
 SCHEMA = {  # allowed keys per record type; catches YAML flow-mapping values split by unquoted commas
-    "lab": {"file", "status", "runtime_s", "title"},
+    "lab": {"file", "status", "runtime_s", "title", "extras"},
     "module": {"id", "slug", "title", "term", "weeks", "week_themes", "labs", "library", "topics", "prerequisites",
                "guided_hours", "self_paced_hours"},
     "block": {"id", "term", "week", "weeks", "name", "guided_hours", "bootcamp_hours", "covers"},
@@ -366,6 +368,10 @@ def check(course: Course) -> tuple[list[str], list[str]]:
             err(f"{lab.file}: marked ready but {lab.path.relative_to(ROOT)} does not exist")
         if lab.status == "planned" and lab.path.exists():
             warn(f"{lab.file}: file exists but is marked planned — mark it ready")
+        unknown = sorted(set(lab.extras) - set(pip_extras()))
+        if unknown:
+            err(f"{lab.file}: extras {unknown} are not optional dependencies in pyproject.toml "
+                f"(choose from {pip_extras()})")
         listed[lab.path] = lab
     for path in sorted(CURRICULUM.glob("*/lab_*.py")):
         if path not in listed:
@@ -489,6 +495,14 @@ def lab_cell(lab: Lab, from_file: Path) -> str:
     return f"{lab.code} (planned)"
 
 
+def pip_extras() -> list[str]:
+    """Optional-dependency groups a learner may install (``pyproject.toml``, without ``dev``)."""
+    text = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    section = re.search(r"^\[project\.optional-dependencies\]\n(.*?)(?=^\[)", text, re.S | re.M)
+    names = re.findall(r"^([a-z0-9_-]+)\s*=", section.group(1), re.M) if section else []
+    return [n for n in names if n != "dev"]
+
+
 def weeks_text(m: Module) -> str:
     if m.id == "M00":
         return "−3 to 0"
@@ -560,6 +574,17 @@ def section_lab_index(course: Course, target: Path) -> str:
         rt = f"~{lab.runtime_s} s" if lab.status == "ready" else "–"
         rows.append([lab.code, lab.module.id, link, lab.title, lab.status, rt])
     return md_table(["Lab", "Module", "File", "What it does", "Status", "Runtime*"], rows)
+
+
+def section_run_order(course: Course, target: Path) -> str:
+    rows = []
+    for i, lab in enumerate((lab for lab in course.labs() if lab.status == "ready"), start=1):
+        extras = ", ".join(f"`{e}`" for e in lab.extras) or "–"
+        rows.append([i, weeks_text(lab.module), f"[{lab.code}]({rel_link(target, lab.path)})", lab.module.id,
+                     lab.title, f"~{lab.runtime_s} s", extras])
+    planned = ", ".join(lab.code for lab in course.labs() if lab.status == "planned")
+    table = md_table(["#", "Week", "Lab", "Module", "What it does", "Runtime", "Optional extras"], rows)
+    return table + (f"\n\nPlanned, not yet released: {planned}." if planned else "")
 
 
 def section_fee_breakup(course: Course, target: Path) -> str:
@@ -744,6 +769,7 @@ SECTIONS = {
     "topic-coverage": section_topic_coverage,
     "prerequisites": section_prerequisites,
     "lab-index": section_lab_index,
+    "run-order": section_run_order,
     "fee-breakup": section_fee_breakup,
     "inclusions": section_inclusions,
     "payment-plans": section_payment_plans,

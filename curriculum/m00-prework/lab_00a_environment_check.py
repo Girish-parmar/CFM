@@ -2,7 +2,8 @@
 # # Lab 00a — Environment Check and Your First Market Chart (M00)
 #
 # Run this before Week 1. It checks that Python, the scientific stack and the course
-# library are installed, then builds a first chart from synthetic prices.
+# library are installed, then builds a first chart from synthetic prices. The full
+# installation steps are in course/12-setup-and-run-guide.md.
 #
 #     pip install -e ".[dev]"          # from the repository root
 #     python curriculum/m00-prework/lab_00a_environment_check.py
