@@ -32,6 +32,12 @@ for the `cfmat` library; the course edition is recorded in `course/course.yaml`.
   slippage; every field always present), `pnl_attribution` (signal + execution + costs, adding
   up exactly to the broker's equity change), and `AlertRule`/`AlertManager`/`webhook_sink`
   (severity, de-duplication, reminders, resolutions, failure-tolerant delivery).
+- Lab 24a, capstone template: pre-registration generated and checked (fields, hold-out after
+  research, grid within the trial budget), data quality and split, Indian cost per side from the
+  cost model, walk-forward with the DSR charged for the trial budget, one hold-out look with a
+  MET/NOT MET verdict, paper trading through the OMS and RMS with a journal and monitoring (acting
+  only on the previous close), three checks (no look-ahead, risk limits, costs), and a capstone
+  folder with README, PREREGISTRATION, report tables and a passing `pytest` file.
 - `data.standardize_ohlcv` (one OHLCV shape for every source: lower-case columns, exchange-local
   naive timestamps, sorted, no duplicates) and `data.ohlcv_problems` (plain-language data-quality
   checks).

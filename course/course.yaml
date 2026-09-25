@@ -501,7 +501,7 @@ modules:
       - Report, peer review, mock jury and career studio
       - Demo Day and graduation
     labs:
-      - {file: lab_24a_capstone_template.py, status: planned, runtime_s: 30, title: "Pre-registration to paper-trading report: a reproducible capstone skeleton"}
+      - {file: lab_24a_capstone_template.py, status: ready, runtime_s: 5, title: "Pre-registration to paper-trading report: a reproducible capstone skeleton"}
     library: [cfmat]
     topics: [monitoring, risk-sizing]
     prerequisites: [M18, M23]

@@ -7,11 +7,11 @@
 | Term | T6 · Capstone and Career |
 | Weeks | 48–52 |
 | Hours | 60 guided |
-| Labs | 24a (planned) — Pre-registration to paper-trading report: a reproducible capstone skeleton |
+| Labs | [24a](lab_24a_capstone_template.py) — Pre-registration to paper-trading report: a reproducible capstone skeleton |
 | Library | `cfmat` |
 | Prerequisites | [M18](../m18-monitoring-automation/README.md), [M23](../m23-advanced-strategies-hpo/README.md) |
 | Committed topics | Monitoring systems, Risk management and position sizing |
-| Status | planned |
+| Status | ready |
 <!-- END GENERATED: module-header -->
 
 ## Why this module
@@ -99,13 +99,26 @@ midpoint review). Weeks 48–52 are full capstone weeks on the normal rhythm.
 
 ## Labs
 
-**Lab 24a — capstone template** (`lab_24a_capstone_template.py`) · *planned*
+**Lab 24a — capstone template** (`lab_24a_capstone_template.py`)
 
 A reproducible skeleton that runs end to end on synthetic data and that learners copy into their
-capstone repository: pre-registration file checks, data loading with quality checks, a Strategy
-Creator spec, walk-forward backtest with Indian costs, DSR with the pre-registered trial count,
-RMS limits, a paper-trading loop with journal and monitoring hooks, and the report tables.
-Acceptance: one command reproduces every table; tests cover look-ahead, risk limits and costs.
+capstone repository as `src/pipeline.py`. Hand it out in Week 39 with the capstone track, so the
+Week 40 pre-registration is written in its format. Edit `CONFIG`, point `data_csv` at your data,
+and one command reproduces every table.
+
+| Section | You do | What good looks like |
+|---|---|---|
+| 1. Pre-registration | Fill `CONFIG`; generate and check `PREREGISTRATION.md` | Every field present; hold-out after research; grid within the trial budget; committed before testing |
+| 2. Data | Load, check quality, split research and hold-out | Problems listed and explained; the hold-out untouched until section 5 |
+| 3. Strategy and costs | A Strategy Creator spec; Indian charges for a typical order | Cost per side derived from the cost model, not guessed |
+| 4. Walk-forward and DSR | Re-optimise yearly; charge the DSR for the trial budget | Out-of-sample Sharpe reported next to the in-sample best |
+| 5. One look at the hold-out | Freeze parameters; run once; state the verdict | The pre-registered criterion decides MET or NOT MET |
+| 6. Paper trading | OMS with RMS limits, journal and monitoring; decisions made only from the previous close | Paper tracks the backtest; the gap is measured and explained |
+| 7. Tests | No look-ahead, risk limits, costs | All pass, in the lab and as `pytest` in the capstone folder |
+| 8. Report and folder | Tables to `report/`; README, PREREGISTRATION, tests, limits | `pytest tests` passes in the copied folder |
+
+On the synthetic data the criterion is not met (the deflated Sharpe is below 95%): the template
+shows how to report a negative result honestly.
 
 **Capstone repository layout**
 
@@ -155,4 +168,4 @@ The capstone is 35% of the final grade. The rubric, timeline, project options an
 
 - Owner: programme director; jury of a practitioner, a risk or compliance professional and a faculty member.
 - Paper trading only. Learners who trade their own money do so outside the programme, at their own risk.
-- Lab 24a is planned; until it ships, learners start from their M12 pipeline. It is the highest-priority lab gap for learner experience — see the [audit](../../audit/2026-09-devils-advocate-review.md).
+- Lab 24a is the starting point for every capstone repository. Check in Week 40 that learners' pre-registrations pass its `check_preregistration` and are committed before their first backtest.

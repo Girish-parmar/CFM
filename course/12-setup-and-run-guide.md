@@ -198,8 +198,9 @@ message.
 | 30 | 45–46 | [23b](../curriculum/m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py) | M23 | Markov regimes, GARCH volatility targeting, Kalman-filter pairs | ~10 s | – |
 | 31 | 45–46 | [23c](../curriculum/m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py) | M23 | Meta-labelling, bet sizing, multi-strategy allocation | ~10 s | – |
 | 32 | 45–46 | [23d](../curriculum/m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | M23 | Day/month/expiry/regime/pattern segments, FDR, per-segment walk-forward | ~60 s | – |
+| 33 | 48–52 | [24a](../curriculum/m24-capstone-career/lab_24a_capstone_template.py) | M24 | Pre-registration to paper-trading report: a reproducible capstone skeleton | ~5 s | – |
 
-Planned, not yet released: 02a, 09a, 22b, 24a.
+Planned, not yet released: 02a, 09a, 22b.
 <!-- END GENERATED: run-order -->
 
 ### How to run a lab

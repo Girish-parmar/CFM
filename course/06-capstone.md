@@ -10,7 +10,7 @@ to practitioners. Work is individual; pairs are allowed for the two infrastructu
 | Week | Milestone | Deliverable |
 |---|---|---|
 | 38 | Topic approved | One-page proposal, usually built on the M12 pipeline assignment |
-| 40 | **Pre-registration** | Hypothesis, economic rationale, data, universe, rules, parameters to search, the full list of trials, success criteria — committed to Git before any testing |
+| 40 | **Pre-registration** | Hypothesis, economic rationale, data, universe, rules, parameters to search, the full list of trials, success criteria — committed to Git before any testing (start from [Lab 24a](../curriculum/m24-capstone-career/lab_24a_capstone_template.py), whose check refuses an incomplete plan) |
 | 44 | Midpoint review | Reproducible data pipeline with quality checks; first walk-forward results |
 | 47–48 | Research review and go/no-go | Walk-forward backtest with Indian costs, DSR with the pre-registered trial count, stress tests, RMS limits, monitoring |
 | 48–51 | **Paper trading (4 weeks)** | Strategy on a static-IP server through `cfmat.trading.PaperBroker` or a broker sandbox, with RMS limits, kill switch, monitoring and a daily journal |

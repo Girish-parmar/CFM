@@ -37,7 +37,7 @@ One folder per module: `mNN-slug/` holds the module guide (`README.md`) and its 
 | M22 | [NLP, News Sentiment, LLMs and RAG](m22-nlp-news-llm-rag/README.md) | T5 | 43–44 | 24 | [22a](m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py), 22b (planned) | partial |
 | M23 | [Advanced Strategies and Hyperparameter Optimisation](m23-advanced-strategies-hpo/README.md) | T5 | 45–46 | 24 | [23a](m23-advanced-strategies-hpo/lab_23a_boosting_hpo.py), [23b](m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py), [23c](m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py), [23d](m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | ready |
 | – | Review, Term exam 3 and Bootcamp 3 | T5 | 47 | 12 + 24 bootcamp | – | – |
-| M24 | [Capstone, Paper Trading, Ethics and Career](m24-capstone-career/README.md) | T6 | 48–52 | 60 | 24a (planned) | planned |
+| M24 | [Capstone, Paper Trading, Ethics and Career](m24-capstone-career/README.md) | T6 | 48–52 | 60 | [24a](m24-capstone-career/lab_24a_capstone_template.py) | ready |
 <!-- END GENERATED: module-table -->
 
 ## Labs (generated)
@@ -81,7 +81,7 @@ One folder per module: `mNN-slug/` holds the module guide (`README.md`) and its 
 | 23b | M23 | [lab_23b_regimes_kalman_garch.py](m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py) | Markov regimes, GARCH volatility targeting, Kalman-filter pairs | ready | ~10 s |
 | 23c | M23 | [lab_23c_meta_labeling_ensembles.py](m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py) | Meta-labelling, bet sizing, multi-strategy allocation | ready | ~10 s |
 | 23d | M23 | [lab_23d_segment_optimisation.py](m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | Day/month/expiry/regime/pattern segments, FDR, per-segment walk-forward | ready | ~60 s |
-| 24a | M24 | lab_24a_capstone_template.py | Pre-registration to paper-trading report: a reproducible capstone skeleton | planned | – |
+| 24a | M24 | [lab_24a_capstone_template.py](m24-capstone-career/lab_24a_capstone_template.py) | Pre-registration to paper-trading report: a reproducible capstone skeleton | ready | ~5 s |
 <!-- END GENERATED: lab-index -->
 
 \*On a typical laptop, one process. Planned labs have a written specification in their module

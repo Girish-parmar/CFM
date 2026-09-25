@@ -38,7 +38,7 @@ notes) in [`curriculum/`](../curriculum/README.md), and runnable labs built on t
 | M22 | [NLP, News Sentiment, LLMs and RAG](../curriculum/m22-nlp-news-llm-rag/README.md) | T5 | 43–44 | 24 | [22a](../curriculum/m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py), 22b (planned) | partial |
 | M23 | [Advanced Strategies and Hyperparameter Optimisation](../curriculum/m23-advanced-strategies-hpo/README.md) | T5 | 45–46 | 24 | [23a](../curriculum/m23-advanced-strategies-hpo/lab_23a_boosting_hpo.py), [23b](../curriculum/m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py), [23c](../curriculum/m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py), [23d](../curriculum/m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | ready |
 | – | Review, Term exam 3 and Bootcamp 3 | T5 | 47 | 12 + 24 bootcamp | – | – |
-| M24 | [Capstone, Paper Trading, Ethics and Career](../curriculum/m24-capstone-career/README.md) | T6 | 48–52 | 60 | 24a (planned) | planned |
+| M24 | [Capstone, Paper Trading, Ethics and Career](../curriculum/m24-capstone-career/README.md) | T6 | 48–52 | 60 | [24a](../curriculum/m24-capstone-career/lab_24a_capstone_template.py) | ready |
 <!-- END GENERATED: module-table -->
 
 *Status*: **ready** — every lab ships and runs in CI; **partial** — at least one lab is planned;
@@ -56,7 +56,7 @@ These are the areas the programme commits to cover in depth, plus supporting are
 |---|---|---|
 | Statistics in finance | M04, M06, M11, M23 | covered |
 | Sentiment and news analysis | M18, M22 (lab planned) | covered |
-| Risk management and position sizing | M13, M17, M24 (lab planned) | covered |
+| Risk management and position sizing | M13, M17, M24 | covered |
 | Strategy optimisation by segment (day, month, regime, pattern) | M23 | covered |
 | Market microstructure | M15 | covered |
 | Futures and options — Greeks, second-order Greeks and strategies | M08, M12, M09 (lab planned) | covered |
@@ -68,7 +68,7 @@ These are the areas the programme commits to cover in depth, plus supporting are
 | Deep-learning techniques | M20 | covered |
 | Reinforcement learning | M21 | covered |
 | Market data handling | M05, M16 | covered |
-| Monitoring systems | M18, M24 (lab planned) | covered |
+| Monitoring systems | M18, M24 | covered |
 | Fundamental and factor investing *(supporting)* | M07 | covered |
 | Screeners and instrument selection *(supporting)* | M12 | covered |
 | Threading and multiprocessing for research *(supporting)* | M12 | covered |
