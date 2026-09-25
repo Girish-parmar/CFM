@@ -180,8 +180,8 @@ modules:
       - Growth, inflation and the RBI — how macro moves Indian markets
       - Rates, the yield curve, the rupee and macro event trading
     labs:
-      - {file: lab_02a_macro_event_study.py, status: planned, runtime_s: 10, title: "RBI policy days, CPI surprises and the yield curve"}
-    library: [cfmat.analytics.stats]
+      - {file: lab_02a_macro_event_study.py, status: ready, runtime_s: 10, title: "Macro calendar and vintages, announcement-day tests, CPI surprises, Nelson–Siegel curves and inversions, causal growth × inflation regimes"}
+    library: [cfmat.analytics.stats, cfmat.analytics.rates, cfmat.analytics.macro]
     topics: [macroeconomics]
     prerequisites: [M01]
 

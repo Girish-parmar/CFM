@@ -7,11 +7,11 @@
 | Term | T1 · Foundations |
 | Weeks | 3–4 |
 | Hours | 24 guided |
-| Labs | 02a (planned) — RBI policy days, CPI surprises and the yield curve |
-| Library | `cfmat.analytics.stats` |
+| Labs | [02a](lab_02a_macro_event_study.py) — Macro calendar and vintages, announcement-day tests, CPI surprises, Nelson–Siegel curves and inversions, causal growth × inflation regimes |
+| Library | `cfmat.analytics.stats`, `cfmat.analytics.rates`, `cfmat.analytics.macro` |
 | Prerequisites | [M01](../m01-financial-markets/README.md) |
 | Committed topics | Macroeconomics |
-| Status | planned |
+| Status | ready |
 <!-- END GENERATED: module-header -->
 
 ## Why this module
@@ -58,35 +58,32 @@ By the end of the module you can:
 |---|---|
 | L1 · Sat · 180 min | 0–15 retrieval quiz · 15–60 bond maths refresher: price–yield, duration, convexity · 60–70 break · 70–120 the yield curve: level, slope, curvature; Nelson–Siegel; term premium; inversions and recessions (with the base-rate caveat) · 120–165 the rupee: interest-rate differentials, FPI flows, RBI intervention; carry and its crashes · 165–180 exit ticket |
 | L2 · Sun · 180 min | 0–10 recap · 10–70 macro regimes: growth × inflation quadrants, built only from data available at each date · 70–80 break · 80–140 workshop: do trend and mean-reversion strategies behave differently by regime? (label with a lag; count observations per regime) · 140–170 pitfalls: few regimes, many parameters, revisions · 170–180 exit ticket |
-| C1 · Tue · 120 min | 0–10 setup · 10–100 Lab 02a (when released) or the C1 exercise pack: CPI surprise event study; Nelson–Siegel fit to a synthetic curve · 100–120 review |
+| C1 · Tue · 120 min | 0–10 setup · 10–100 Lab 02a sections 2–3: announcement-day tests, CPI surprises, Nelson–Siegel fits and inversions · 100–120 review |
 | OH · Wed · 60 min | Assignment clinic |
-| C2 · Thu · 120 min | 0–60 regime labels with a publication lag; attribution of a strategy's returns by regime · 60–100 peer review · 100–120 quiz review |
+| C2 · Thu · 120 min | 0–60 Lab 02a section 4: regime labels with a publication lag, the truncation test, attribution of a strategy's returns by regime · 60–100 peer review · 100–120 quiz review |
 | QP · Fri · 60 min | 0–20 quiz 2b · 20–50 peer review of assignment drafts · 50–60 preview of M03 |
 | Self-study · ~6 h | Ilmanen, *Expected Returns*, ch. on macro and carry; finish the assignment |
 
 ## Labs
 
-**Lab 02a — RBI policy days, CPI surprises and the yield curve** (`lab_02a_macro_event_study.py`) · *planned*
+**Lab 02a — RBI policy days, CPI surprises and the yield curve** (`lab_02a_macro_event_study.py`)
 
-Specification (for the lab author):
-
-| Section | Content | Library support needed |
+| Section | You do | What good looks like |
 |---|---|---|
-| 1. Macro calendar | Synthetic calendar of policy, CPI and budget dates with surprise values; release time vs reference period | `data.macro_calendar(seed)` generator |
-| 2. Event study | Index returns and absolute returns on event days vs other days, HAC and permutation p-values; policy surprise sign | `analytics.stats.event_study` (exists) |
-| 3. Yield curve | Fit Nelson–Siegel to synthetic curves; level/slope/curvature time series; inversion episodes | `analytics.rates.nelson_siegel_fit` |
-| 4. Regimes | Growth × inflation quadrants with a publication lag; strategy attribution by regime | `research.segments.segment_stats` (exists) |
+| 1. Macro calendar | Read ten years of RBI, CPI, IIP, GDP, Budget and FOMC events: reference period, release time (IST), consensus, actual, surprise; map each to the first session it can move; compare first prints with revisions | Every after-close release on the next session; you say how often an IIP revision flips the direction of growth |
+| 2. Announcement days | Volatility and mean returns on event sessions vs other days (HAC t and a studentised permutation test); the minimum detectable effect; the price response to surprises on the session and on the release date; drift after hawkish CPI surprises, then the same study started a day early | RBI-day volatility detected; you explain why smaller planted effects are not; the surprise response recovered on the session and lost on the release date; no tradable drift, and the look-ahead version named as such |
+| 3. Yield curve | Fit Nelson–Siegel to single days and to the panel with one tau; compare with the true factors and the 10y / 10y−3m / butterfly proxies; list inversion episodes; duration and convexity of a 10-year G-sec | Panel tau within 0.05 of the planted 1.5; level and slope correlate > 0.99 with the truth; a +50 bp reprice explained by duration + convexity |
+| 4. Regimes | Growth × inflation labels three ways (hindsight, causal, first release); the truncation test; next-day index returns and a trend rule's P&L by regime, with the days per regime | The causal label passes truncation and hindsight fails; the hindsight spread between regimes shrinks once only known data are used, and you report the smaller number |
 
-Acceptance: runs offline in under 15 s; tests for the generator (event dates known, surprises planted)
-and for Nelson–Siegel (recovers known parameters); causality test for regime labels (truncation).
-Until it ships, C1/C2 use the exercise pack with `event_study` on synthetic index data.
+The data are synthetic (`data.macro_calendar`) with planted effects and an answer key; the
+runtime is about 5 s offline. The exercises move the same tables to real RBI and MOSPI dates.
 
 ## Assessment
 
 | Item | Weight in course component | Due | Criteria |
 |---|---|---|---|
 | Quizzes 2a, 2b | quizzes (10%) | Fri W3, W4 | 10 MCQ each |
-| Lab 02a (or exercise pack) | labs (20%) | Sun W4 | Correct event windows, lagged regime labels, interpretation in words |
+| Lab 02a | labs (20%) | Sun W4 | Correct event sessions, honest p-values with the number of events, lagged regime labels that pass truncation, interpretation in words |
 | Assignment: a macro event study | assignments (15%) | Sun W5 | Pick one scheduled event type; test index volatility and returns around it on at least 8 years of data; report HAC and permutation p-values and the number of events; one-page verdict. Rubric: design 30, correctness 30, honesty about power 20, clarity 20 |
 
 ## Common mistakes
@@ -108,5 +105,5 @@ Until it ships, C1/C2 use the exercise pack with `event_study` on synthetic inde
 
 - Owner: markets and derivatives lead with an economist guest (one session).
 - Refresh the event calendar for the latest year before each cohort; keep release times in IST.
-- The lab is planned: until it ships, C1/C2 use the exercise pack with `event_study` on synthetic data. Track it in the [audit](../../audit/2026-09-devils-advocate-review.md).
+- Lab 02a uses seed 7, the first seed meeting criteria fixed in advance (effects not planted come out insignificant, at least two inversion episodes); do not swap seeds for a cleaner story. Stress what the tests *cannot* see: the planted RBI-day premium needs about a century of meetings.
 - Keep policy discussion descriptive. Do not make or invite predictions about specific future policy decisions.

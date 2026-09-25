@@ -5,6 +5,8 @@
     benjamini_hochberg   false-discovery-rate adjusted p-values (q-values)
     event_study          forward returns after events vs other days: HAC t-statistic and
                          a random-date (circular-shift) permutation p-value
+    event_day_effect     a same-day quantity (return, absolute return, range) on event days
+                         vs other days, with the same two tests
 """
 
 from __future__ import annotations
@@ -102,6 +104,57 @@ def event_study(
             row.update(excess=np.nan, t_hac=np.nan, p_value=np.nan)
         rows[f"{h}d"] = row
     return pd.DataFrame(rows).T[["events", "mean_after", "mean_other", "excess", "hit_rate", "t_hac", "p_value"]]
+
+
+def _welch(y: np.ndarray, mask: np.ndarray) -> float:
+    a, b = y[mask], y[~mask]
+    scale = np.sqrt(a.var(ddof=1) / len(a) + b.var(ddof=1) / len(b))
+    return float((a.mean() - b.mean()) / scale) if scale > 0 else 0.0
+
+
+def event_day_effect(
+    values: pd.Series,
+    events: pd.Series,
+    n_perm: int = 1000,
+    seed: int = 0,
+    lags: int | None = None,
+) -> pd.Series:
+    """Is ``values`` different on event days? For quantities of the event day itself.
+
+    Use it for the day's return, absolute return or high-low range on scheduled
+    announcement days (``event_study`` measures returns *after* the close instead). Returns
+    ``events``, ``mean_event``, ``mean_other``, ``difference``, ``ratio``, ``t_hac`` (event
+    dummy regression with Newey-West errors, ``lags`` defaulting to ``floor(4 (n/100)^(2/9))``:
+    absolute returns cluster, so plain t-statistics overstate) and ``p_value`` (two-sided
+    circular-shift permutation, which keeps volatility clustering and the event spacing).
+
+    The permutation statistic is studentised (Welch's t, not the raw difference). Event days
+    are often more volatile; shifted dates land on calmer days, so a raw difference would be
+    compared with a null distribution that is too narrow and the test would reject too often.
+    Strictly periodic events (every 25th day) are shifted onto themselves by multiples of
+    the period, which puts a floor under the p-value; real calendars are close to periodic,
+    so read p-values near that floor (about 1 / period) as "as small as this test can say".
+    """
+    import statsmodels.api as sm
+
+    x = values.dropna()
+    ev = events.reindex(x.index).fillna(False).astype(bool).to_numpy()
+    y = x.to_numpy(dtype=float)
+    n, k = len(y), int(ev.sum())
+    out = {"events": k, "mean_event": y[ev].mean() if k else np.nan,
+           "mean_other": y[~ev].mean() if k < n else np.nan}
+    out["difference"] = out["mean_event"] - out["mean_other"]
+    out["ratio"] = out["mean_event"] / out["mean_other"] if out["mean_other"] else np.nan
+    if k >= 2 and n - k >= 2:
+        maxlags = lags if lags is not None else int(np.floor(4 * (n / 100) ** (2 / 9)))
+        fit = sm.OLS(y, sm.add_constant(ev.astype(float))).fit(cov_type="HAC", cov_kwds={"maxlags": maxlags})
+        rng = np.random.default_rng(seed)
+        perm = np.array([_welch(y, np.roll(ev, s)) for s in rng.integers(1, n, size=n_perm)])
+        out["t_hac"] = float(fit.tvalues[1])
+        out["p_value"] = float((1 + np.sum(np.abs(perm) >= abs(_welch(y, ev)))) / (1 + n_perm))
+    else:
+        out.update(t_hac=np.nan, p_value=np.nan)
+    return pd.Series(out)
 
 
 def _panel_event_study(close: pd.DataFrame, events: pd.DataFrame, horizons, n_perm: int, seed: int) -> pd.DataFrame:

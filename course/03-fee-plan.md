@@ -154,11 +154,11 @@ programme director and may convert a withdrawal into a free deferral.
 
 - ₹10 lakh sits above most Indian algo-trading certificates. Learners will compare it with self-paced courses at a tenth of the price; the programme must win on outcomes, not content lists.
 - Break-even needs about 28 learners at this price. A weak first intake is a real financial risk (see the sensitivity table).
-- Six labs are still planned. A premium price makes gaps more visible; the audit commits to shipping them in priority order.
+- The six labs the audit found planned have now shipped (v2.2.0), but they are new: a premium price makes any rough edge in them more visible, so they need a first cohort's feedback before the price rests on them.
 - Part of the value (bootcamp stay, data licences, GPU hours) is only valuable if learners use it; unused inclusions feel like overpricing.
 
-**Mitigations.** Publish audited outcomes with their base and period; ship planned labs before
-charging the full price to a second intake; offer corporate cohorts (GST input credit makes the
+**Mitigations.** Publish audited outcomes with their base and period; review the new labs with
+the first intake before charging the full price to a second; offer corporate cohorts (GST input credit makes the
 effective cost ₹8,47,457.63 for many employers); keep the scholarship budget at 10% to protect
 access.
 

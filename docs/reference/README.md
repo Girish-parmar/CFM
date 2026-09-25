@@ -6,7 +6,7 @@ Generated from `cfmat` 2.1.0. Regenerate with `make docs`.
 
 | Package | Summary |
 |---|---|
-| [`cfmat.analytics`](analytics.md) | Market analytics: returns and performance, indicators, patterns, momentum and volatility, relative performance, statistical tests and factor tools (M04, M06, M07, M10, M11). |
+| [`cfmat.analytics`](analytics.md) | Market analytics: returns and performance, indicators, patterns, momentum and volatility, relative performance, statistical tests, factor tools, rates and macro (M02, M04, M06, M07, M10, M11). |
 | [`cfmat.automation`](automation.md) | Automation and monitoring: the signal service and trade journal used by n8n, and live monitoring (M18). |
 | [`cfmat.backtesting`](backtesting.md) | Backtesting engines and reports (M11, M12). Costs live in ``cfmat.microstructure.costs``. |
 | [`cfmat.data`](data.md) | Market data (M03, M05, M16). |

@@ -48,6 +48,16 @@ for the `cfmat` library; the course edition is recorded in `course/course.yaml`.
   assignment to the first session that can act) and `nlp.news_signal` (decayed per-stock
   sentiment known at each close); `analytics.stats.event_study` accepts a panel (one column per
   stock), shifting every stock's events together in the permutation test.
+- Lab 02a, RBI policy days, CPI surprises and the yield curve: `data.macro_calendar` (a synthetic
+  economy: release calendar in IST with consensus and surprises, CPI/IIP vintages with
+  revisions, an equity index with planted announcement effects, the repo rate and a G-sec curve
+  built from known Nelson–Siegel factors); `analytics.rates` (`bond_price`, `bond_risk`,
+  `nelson_siegel`, `nelson_siegel_fit`, `nelson_siegel_tau`, `nelson_siegel_panel`,
+  `inversion_episodes`); `analytics.macro` (`release_sessions`, vintage-aware `latest_known`,
+  causal `growth_inflation_regimes` with a hindsight mode for comparison); and
+  `analytics.stats.event_day_effect` (same-day quantities on event days vs other days, HAC t and
+  a studentised circular-shift permutation test, which keeps its size when event days are more
+  volatile). With it every planned lab has shipped.
 - `data.standardize_ohlcv` (one OHLCV shape for every source: lower-case columns, exchange-local
   naive timestamps, sorted, no duplicates) and `data.ohlcv_problems` (plain-language data-quality
   checks).
@@ -55,6 +65,7 @@ for the `cfmat` library; the course edition is recorded in `course/course.yaml`.
 ### Changed
 - Docs recommend Python 3.11 or 3.12 (the tested pins) instead of "3.11+".
 - `data.download_prices` returns the standard shape via `standardize_ohlcv`.
+- `nlp.news_events` assigns sessions with the shared `analytics.macro.release_sessions` (same rule).
 
 ## [2.1.0] — 2026-09-25
 

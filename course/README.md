@@ -12,7 +12,7 @@ manager, so they always agree with the manifest and with the repository.
 | Duration | 52 weeks + 4 weeks of self-paced pre-work |
 | Format | Hybrid — live online weekend classes, weekday lab clinics, three 3-day in-person bootcamps |
 | Guided hours | 736 (plus 40 h pre-work and about 6 h/week self-study) |
-| Structure | 6 terms, 24 modules + pre-work, 36 labs (35 ready) |
+| Structure | 6 terms, 24 modules + pre-work, 36 labs (36 ready) |
 | Cohort | target 36, maximum 40; intakes January and July |
 | Programme fee | **₹10,00,000.00 all-inclusive** = ₹8,47,457.63 + GST 18% ₹1,52,542.37 |
 | Fee per guided hour | ₹1,358.70 (₹1,151.44 before GST) |

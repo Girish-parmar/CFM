@@ -12,7 +12,7 @@ to tell an edge from a lucky backtest.
 | Duration | 52 weeks + 4 weeks of self-paced pre-work |
 | Format | Hybrid — live online weekend classes, weekday lab clinics, three 3-day in-person bootcamps |
 | Guided hours | 736 (plus 40 h pre-work and about 6 h/week self-study) |
-| Structure | 6 terms, 24 modules + pre-work, 36 labs (35 ready) |
+| Structure | 6 terms, 24 modules + pre-work, 36 labs (36 ready) |
 | Cohort | target 36, maximum 40; intakes January and July |
 | Programme fee | **₹10,00,000.00 all-inclusive** = ₹8,47,457.63 + GST 18% ₹1,52,542.37 |
 | Fee per guided hour | ₹1,358.70 (₹1,151.44 before GST) |
@@ -39,7 +39,7 @@ to tell an edge from a lucky backtest.
 |---|---|---|---|---|---|---|
 | M00 | [Pre-work: Python, Statistics and Markets Primer](curriculum/m00-prework/README.md) | T0 | −3 to 0 | 40 self-paced | [00a](curriculum/m00-prework/lab_00a_environment_check.py) | ready |
 | M01 | [Financial Markets, Instruments and Regulation](curriculum/m01-financial-markets/README.md) | T1 | 1–2 | 24 | [01a](curriculum/m01-financial-markets/lab_01a_markets_instruments.py) | ready |
-| M02 | [Macroeconomics for Traders](curriculum/m02-macroeconomics/README.md) | T1 | 3–4 | 24 | 02a (planned) | planned |
+| M02 | [Macroeconomics for Traders](curriculum/m02-macroeconomics/README.md) | T1 | 3–4 | 24 | [02a](curriculum/m02-macroeconomics/lab_02a_macro_event_study.py) | ready |
 | M03 | [Python for Financial Analysis](curriculum/m03-python-for-finance/README.md) | T1 | 5–6 | 24 | [03a](curriculum/m03-python-for-finance/lab_03a_python_for_finance.py) | ready |
 | M04 | [Statistics and Time Series for Finance](curriculum/m04-statistics-time-series/README.md) | T1 | 7–8 | 24 | [04a](curriculum/m04-statistics-time-series/lab_04a_statistics_time_series.py) | ready |
 | M05 | [Databases and Market Data Engineering](curriculum/m05-data-engineering-databases/README.md) | T1 | 9–10 | 24 | [05a](curriculum/m05-data-engineering-databases/lab_05a_market_database.py) | ready |

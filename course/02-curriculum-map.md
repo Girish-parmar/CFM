@@ -13,7 +13,7 @@ notes) in [`curriculum/`](../curriculum/README.md), and runnable labs built on t
 |---|---|---|---|---|---|---|
 | M00 | [Pre-work: Python, Statistics and Markets Primer](../curriculum/m00-prework/README.md) | T0 | −3 to 0 | 40 self-paced | [00a](../curriculum/m00-prework/lab_00a_environment_check.py) | ready |
 | M01 | [Financial Markets, Instruments and Regulation](../curriculum/m01-financial-markets/README.md) | T1 | 1–2 | 24 | [01a](../curriculum/m01-financial-markets/lab_01a_markets_instruments.py) | ready |
-| M02 | [Macroeconomics for Traders](../curriculum/m02-macroeconomics/README.md) | T1 | 3–4 | 24 | 02a (planned) | planned |
+| M02 | [Macroeconomics for Traders](../curriculum/m02-macroeconomics/README.md) | T1 | 3–4 | 24 | [02a](../curriculum/m02-macroeconomics/lab_02a_macro_event_study.py) | ready |
 | M03 | [Python for Financial Analysis](../curriculum/m03-python-for-finance/README.md) | T1 | 5–6 | 24 | [03a](../curriculum/m03-python-for-finance/lab_03a_python_for_finance.py) | ready |
 | M04 | [Statistics and Time Series for Finance](../curriculum/m04-statistics-time-series/README.md) | T1 | 7–8 | 24 | [04a](../curriculum/m04-statistics-time-series/lab_04a_statistics_time_series.py) | ready |
 | M05 | [Databases and Market Data Engineering](../curriculum/m05-data-engineering-databases/README.md) | T1 | 9–10 | 24 | [05a](../curriculum/m05-data-engineering-databases/lab_05a_market_database.py) | ready |
@@ -61,7 +61,7 @@ These are the areas the programme commits to cover in depth, plus supporting are
 | Market microstructure | M15 | covered |
 | Futures and options — Greeks, second-order Greeks and strategies | M08, M09, M12 | covered |
 | Technical indicators, chart and candlestick patterns | M06, M12 | covered |
-| Macroeconomics | M22, M02 (lab planned) | covered |
+| Macroeconomics | M02, M22 | covered |
 | Portfolio management methods | M14, M23 | covered |
 | Trading platform structure and infrastructure | M05, M17, M18 | covered |
 | Machine-learning techniques | M19, M23 | covered |

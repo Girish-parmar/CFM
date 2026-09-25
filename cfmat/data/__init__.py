@@ -21,7 +21,9 @@ from .providers import (
 )
 from .synthetic import (
     ARCHETYPES,
+    MACRO_MATURITIES,
     SECTORS,
+    MacroData,
     ar1_prices,
     brownian_ohlc,
     cointegrated_pair,
@@ -33,6 +35,7 @@ from .synthetic import (
     implied_vol_series,
     instrument_universe,
     intraday_volume_profile,
+    macro_calendar,
     news_stream,
     ohlcv,
     ohlcv_from_close,
@@ -45,8 +48,10 @@ from .synthetic import (
 
 __all__ = [
     "ARCHETYPES",
+    "MACRO_MATURITIES",
     "OHLCV",
     "SECTORS",
+    "MacroData",
     "alpaca_bars",
     "ar1_prices",
     "brownian_ohlc",
@@ -62,6 +67,7 @@ __all__ = [
     "instrument_universe",
     "intraday_volume_profile",
     "load_ohlcv_csv",
+    "macro_calendar",
     "news_stream",
     "ohlcv",
     "ohlcv_from_close",

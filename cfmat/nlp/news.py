@@ -13,9 +13,9 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-import numpy as np
 import pandas as pd
 
+from ..analytics.macro import release_sessions
 from .sentiment import lexicon_sentiment
 
 
@@ -39,12 +39,8 @@ def news_events(
     frame["key"] = frame["headline"].str.lower().str.replace(r"[^a-z0-9 ]", "", regex=True).str.strip()
     previous = frame.groupby(["symbol", "key"])["ts"].shift()
     frame = frame[~((frame["ts"] - previous) <= pd.Timedelta(dedupe_window))]   # the same story re-published
-    close = pd.Timedelta(f"{session_close}:00")
-    same_day = frame["ts"] - frame["ts"].dt.normalize() < close
-    target = frame["ts"].dt.normalize() + pd.to_timedelta(np.where(same_day, 0, 1), unit="D")
-    position = trading_days.searchsorted(pd.DatetimeIndex(target))
-    frame = frame[position < len(trading_days)].copy()
-    frame["session"] = trading_days[position[position < len(trading_days)]]
+    frame["session"] = release_sessions(frame["ts"], trading_days, session_close).to_numpy()
+    frame = frame.dropna(subset=["session"]).copy()
     frame["score"] = [float(score(text)) for text in frame["headline"]]
     return frame.drop(columns="key").reset_index(drop=True)
 

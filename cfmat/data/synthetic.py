@@ -14,6 +14,8 @@ a look-ahead that makes candlestick patterns look predictive.
 
 from __future__ import annotations
 
+from typing import NamedTuple
+
 import numpy as np
 import pandas as pd
 
@@ -740,3 +742,187 @@ def news_stream(
     truth = {"events": pd.DataFrame(events),
              "params": {"drift": drift, "jump": jump, "half_life": half_life}}
     return news, close, truth
+
+
+class MacroData(NamedTuple):
+    """A synthetic Indian economy and its markets (``macro_calendar``)."""
+
+    calendar: pd.DataFrame
+    releases: pd.DataFrame
+    market: pd.DataFrame
+    curves: pd.DataFrame
+    truth: dict
+
+
+MACRO_MATURITIES = (0.25, 0.5, 1.0, 2.0, 3.0, 5.0, 7.0, 10.0, 14.0, 30.0)
+_REGIME_DRIFT = {"recovery": 0.30, "overheat": 0.10, "stagflation": -0.20, "reflation": 0.05}
+_EVENT_VOL = {"RBI policy": 1.6, "CPI": 1.3, "IIP": 1.0, "GDP": 1.2, "Union Budget": 2.5, "FOMC": 1.3}
+_EVENT_RESPONSE = {"RBI policy": -3.0, "CPI": -1.2, "IIP": 0.15, "GDP": 0.5}   # % index move per 1 pp surprise
+_SURPRISE_SD = {"CPI": 0.2, "IIP": 1.0, "GDP": 0.4}
+
+
+def _ar1(rng: np.random.Generator, n: int, rho: float, sd: float, jumps: np.ndarray | None = None) -> np.ndarray:
+    shocks = rng.normal(0, sd, n) + (0 if jumps is None else jumps)
+    out = np.empty(n)
+    level = 0.0
+    for i in range(n):
+        level = rho * level + shocks[i]
+        out[i] = level
+    return out
+
+
+def macro_calendar(n_years: int = 10, seed: int | None = None, start: str = "2015-01-01") -> MacroData:
+    """Release calendar, data vintages, an equity index and the G-sec curve, with the answer key.
+
+    Monthly growth (an IIP-like year-on-year %) and inflation (CPI year-on-year %) follow slow
+    cycles plus noise. Their three-month changes define the true regime of each month
+    (``truth["monthly"]``), which sets the index's drift (``_REGIME_DRIFT``).
+
+    ``calendar`` has one row per scheduled event, times in IST: ``RBI policy`` (six a year,
+    10:00, during the session), ``CPI`` (12th of the next month, 16:00, after the close),
+    ``IIP`` (28th of the next month, 16:00), ``GDP`` (end of the second month after the quarter,
+    16:00), ``Union Budget`` (1 February, 11:00; a weekend Budget falls to Monday here, where
+    NSE would open a special session) and ``FOMC`` (23:30, after the close). Data releases carry
+    ``consensus``, ``actual`` (first release) and ``surprise``; for the RBI they are the expected
+    and decided repo rate. ``truth["sessions"]`` is the session each event first moves.
+
+    ``releases`` is the vintage table (``series``, ``reference``, ``release_ts``, ``vintage``,
+    ``value``): each CPI and IIP month is published once (``first``) and revised a month later
+    (``revised``, the true value); IIP revisions are large. ``market`` has the index close
+    (``equity``) and the ``repo`` rate; ``curves`` the zero-coupon yields at
+    ``MACRO_MATURITIES``, built from Nelson-Siegel factors (``truth["factors"]``) plus noise.
+
+    Planted: higher volatility on event sessions (``_EVENT_VOL``), a price response to
+    surprises on the event session only (``_EVENT_RESPONSE``, no drift afterwards), an RBI-day
+    premium too small to detect, the repo following inflation, and a curve that inverts when
+    the repo rises above the long end.
+    """
+    from ..analytics.macro import REGIMES, release_sessions
+    from ..analytics.rates import nelson_siegel
+
+    rng = np.random.default_rng(seed)
+    first_day = pd.Timestamp(start)
+    last_day = first_day + pd.DateOffset(years=n_years) - pd.Timedelta(days=1)
+    days = pd.bdate_range(first_day, last_day, name="date")
+    months = pd.period_range(first_day.to_period("M") - 24, last_day.to_period("M"), freq="M")
+    t = np.arange(len(months))
+    growth = 5 + 3.0 * np.sin(2 * np.pi * t / rng.uniform(40, 60) + rng.uniform(0, 2 * np.pi)) + _ar1(rng, len(t), 0.5, 0.4)
+    inflation = 5 + 1.8 * np.sin(2 * np.pi * t / rng.uniform(48, 72) + rng.uniform(0, 2 * np.pi)) + _ar1(rng, len(t), 0.7, 0.2)
+    g_up = growth - np.r_[np.full(3, np.nan), growth[:-3]] > 0
+    i_up = inflation - np.r_[np.full(3, np.nan), inflation[:-3]] > 0
+    regime = pd.Series([REGIMES[(bool(a), bool(b))] for a, b in zip(g_up, i_up, strict=True)], index=months)
+    regime.iloc[:3] = None
+
+    bday, month_end = pd.offsets.BDay(), pd.offsets.BMonthEnd()
+    hour = {"16:00": pd.Timedelta("16:00:00"), "10:00": pd.Timedelta("10:00:00"),
+            "11:00": pd.Timedelta("11:00:00"), "23:30": pd.Timedelta("23:30:00")}
+
+    def monthly_release(month: pd.Period, day: int) -> pd.Timestamp:
+        return bday.rollforward(pd.Timestamp(month.year, month.month, day)) + hour["16:00"]
+
+    releases, events = [], []
+    for k, month in enumerate(months):
+        cpi_first = round(inflation[k] + rng.normal(0, 0.1), 2)
+        iip_first = round(growth[k] + rng.normal(0, 0.8), 1)
+        for series, first, final, day in (("CPI", cpi_first, round(inflation[k], 2), 12),
+                                          ("IIP", iip_first, round(growth[k], 1), 28)):
+            released = monthly_release(month + 1, day)
+            releases.append({"series": series, "reference": month, "release_ts": released, "vintage": "first", "value": first})
+            releases.append({"series": series, "reference": month, "release_ts": monthly_release(month + 2, day),
+                             "vintage": "revised", "value": final})
+            surprise = rng.normal(0, _SURPRISE_SD[series])
+            consensus = round(first - surprise, 1)
+            events.append({"event": series, "reference": str(month), "release_ts": released, "consensus": consensus,
+                           "actual": first, "surprise": round(first - consensus, 2)})
+    for quarter in pd.period_range(months[0].asfreq("Q"), months[-1].asfreq("Q"), freq="Q"):
+        in_q = [k for k, m in enumerate(months) if m.asfreq("Q") == quarter]
+        if len(in_q) < 3:
+            continue
+        value = round(6 + 0.5 * (growth[in_q].mean() - 5) + rng.normal(0, 0.3), 1)
+        end = quarter.asfreq("M", "end") + 2
+        released = month_end.rollforward(pd.Timestamp(end.year, end.month, 1)) + hour["16:00"]
+        releases.append({"series": "GDP", "reference": quarter, "release_ts": released, "vintage": "first", "value": value})
+        consensus = round(value - rng.normal(0, _SURPRISE_SD["GDP"]), 1)
+        events.append({"event": "GDP", "reference": str(quarter), "release_ts": released, "consensus": consensus,
+                       "actual": value, "surprise": round(value - consensus, 2)})
+    releases = pd.DataFrame(releases).sort_values("release_ts", kind="stable").reset_index(drop=True)
+    releases = releases[releases["release_ts"] <= last_day + pd.Timedelta(days=1)].reset_index(drop=True)
+
+    first_cpi = releases[(releases["series"] == "CPI") & (releases["vintage"] == "first")]
+    first_iip = releases[(releases["series"] == "IIP") & (releases["vintage"] == "first")]
+
+    def known(table: pd.DataFrame, when: pd.Timestamp) -> float:
+        return float(table.loc[table["release_ts"] < when, "value"].iloc[-1])
+
+    def rule(when: pd.Timestamp) -> float:
+        return float(np.clip(4.0 + 1.5 * (known(first_cpi, when) - 4) + 0.25 * (known(first_iip, when) - 5), 3.5, 7.75))
+
+    meetings = [bday.rollforward(pd.Timestamp(y, m, 6)) + hour["10:00"]
+                for y in range(first_day.year, last_day.year + 1) for m in (2, 4, 6, 8, 10, 12)]
+    meetings = [m for m in meetings if first_day <= m <= last_day]
+    repo = round(rule(meetings[0]) / 0.25) * 0.25
+    repo_path = pd.Series(repo, index=days)
+    for when in meetings:
+        step = float(np.clip(round((rule(when) - repo) * 0.5 / 0.25) * 0.25, -0.5, 0.5))
+        expected = repo + step
+        decided = expected + rng.choice([-0.25, 0.0, 0.25], p=[0.15, 0.7, 0.15])
+        events.append({"event": "RBI policy", "reference": None, "release_ts": when, "consensus": expected,
+                       "actual": decided, "surprise": decided - expected})
+        repo = decided
+        repo_path[repo_path.index >= when.normalize()] = repo
+    for year in range(first_day.year, last_day.year + 1):
+        events.append({"event": "Union Budget", "reference": None, "release_ts": pd.Timestamp(year, 2, 1) + hour["11:00"]})
+        for m in (1, 3, 5, 6, 7, 9, 11, 12):
+            wednesday = pd.offsets.Week(weekday=2).rollforward(pd.Timestamp(year, m, 15))
+            events.append({"event": "FOMC", "reference": None, "release_ts": wednesday + hour["23:30"]})
+    calendar = pd.DataFrame(events, columns=["event", "reference", "release_ts", "consensus", "actual", "surprise"])
+    calendar = calendar[calendar["release_ts"].between(first_day, last_day + pd.Timedelta(hours=23, minutes=59))]
+    calendar = calendar.sort_values("release_ts", kind="stable").reset_index(drop=True)
+    sessions = release_sessions(calendar["release_ts"], days)
+
+    n = len(days)
+    day_regime = regime.reindex(days.to_period("M")).to_numpy()
+    base_vol = 0.009
+    vol = np.full(n, base_vol)
+    response = np.zeros(n)
+    level_jump = np.zeros(n)
+    premium = 0.0015
+    for row, session in zip(calendar.itertuples(index=False), sessions, strict=True):
+        if pd.isna(session):
+            continue
+        pos = days.get_loc(session)
+        vol[pos] = max(vol[pos], base_vol * _EVENT_VOL[row.event])
+        if row.event in _EVENT_RESPONSE and not pd.isna(row.surprise):
+            response[pos] += _EVENT_RESPONSE[row.event] * row.surprise / 100
+        if row.event == "RBI policy":
+            response[pos] += premium
+        if row.event == "CPI":
+            level_jump[pos] += 0.15 * row.surprise
+    drift = np.array([_REGIME_DRIFT[r] for r in day_regime]) / 252
+    rets = drift + vol * rng.standard_t(5, n) / np.sqrt(5 / 3) + response
+    rets[0] = 0.0
+    equity = 10_000 * np.exp(np.cumsum(np.log1p(rets)))
+
+    expected_inflation = pd.Series(inflation, index=months).reindex(days.to_period("M")).ewm(halflife=60).mean().to_numpy()
+    beta0 = 6.9 + 0.5 * (expected_inflation - 5) + _ar1(rng, n, 0.995, 0.012, level_jump)
+    short = repo_path.to_numpy() + 0.10 + _ar1(rng, n, 0.9, 0.02)
+    beta1 = short - beta0
+    beta2 = -0.4 + _ar1(rng, n, 0.995, 0.02)
+    tau = 1.5
+    maturities = np.array(MACRO_MATURITIES)
+    loadings = np.column_stack([nelson_siegel(maturities, 1, 0, 0, tau), nelson_siegel(maturities, 0, 1, 0, tau),
+                                nelson_siegel(maturities, 0, 0, 1, tau)])
+    clean = np.column_stack([beta0, beta1, beta2]) @ loadings.T
+    curves = pd.DataFrame((clean + rng.normal(0, 0.015, clean.shape)).round(4), index=days, columns=list(MACRO_MATURITIES))
+
+    market = pd.DataFrame({"equity": equity, "repo": repo_path.to_numpy()}, index=days)
+    truth = {
+        "monthly": pd.DataFrame({"growth": growth, "inflation": inflation, "regime": regime}, index=months),
+        "daily_regime": pd.Series(day_regime, index=days, name="regime"),
+        "factors": pd.DataFrame({"beta0": beta0, "beta1": beta1, "beta2": beta2, "tau": tau}, index=days),
+        "sessions": sessions.rename("session"),
+        "params": {"regime_drift": dict(_REGIME_DRIFT), "event_vol": dict(_EVENT_VOL),
+                   "surprise_response_pct_per_pp": dict(_EVENT_RESPONSE), "rbi_day_premium": premium,
+                   "base_daily_vol": base_vol, "tau": tau, "yield_noise": 0.015, "cpi_level_response": 0.15},
+    }
+    return MacroData(calendar, releases, market, curves, truth)

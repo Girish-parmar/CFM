@@ -54,17 +54,17 @@ each with a regression test or an automated check.
 
 | Committed topic | v1 status | v2 | Remaining work |
 |---|---|---|---|
-| Macroeconomics | missing | M02 (2 weeks) | Lab 02a planned |
-| Market data handler | missing | M16 (1 week) | Lab 16a planned |
-| Monitoring system | missing | M18 week 37 | Lab 18b planned |
-| F&O with second-order Greeks | first-order only | M09 (2 weeks) | Lab 09a planned |
+| Macroeconomics | missing | M02 (2 weeks) | – (Lab 02a shipped in v2.2.0) |
+| Market data handler | missing | M16 (1 week) | – (Lab 16a shipped in v2.2.0) |
+| Monitoring system | missing | M18 week 37 | – (Lab 18b shipped in v2.2.0) |
+| F&O with second-order Greeks | first-order only | M09 (2 weeks) | – (Lab 09a shipped in v2.2.0) |
 | Deep learning | shared lab, thin | M20 with its own lab (linear vs nonlinear signals) | – |
 | Reinforcement learning | one section | M21 with its own lab (costs, seeds) | – |
 | Portfolio management | one section | M14 with its own lab (shrinkage, frontier, sleeves) | – |
 | Risk management and sizing | one section | M13 with its own lab (Kupiec, GARCH VaR, ruin) | – |
 | Technical indicators and patterns | indicators only in lab 5 | M06 lab with event studies and FDR over 20 patterns | – |
-| Sentiment and news | sentiment only | M22 week 43 | Lab 22b planned |
-| Capstone scaffold | none | M24 repository layout | Lab 24a planned |
+| Sentiment and news | sentiment only | M22 week 43 | – (Lab 22b shipped in v2.2.0) |
+| Capstone scaffold | none | M24 repository layout | – (Lab 24a shipped in v2.2.0) |
 
 Also missing in v1 and now present: a mission statement, learning routes for different
 backgrounds, an operations runbook, a published fee split and unit-economics sensitivity,
@@ -107,7 +107,7 @@ reviews and the CI checks), and use feature branches with pull requests from the
 | P1 | 18b live monitoring — **shipped in v2.2.0** | Committed topic "monitoring system" | `automation.monitoring` | Planted incidents detected; no alerts on a clean day |
 | P2 | 09a second-order Greeks — **shipped in v2.2.0** | Committed topic; derivatives route | `bs_second_order_greeks`, `greek_pnl_attribution` | Closed forms match finite differences (worst 5.5e-6 relative); daily residual < 5% of gross Greek P&L |
 | P2 | 22b news to signals — **shipped in v2.2.0** | Committed topic "sentiment and news" | `data.news_stream`, `nlp.news_events`, `nlp.news_signal`, panel `event_study` | Planted response recovered; the net edge turns negative once the delay passes the half-life |
-| P2 | 02a macro event study | Committed topic "macroeconomics" | `data.macro_calendar`, `analytics.rates.nelson_siegel_fit` | Known Nelson–Siegel parameters recovered; causal regime labels |
+| P2 | 02a macro event study — **shipped in v2.2.0** | Committed topic "macroeconomics" | `data.macro_calendar`, `analytics.rates`, `analytics.macro`, `stats.event_day_effect` | Known Nelson–Siegel parameters recovered (panel tau 1.51 vs 1.5); causal regime labels pass the truncation test; event-day test size 5–7% on 60 null seeds |
 
 Each lab's full specification is in its module guide. When a lab ships, flip its status to
 `ready` in `course/course.yaml`; the route manager then requires the file and the lab test runs it.

@@ -12,7 +12,7 @@ One folder per module: `mNN-slug/` holds the module guide (`README.md`) and its 
 |---|---|---|---|---|---|---|
 | M00 | [Pre-work: Python, Statistics and Markets Primer](m00-prework/README.md) | T0 | −3 to 0 | 40 self-paced | [00a](m00-prework/lab_00a_environment_check.py) | ready |
 | M01 | [Financial Markets, Instruments and Regulation](m01-financial-markets/README.md) | T1 | 1–2 | 24 | [01a](m01-financial-markets/lab_01a_markets_instruments.py) | ready |
-| M02 | [Macroeconomics for Traders](m02-macroeconomics/README.md) | T1 | 3–4 | 24 | 02a (planned) | planned |
+| M02 | [Macroeconomics for Traders](m02-macroeconomics/README.md) | T1 | 3–4 | 24 | [02a](m02-macroeconomics/lab_02a_macro_event_study.py) | ready |
 | M03 | [Python for Financial Analysis](m03-python-for-finance/README.md) | T1 | 5–6 | 24 | [03a](m03-python-for-finance/lab_03a_python_for_finance.py) | ready |
 | M04 | [Statistics and Time Series for Finance](m04-statistics-time-series/README.md) | T1 | 7–8 | 24 | [04a](m04-statistics-time-series/lab_04a_statistics_time_series.py) | ready |
 | M05 | [Databases and Market Data Engineering](m05-data-engineering-databases/README.md) | T1 | 9–10 | 24 | [05a](m05-data-engineering-databases/lab_05a_market_database.py) | ready |
@@ -48,7 +48,7 @@ One folder per module: `mNN-slug/` holds the module guide (`README.md`) and its 
 |---|---|---|---|---|---|
 | 00a | M00 | [lab_00a_environment_check.py](m00-prework/lab_00a_environment_check.py) | Environment check and first chart | ready | ~5 s |
 | 01a | M01 | [lab_01a_markets_instruments.py](m01-financial-markets/lab_01a_markets_instruments.py) | Notional, margin, fair value, corporate actions, T+1 | ready | ~5 s |
-| 02a | M02 | lab_02a_macro_event_study.py | RBI policy days, CPI surprises and the yield curve | planned | – |
+| 02a | M02 | [lab_02a_macro_event_study.py](m02-macroeconomics/lab_02a_macro_event_study.py) | Macro calendar and vintages, announcement-day tests, CPI surprises, Nelson–Siegel curves and inversions, causal growth × inflation regimes | ready | ~10 s |
 | 03a | M03 | [lab_03a_python_for_finance.py](m03-python-for-finance/lab_03a_python_for_finance.py) | Returns, resampling, rolling volatility, drawdowns | ready | ~5 s |
 | 04a | M04 | [lab_04a_statistics_time_series.py](m04-statistics-time-series/lab_04a_statistics_time_series.py) | Fat tails, ADF, Ljung–Box, CAPM, cointegration, bootstrap Sharpe | ready | ~10 s |
 | 05a | M05 | [lab_05a_market_database.py](m05-data-engineering-databases/lab_05a_market_database.py) | SQLite schema, window functions, query plans, data-quality checks | ready | ~5 s |

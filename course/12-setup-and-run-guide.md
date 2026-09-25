@@ -168,41 +168,40 @@ message.
 |---|---|---|---|---|---|---|
 | 1 | −3 to 0 | [00a](../curriculum/m00-prework/lab_00a_environment_check.py) | M00 | Environment check and first chart | ~5 s | – |
 | 2 | 1–2 | [01a](../curriculum/m01-financial-markets/lab_01a_markets_instruments.py) | M01 | Notional, margin, fair value, corporate actions, T+1 | ~5 s | – |
-| 3 | 5–6 | [03a](../curriculum/m03-python-for-finance/lab_03a_python_for_finance.py) | M03 | Returns, resampling, rolling volatility, drawdowns | ~5 s | `data` |
-| 4 | 7–8 | [04a](../curriculum/m04-statistics-time-series/lab_04a_statistics_time_series.py) | M04 | Fat tails, ADF, Ljung–Box, CAPM, cointegration, bootstrap Sharpe | ~10 s | – |
-| 5 | 9–10 | [05a](../curriculum/m05-data-engineering-databases/lab_05a_market_database.py) | M05 | SQLite schema, window functions, query plans, data-quality checks | ~5 s | – |
-| 6 | 12–13 | [06a](../curriculum/m06-technical-analysis-patterns/lab_06a_indicators_patterns.py) | M06 | Indicator dashboard, HAC event studies, 20 patterns with FDR control | ~15 s | – |
-| 7 | 14 | [07a](../curriculum/m07-fundamental-factor-investing/lab_07a_factors_quantamental.py) | M07 | IC, winsorising, sector neutrality, composites, quintile spreads | ~15 s | – |
-| 8 | 15–17 | [08a](../curriculum/m08-derivatives-pricing-greeks/lab_08a_options_pricing_greeks.py) | M08 | Option chain and Greeks, IV smile, binomial, payoffs, delta hedging | ~10 s | – |
-| 9 | 18–19 | [09a](../curriculum/m09-fno-strategies-advanced-greeks/lab_09a_second_order_greeks.py) | M09 | Vanna, volga, charm, speed, zomma, colour; P&L attribution through a sell-off; gamma scalping | ~10 s | – |
-| 10 | 18–19 | [09b](../curriculum/m09-fno-strategies-advanced-greeks/lab_09b_futures_options_structures.py) | M09 | Futures curve, cash-and-carry, seven option structures in parallel | ~10 s | – |
-| 11 | 20–22 | [10a](../curriculum/m10-trading-strategies/lab_10a_trading_strategies.py) | M10 | Trend, momentum, mean reversion, cross-sectional momentum, pairs | ~10 s | – |
-| 12 | 20–22 | [10b](../curriculum/m10-trading-strategies/lab_10b_momentum_volatility.py) | M10 | Volatility estimators vs truth, cones and regimes, momentum scores, TSMOM with a vol target | ~5 s | – |
-| 13 | 23–24 | [11a](../curriculum/m11-backtesting-research/lab_11a_backtesting_costs_walk_forward.py) | M11 | Indian costs, grid search vs walk-forward, deflated Sharpe, event engine | ~20 s | – |
-| 14 | 23–24 | [11b](../curriculum/m11-backtesting-research/lab_11b_analysis_tearsheet.py) | M11 | Tearsheet vs benchmark, drawdown anatomy, rolling and distribution views, CAPM, RS and rotation | ~5 s | – |
-| 15 | 25–26 | [12a](../curriculum/m12-strategy-studio/lab_12a_screener_instrument_selection.py) | M12 | Parallel screener, regime labels, ranking, pattern scan, shortlist | ~10 s | – |
-| 16 | 25–26 | [12b](../curriculum/m12-strategy-studio/lab_12b_strategy_creator_parallel.py) | M12 | Strategy library and creator, sweeps (serial/thread/process), walk-forward | ~20 s | – |
-| 17 | 25–26 | [12c](../curriculum/m12-strategy-studio/lab_12c_fno_signals_and_filters.py) | M12 | Trend template on futures; regime filters for option structures | ~10 s | – |
-| 18 | 28–29 | [13a](../curriculum/m13-risk-position-sizing/lab_13a_risk_sizing_stress.py) | M13 | VaR/ES, Kupiec, GARCH VaR, sizing, risk of ruin, stress tests | ~15 s | – |
-| 19 | 30–31 | [14a](../curriculum/m14-portfolio-management/lab_14a_portfolio_construction.py) | M14 | Optimisers out of sample, Ledoit–Wolf, frontier, strategy sleeves | ~15 s | – |
-| 20 | 32–33 | [15a](../curriculum/m15-microstructure-execution/lab_15a_order_book_execution.py) | M15 | Order book, TWAP/VWAP/POV, Almgren–Chriss, impact, shortfall | ~5 s | – |
-| 21 | 34 | [16a](../curriculum/m16-market-data-handling/lab_16a_market_data_handler.py) | M16 | Tick validation with scored detectors, time/volume/dollar bars, instrument master, continuous futures, storage and replay | ~10 s | – |
-| 22 | 35–36 | [17a](../curriculum/m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py) | M17 | Paper broker, RMS rejects, throttle, kill switch, trade journal | ~5 s | – |
-| 23 | 35–36 | [17b](../curriculum/m17-trading-platform-compliance/lab_17b_order_management_journal.py) | M17 | OMS states, stops, IOC/DAY, bracket and OCO, reconciliation; journal review with R and MAE/MFE | ~5 s | – |
-| 24 | 37–38 | [18a](../curriculum/m18-monitoring-automation/lab_18a_n8n_signal_service.py) | M18 | Signal service endpoints used by the n8n workflows | ~5 s | – |
-| 25 | 37–38 | [18b](../curriculum/m18-monitoring-automation/lab_18b_live_monitoring.py) | M18 | Heartbeats and stale feeds, live-vs-backtest drift, P&L attribution, alert rules to a webhook | ~5 s | – |
-| 26 | 39–40 | [19a](../curriculum/m19-machine-learning/lab_19a_machine_learning.py) | M19 | Features, triple barrier, leakage vs purged CV, walk-forward trading | ~30 s | – |
-| 27 | 41 | [20a](../curriculum/m20-deep-learning/lab_20a_deep_learning.py) | M20 | Sliding windows, MLP vs logistic on linear and nonlinear signals | ~15 s | `dl` |
-| 28 | 42 | [21a](../curriculum/m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | M21 | Q-learning policy, rule baseline, costs in the reward, seed spread | ~30 s | – |
-| 29 | 43–44 | [22a](../curriculum/m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py) | M22 | Lexicon and TF-IDF sentiment, RAG with relevance guard, optional Claude | ~5 s | `llm` |
-| 30 | 43–44 | [22b](../curriculum/m22-nlp-news-llm-rag/lab_22b_news_signal_event_study.py) | M22 | Timestamped news to signals: dedupe, session alignment, decay, pooled event study, delay sweep | ~5 s | – |
-| 31 | 45–46 | [23a](../curriculum/m23-advanced-strategies-hpo/lab_23a_boosting_hpo.py) | M23 | HGB/XGBoost/LightGBM, random search, Optuna, nested walk-forward, PBO | ~60 s | `boost` |
-| 32 | 45–46 | [23b](../curriculum/m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py) | M23 | Markov regimes, GARCH volatility targeting, Kalman-filter pairs | ~10 s | – |
-| 33 | 45–46 | [23c](../curriculum/m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py) | M23 | Meta-labelling, bet sizing, multi-strategy allocation | ~10 s | – |
-| 34 | 45–46 | [23d](../curriculum/m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | M23 | Day/month/expiry/regime/pattern segments, FDR, per-segment walk-forward | ~60 s | – |
-| 35 | 48–52 | [24a](../curriculum/m24-capstone-career/lab_24a_capstone_template.py) | M24 | Pre-registration to paper-trading report: a reproducible capstone skeleton | ~5 s | – |
-
-Planned, not yet released: 02a.
+| 3 | 3–4 | [02a](../curriculum/m02-macroeconomics/lab_02a_macro_event_study.py) | M02 | Macro calendar and vintages, announcement-day tests, CPI surprises, Nelson–Siegel curves and inversions, causal growth × inflation regimes | ~10 s | – |
+| 4 | 5–6 | [03a](../curriculum/m03-python-for-finance/lab_03a_python_for_finance.py) | M03 | Returns, resampling, rolling volatility, drawdowns | ~5 s | `data` |
+| 5 | 7–8 | [04a](../curriculum/m04-statistics-time-series/lab_04a_statistics_time_series.py) | M04 | Fat tails, ADF, Ljung–Box, CAPM, cointegration, bootstrap Sharpe | ~10 s | – |
+| 6 | 9–10 | [05a](../curriculum/m05-data-engineering-databases/lab_05a_market_database.py) | M05 | SQLite schema, window functions, query plans, data-quality checks | ~5 s | – |
+| 7 | 12–13 | [06a](../curriculum/m06-technical-analysis-patterns/lab_06a_indicators_patterns.py) | M06 | Indicator dashboard, HAC event studies, 20 patterns with FDR control | ~15 s | – |
+| 8 | 14 | [07a](../curriculum/m07-fundamental-factor-investing/lab_07a_factors_quantamental.py) | M07 | IC, winsorising, sector neutrality, composites, quintile spreads | ~15 s | – |
+| 9 | 15–17 | [08a](../curriculum/m08-derivatives-pricing-greeks/lab_08a_options_pricing_greeks.py) | M08 | Option chain and Greeks, IV smile, binomial, payoffs, delta hedging | ~10 s | – |
+| 10 | 18–19 | [09a](../curriculum/m09-fno-strategies-advanced-greeks/lab_09a_second_order_greeks.py) | M09 | Vanna, volga, charm, speed, zomma, colour; P&L attribution through a sell-off; gamma scalping | ~10 s | – |
+| 11 | 18–19 | [09b](../curriculum/m09-fno-strategies-advanced-greeks/lab_09b_futures_options_structures.py) | M09 | Futures curve, cash-and-carry, seven option structures in parallel | ~10 s | – |
+| 12 | 20–22 | [10a](../curriculum/m10-trading-strategies/lab_10a_trading_strategies.py) | M10 | Trend, momentum, mean reversion, cross-sectional momentum, pairs | ~10 s | – |
+| 13 | 20–22 | [10b](../curriculum/m10-trading-strategies/lab_10b_momentum_volatility.py) | M10 | Volatility estimators vs truth, cones and regimes, momentum scores, TSMOM with a vol target | ~5 s | – |
+| 14 | 23–24 | [11a](../curriculum/m11-backtesting-research/lab_11a_backtesting_costs_walk_forward.py) | M11 | Indian costs, grid search vs walk-forward, deflated Sharpe, event engine | ~20 s | – |
+| 15 | 23–24 | [11b](../curriculum/m11-backtesting-research/lab_11b_analysis_tearsheet.py) | M11 | Tearsheet vs benchmark, drawdown anatomy, rolling and distribution views, CAPM, RS and rotation | ~5 s | – |
+| 16 | 25–26 | [12a](../curriculum/m12-strategy-studio/lab_12a_screener_instrument_selection.py) | M12 | Parallel screener, regime labels, ranking, pattern scan, shortlist | ~10 s | – |
+| 17 | 25–26 | [12b](../curriculum/m12-strategy-studio/lab_12b_strategy_creator_parallel.py) | M12 | Strategy library and creator, sweeps (serial/thread/process), walk-forward | ~20 s | – |
+| 18 | 25–26 | [12c](../curriculum/m12-strategy-studio/lab_12c_fno_signals_and_filters.py) | M12 | Trend template on futures; regime filters for option structures | ~10 s | – |
+| 19 | 28–29 | [13a](../curriculum/m13-risk-position-sizing/lab_13a_risk_sizing_stress.py) | M13 | VaR/ES, Kupiec, GARCH VaR, sizing, risk of ruin, stress tests | ~15 s | – |
+| 20 | 30–31 | [14a](../curriculum/m14-portfolio-management/lab_14a_portfolio_construction.py) | M14 | Optimisers out of sample, Ledoit–Wolf, frontier, strategy sleeves | ~15 s | – |
+| 21 | 32–33 | [15a](../curriculum/m15-microstructure-execution/lab_15a_order_book_execution.py) | M15 | Order book, TWAP/VWAP/POV, Almgren–Chriss, impact, shortfall | ~5 s | – |
+| 22 | 34 | [16a](../curriculum/m16-market-data-handling/lab_16a_market_data_handler.py) | M16 | Tick validation with scored detectors, time/volume/dollar bars, instrument master, continuous futures, storage and replay | ~10 s | – |
+| 23 | 35–36 | [17a](../curriculum/m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py) | M17 | Paper broker, RMS rejects, throttle, kill switch, trade journal | ~5 s | – |
+| 24 | 35–36 | [17b](../curriculum/m17-trading-platform-compliance/lab_17b_order_management_journal.py) | M17 | OMS states, stops, IOC/DAY, bracket and OCO, reconciliation; journal review with R and MAE/MFE | ~5 s | – |
+| 25 | 37–38 | [18a](../curriculum/m18-monitoring-automation/lab_18a_n8n_signal_service.py) | M18 | Signal service endpoints used by the n8n workflows | ~5 s | – |
+| 26 | 37–38 | [18b](../curriculum/m18-monitoring-automation/lab_18b_live_monitoring.py) | M18 | Heartbeats and stale feeds, live-vs-backtest drift, P&L attribution, alert rules to a webhook | ~5 s | – |
+| 27 | 39–40 | [19a](../curriculum/m19-machine-learning/lab_19a_machine_learning.py) | M19 | Features, triple barrier, leakage vs purged CV, walk-forward trading | ~30 s | – |
+| 28 | 41 | [20a](../curriculum/m20-deep-learning/lab_20a_deep_learning.py) | M20 | Sliding windows, MLP vs logistic on linear and nonlinear signals | ~15 s | `dl` |
+| 29 | 42 | [21a](../curriculum/m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | M21 | Q-learning policy, rule baseline, costs in the reward, seed spread | ~30 s | – |
+| 30 | 43–44 | [22a](../curriculum/m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py) | M22 | Lexicon and TF-IDF sentiment, RAG with relevance guard, optional Claude | ~5 s | `llm` |
+| 31 | 43–44 | [22b](../curriculum/m22-nlp-news-llm-rag/lab_22b_news_signal_event_study.py) | M22 | Timestamped news to signals: dedupe, session alignment, decay, pooled event study, delay sweep | ~5 s | – |
+| 32 | 45–46 | [23a](../curriculum/m23-advanced-strategies-hpo/lab_23a_boosting_hpo.py) | M23 | HGB/XGBoost/LightGBM, random search, Optuna, nested walk-forward, PBO | ~60 s | `boost` |
+| 33 | 45–46 | [23b](../curriculum/m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py) | M23 | Markov regimes, GARCH volatility targeting, Kalman-filter pairs | ~10 s | – |
+| 34 | 45–46 | [23c](../curriculum/m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py) | M23 | Meta-labelling, bet sizing, multi-strategy allocation | ~10 s | – |
+| 35 | 45–46 | [23d](../curriculum/m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | M23 | Day/month/expiry/regime/pattern segments, FDR, per-segment walk-forward | ~60 s | – |
+| 36 | 48–52 | [24a](../curriculum/m24-capstone-career/lab_24a_capstone_template.py) | M24 | Pre-registration to paper-trading report: a reproducible capstone skeleton | ~5 s | – |
 <!-- END GENERATED: run-order -->
 
 ### How to run a lab
