@@ -31,7 +31,7 @@ notes) in [`curriculum/`](../curriculum/README.md), and runnable labs built on t
 | M15 | [Market Microstructure and Execution](../curriculum/m15-microstructure-execution/README.md) | T4 | 32–33 | 24 | [15a](../curriculum/m15-microstructure-execution/lab_15a_order_book_execution.py) | ready |
 | M16 | [Market Data Handling](../curriculum/m16-market-data-handling/README.md) | T4 | 34 | 12 | [16a](../curriculum/m16-market-data-handling/lab_16a_market_data_handler.py) | ready |
 | M17 | [Trading Platform, Broker APIs and Compliance](../curriculum/m17-trading-platform-compliance/README.md) | T4 | 35–36 | 24 | [17a](../curriculum/m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py), [17b](../curriculum/m17-trading-platform-compliance/lab_17b_order_management_journal.py) | ready |
-| M18 | [Monitoring and Automation with n8n](../curriculum/m18-monitoring-automation/README.md) | T4 | 37–38 | 24 | [18a](../curriculum/m18-monitoring-automation/lab_18a_n8n_signal_service.py), 18b (planned) | partial |
+| M18 | [Monitoring and Automation with n8n](../curriculum/m18-monitoring-automation/README.md) | T4 | 37–38 | 24 | [18a](../curriculum/m18-monitoring-automation/lab_18a_n8n_signal_service.py), [18b](../curriculum/m18-monitoring-automation/lab_18b_live_monitoring.py) | ready |
 | M19 | [Machine Learning for Trading](../curriculum/m19-machine-learning/README.md) | T5 | 39–40 | 24 | [19a](../curriculum/m19-machine-learning/lab_19a_machine_learning.py) | ready |
 | M20 | [Deep Learning for Financial Time Series](../curriculum/m20-deep-learning/README.md) | T5 | 41 | 12 | [20a](../curriculum/m20-deep-learning/lab_20a_deep_learning.py) | ready |
 | M21 | [Reinforcement Learning for Trading](../curriculum/m21-reinforcement-learning/README.md) | T5 | 42 | 12 | [21a](../curriculum/m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | ready |
@@ -55,7 +55,7 @@ These are the areas the programme commits to cover in depth, plus supporting are
 | Topic | Modules | State |
 |---|---|---|
 | Statistics in finance | M04, M06, M11, M23 | covered |
-| Sentiment and news analysis | M18 (lab planned), M22 (lab planned) | planned |
+| Sentiment and news analysis | M18, M22 (lab planned) | covered |
 | Risk management and position sizing | M13, M17, M24 (lab planned) | covered |
 | Strategy optimisation by segment (day, month, regime, pattern) | M23 | covered |
 | Market microstructure | M15 | covered |
@@ -63,12 +63,12 @@ These are the areas the programme commits to cover in depth, plus supporting are
 | Technical indicators, chart and candlestick patterns | M06, M12 | covered |
 | Macroeconomics | M02 (lab planned), M22 (lab planned) | planned |
 | Portfolio management methods | M14, M23 | covered |
-| Trading platform structure and infrastructure | M05, M17, M18 (lab planned) | covered |
+| Trading platform structure and infrastructure | M05, M17, M18 | covered |
 | Machine-learning techniques | M19, M23 | covered |
 | Deep-learning techniques | M20 | covered |
 | Reinforcement learning | M21 | covered |
 | Market data handling | M05, M16 | covered |
-| Monitoring systems | M18 (lab planned), M24 (lab planned) | planned |
+| Monitoring systems | M18, M24 (lab planned) | covered |
 | Fundamental and factor investing *(supporting)* | M07 | covered |
 | Screeners and instrument selection *(supporting)* | M12 | covered |
 | Threading and multiprocessing for research *(supporting)* | M12 | covered |

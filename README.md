@@ -12,7 +12,7 @@ to tell an edge from a lucky backtest.
 | Duration | 52 weeks + 4 weeks of self-paced pre-work |
 | Format | Hybrid — live online weekend classes, weekday lab clinics, three 3-day in-person bootcamps |
 | Guided hours | 736 (plus 40 h pre-work and about 6 h/week self-study) |
-| Structure | 6 terms, 24 modules + pre-work, 36 labs (31 ready) |
+| Structure | 6 terms, 24 modules + pre-work, 36 labs (32 ready) |
 | Cohort | target 36, maximum 40; intakes January and July |
 | Programme fee | **₹10,00,000.00 all-inclusive** = ₹8,47,457.63 + GST 18% ₹1,52,542.37 |
 | Fee per guided hour | ₹1,358.70 (₹1,151.44 before GST) |
@@ -57,7 +57,7 @@ to tell an edge from a lucky backtest.
 | M15 | [Market Microstructure and Execution](curriculum/m15-microstructure-execution/README.md) | T4 | 32–33 | 24 | [15a](curriculum/m15-microstructure-execution/lab_15a_order_book_execution.py) | ready |
 | M16 | [Market Data Handling](curriculum/m16-market-data-handling/README.md) | T4 | 34 | 12 | [16a](curriculum/m16-market-data-handling/lab_16a_market_data_handler.py) | ready |
 | M17 | [Trading Platform, Broker APIs and Compliance](curriculum/m17-trading-platform-compliance/README.md) | T4 | 35–36 | 24 | [17a](curriculum/m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py), [17b](curriculum/m17-trading-platform-compliance/lab_17b_order_management_journal.py) | ready |
-| M18 | [Monitoring and Automation with n8n](curriculum/m18-monitoring-automation/README.md) | T4 | 37–38 | 24 | [18a](curriculum/m18-monitoring-automation/lab_18a_n8n_signal_service.py), 18b (planned) | partial |
+| M18 | [Monitoring and Automation with n8n](curriculum/m18-monitoring-automation/README.md) | T4 | 37–38 | 24 | [18a](curriculum/m18-monitoring-automation/lab_18a_n8n_signal_service.py), [18b](curriculum/m18-monitoring-automation/lab_18b_live_monitoring.py) | ready |
 | M19 | [Machine Learning for Trading](curriculum/m19-machine-learning/README.md) | T5 | 39–40 | 24 | [19a](curriculum/m19-machine-learning/lab_19a_machine_learning.py) | ready |
 | M20 | [Deep Learning for Financial Time Series](curriculum/m20-deep-learning/README.md) | T5 | 41 | 12 | [20a](curriculum/m20-deep-learning/lab_20a_deep_learning.py) | ready |
 | M21 | [Reinforcement Learning for Trading](curriculum/m21-reinforcement-learning/README.md) | T5 | 42 | 12 | [21a](curriculum/m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | ready |

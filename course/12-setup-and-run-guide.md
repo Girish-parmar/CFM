@@ -189,16 +189,17 @@ message.
 | 21 | 35–36 | [17a](../curriculum/m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py) | M17 | Paper broker, RMS rejects, throttle, kill switch, trade journal | ~5 s | – |
 | 22 | 35–36 | [17b](../curriculum/m17-trading-platform-compliance/lab_17b_order_management_journal.py) | M17 | OMS states, stops, IOC/DAY, bracket and OCO, reconciliation; journal review with R and MAE/MFE | ~5 s | – |
 | 23 | 37–38 | [18a](../curriculum/m18-monitoring-automation/lab_18a_n8n_signal_service.py) | M18 | Signal service endpoints used by the n8n workflows | ~5 s | – |
-| 24 | 39–40 | [19a](../curriculum/m19-machine-learning/lab_19a_machine_learning.py) | M19 | Features, triple barrier, leakage vs purged CV, walk-forward trading | ~30 s | – |
-| 25 | 41 | [20a](../curriculum/m20-deep-learning/lab_20a_deep_learning.py) | M20 | Sliding windows, MLP vs logistic on linear and nonlinear signals | ~15 s | `dl` |
-| 26 | 42 | [21a](../curriculum/m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | M21 | Q-learning policy, rule baseline, costs in the reward, seed spread | ~30 s | – |
-| 27 | 43–44 | [22a](../curriculum/m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py) | M22 | Lexicon and TF-IDF sentiment, RAG with relevance guard, optional Claude | ~5 s | `llm` |
-| 28 | 45–46 | [23a](../curriculum/m23-advanced-strategies-hpo/lab_23a_boosting_hpo.py) | M23 | HGB/XGBoost/LightGBM, random search, Optuna, nested walk-forward, PBO | ~60 s | `boost` |
-| 29 | 45–46 | [23b](../curriculum/m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py) | M23 | Markov regimes, GARCH volatility targeting, Kalman-filter pairs | ~10 s | – |
-| 30 | 45–46 | [23c](../curriculum/m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py) | M23 | Meta-labelling, bet sizing, multi-strategy allocation | ~10 s | – |
-| 31 | 45–46 | [23d](../curriculum/m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | M23 | Day/month/expiry/regime/pattern segments, FDR, per-segment walk-forward | ~60 s | – |
+| 24 | 37–38 | [18b](../curriculum/m18-monitoring-automation/lab_18b_live_monitoring.py) | M18 | Heartbeats and stale feeds, live-vs-backtest drift, P&L attribution, alert rules to a webhook | ~5 s | – |
+| 25 | 39–40 | [19a](../curriculum/m19-machine-learning/lab_19a_machine_learning.py) | M19 | Features, triple barrier, leakage vs purged CV, walk-forward trading | ~30 s | – |
+| 26 | 41 | [20a](../curriculum/m20-deep-learning/lab_20a_deep_learning.py) | M20 | Sliding windows, MLP vs logistic on linear and nonlinear signals | ~15 s | `dl` |
+| 27 | 42 | [21a](../curriculum/m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | M21 | Q-learning policy, rule baseline, costs in the reward, seed spread | ~30 s | – |
+| 28 | 43–44 | [22a](../curriculum/m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py) | M22 | Lexicon and TF-IDF sentiment, RAG with relevance guard, optional Claude | ~5 s | `llm` |
+| 29 | 45–46 | [23a](../curriculum/m23-advanced-strategies-hpo/lab_23a_boosting_hpo.py) | M23 | HGB/XGBoost/LightGBM, random search, Optuna, nested walk-forward, PBO | ~60 s | `boost` |
+| 30 | 45–46 | [23b](../curriculum/m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py) | M23 | Markov regimes, GARCH volatility targeting, Kalman-filter pairs | ~10 s | – |
+| 31 | 45–46 | [23c](../curriculum/m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py) | M23 | Meta-labelling, bet sizing, multi-strategy allocation | ~10 s | – |
+| 32 | 45–46 | [23d](../curriculum/m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | M23 | Day/month/expiry/regime/pattern segments, FDR, per-segment walk-forward | ~60 s | – |
 
-Planned, not yet released: 02a, 09a, 18b, 22b, 24a.
+Planned, not yet released: 02a, 09a, 22b, 24a.
 <!-- END GENERATED: run-order -->
 
 ### How to run a lab

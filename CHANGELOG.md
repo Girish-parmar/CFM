@@ -27,6 +27,11 @@ for the `cfmat` library; the course edition is recorded in `course/course.yaml`.
   partitioned `store_ticks`/`load_ticks` (Parquet or CSV) and deterministic `replay`; the
   generators `data.tick_stream` (with planted faults and an answer key) and `data.futures_chain`.
   pyarrow joins the `data` extra.
+- Lab 18b, live monitoring, and `cfmat.automation.monitoring`: `heartbeat_gaps`, `staleness`
+  (silent vs frozen feeds), `drift_report` (tracking, return distribution, signal agreement,
+  slippage; every field always present), `pnl_attribution` (signal + execution + costs, adding
+  up exactly to the broker's equity change), and `AlertRule`/`AlertManager`/`webhook_sink`
+  (severity, de-duplication, reminders, resolutions, failure-tolerant delivery).
 - `data.standardize_ohlcv` (one OHLCV shape for every source: lower-case columns, exchange-local
   naive timestamps, sorted, no duplicates) and `data.ohlcv_problems` (plain-language data-quality
   checks).

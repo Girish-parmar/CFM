@@ -411,7 +411,7 @@ modules:
       - Automation with n8n — alerts, digests and trade journals
     labs:
       - {file: lab_18a_n8n_signal_service.py, status: ready, runtime_s: 5, title: Signal service endpoints used by the n8n workflows}
-      - {file: lab_18b_live_monitoring.py, status: planned, runtime_s: 10, title: "Heartbeats, live-vs-backtest drift, alert rules, incident drill"}
+      - {file: lab_18b_live_monitoring.py, status: ready, runtime_s: 5, title: "Heartbeats and stale feeds, live-vs-backtest drift, P&L attribution, alert rules to a webhook"}
     library: [cfmat.automation]
     topics: [monitoring, platform, sentiment-news]
     prerequisites: [M17]

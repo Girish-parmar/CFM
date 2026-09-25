@@ -30,7 +30,7 @@ One folder per module: `mNN-slug/` holds the module guide (`README.md`) and its 
 | M15 | [Market Microstructure and Execution](m15-microstructure-execution/README.md) | T4 | 32–33 | 24 | [15a](m15-microstructure-execution/lab_15a_order_book_execution.py) | ready |
 | M16 | [Market Data Handling](m16-market-data-handling/README.md) | T4 | 34 | 12 | [16a](m16-market-data-handling/lab_16a_market_data_handler.py) | ready |
 | M17 | [Trading Platform, Broker APIs and Compliance](m17-trading-platform-compliance/README.md) | T4 | 35–36 | 24 | [17a](m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py), [17b](m17-trading-platform-compliance/lab_17b_order_management_journal.py) | ready |
-| M18 | [Monitoring and Automation with n8n](m18-monitoring-automation/README.md) | T4 | 37–38 | 24 | [18a](m18-monitoring-automation/lab_18a_n8n_signal_service.py), 18b (planned) | partial |
+| M18 | [Monitoring and Automation with n8n](m18-monitoring-automation/README.md) | T4 | 37–38 | 24 | [18a](m18-monitoring-automation/lab_18a_n8n_signal_service.py), [18b](m18-monitoring-automation/lab_18b_live_monitoring.py) | ready |
 | M19 | [Machine Learning for Trading](m19-machine-learning/README.md) | T5 | 39–40 | 24 | [19a](m19-machine-learning/lab_19a_machine_learning.py) | ready |
 | M20 | [Deep Learning for Financial Time Series](m20-deep-learning/README.md) | T5 | 41 | 12 | [20a](m20-deep-learning/lab_20a_deep_learning.py) | ready |
 | M21 | [Reinforcement Learning for Trading](m21-reinforcement-learning/README.md) | T5 | 42 | 12 | [21a](m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | ready |
@@ -71,7 +71,7 @@ One folder per module: `mNN-slug/` holds the module guide (`README.md`) and its 
 | 17a | M17 | [lab_17a_oms_rms_paper_trading.py](m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py) | Paper broker, RMS rejects, throttle, kill switch, trade journal | ready | ~5 s |
 | 17b | M17 | [lab_17b_order_management_journal.py](m17-trading-platform-compliance/lab_17b_order_management_journal.py) | OMS states, stops, IOC/DAY, bracket and OCO, reconciliation; journal review with R and MAE/MFE | ready | ~5 s |
 | 18a | M18 | [lab_18a_n8n_signal_service.py](m18-monitoring-automation/lab_18a_n8n_signal_service.py) | Signal service endpoints used by the n8n workflows | ready | ~5 s |
-| 18b | M18 | lab_18b_live_monitoring.py | Heartbeats, live-vs-backtest drift, alert rules, incident drill | planned | – |
+| 18b | M18 | [lab_18b_live_monitoring.py](m18-monitoring-automation/lab_18b_live_monitoring.py) | Heartbeats and stale feeds, live-vs-backtest drift, P&L attribution, alert rules to a webhook | ready | ~5 s |
 | 19a | M19 | [lab_19a_machine_learning.py](m19-machine-learning/lab_19a_machine_learning.py) | Features, triple barrier, leakage vs purged CV, walk-forward trading | ready | ~30 s |
 | 20a | M20 | [lab_20a_deep_learning.py](m20-deep-learning/lab_20a_deep_learning.py) | Sliding windows, MLP vs logistic on linear and nonlinear signals | ready | ~15 s |
 | 21a | M21 | [lab_21a_reinforcement_learning.py](m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | Q-learning policy, rule baseline, costs in the reward, seed spread | ready | ~30 s |

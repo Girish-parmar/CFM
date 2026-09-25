@@ -7,11 +7,11 @@
 | Term | T4 · Risk, Portfolio and Trading Systems |
 | Weeks | 37–38 |
 | Hours | 24 guided |
-| Labs | [18a](lab_18a_n8n_signal_service.py) — Signal service endpoints used by the n8n workflows<br>18b (planned) — Heartbeats, live-vs-backtest drift, alert rules, incident drill |
+| Labs | [18a](lab_18a_n8n_signal_service.py) — Signal service endpoints used by the n8n workflows<br>[18b](lab_18b_live_monitoring.py) — Heartbeats and stale feeds, live-vs-backtest drift, P&L attribution, alert rules to a webhook |
 | Library | `cfmat.automation` |
 | Prerequisites | [M17](../m17-trading-platform-compliance/README.md) |
 | Committed topics | Monitoring systems, Trading platform structure and infrastructure, Sentiment and news analysis |
-| Status | partial |
+| Status | ready |
 <!-- END GENERATED: module-header -->
 
 ## Why this module
@@ -45,9 +45,9 @@ By the end of the module you can:
 |---|---|
 | L1 · Sat · 180 min | 0–15 retrieval quiz on M17 · 15–60 what to monitor: heartbeats, staleness, latency, rejects, reconciliation, exposure; SLOs for a trading system · 60–70 break · 70–120 drift: live vs backtest fills, slippage, signal agreement, return distribution tests · 120–170 P&L attribution (signal, execution, costs) and kill-switch triggers · 170–180 exit ticket |
 | L2 · Sun · 180 min | 0–10 recap · 10–60 alert design: severity, routing, deduplication, alert fatigue · 60–70 break · 70–130 workshop: a monitoring dashboard for the M17 paper strategy (heartbeat, staleness, drift, daily risk report from M13) · 130–170 incident drill: stale feed at 11:02 · 170–180 exit ticket |
-| C1 · Tue · 120 min | 0–10 setup · 10–100 Lab 18b (when released) or the exercise pack: staleness and drift detectors on the paper strategy's journal · 100–120 blockers |
+| C1 · Tue · 120 min | 0–10 setup · 10–100 Lab 18b §1–§2: heartbeats and stale feeds; monthly drift reports and the false-alarm budget · 100–120 blockers |
 | OH · Wed · 60 min | Monitoring design clinic |
-| C2 · Thu · 120 min | 0–60 daily P&L attribution report · 60–100 peer review · 100–120 review |
+| C2 · Thu · 120 min | 0–60 Lab 18b §3–§4: daily P&L attribution; alert rules, de-duplication and a webhook · 60–100 peer review · 100–120 review |
 | QP · Fri · 60 min | 0–20 quiz 18a · 20–50 "false alarm or real?" alert cards · 50–60 preview |
 | Self-study · ~6 h | Google SRE book ch. 6 (monitoring); capstone topic finalisation |
 
@@ -74,24 +74,21 @@ By the end of the module you can:
 | 3. Trade journal | POST fills to `/journal`; read them back | Bad rows rejected by the schema |
 | 4. In n8n | Import the three workflows | Workflows run against the local service |
 
-**Lab 18b — live monitoring** (`lab_18b_live_monitoring.py`) · *planned*
+**Lab 18b — live monitoring** (`lab_18b_live_monitoring.py`)
 
-| Section | Content | Library support needed |
+| Section | You do | What good looks like |
 |---|---|---|
-| 1. Heartbeats and staleness | Detect a frozen feed and a dead process from timestamps | `automation.monitoring.staleness`, `heartbeat_gaps` |
-| 2. Drift | Live vs backtest: slippage, signal agreement, KS test on returns | `automation.monitoring.drift_report` |
-| 3. P&L attribution | Signal vs execution vs costs per day | `automation.monitoring.pnl_attribution` |
-| 4. Alert rules | Severity, dedupe, routing to the n8n webhook | `automation.monitoring.AlertRule` |
-
-Acceptance: planted incidents detected with no alerts on a clean day; runs offline in under 15 s;
-tests in `tests/test_automation.py`.
+| 1. Heartbeats and staleness | Find a crashed strategy process, a silent feed and a frozen price from timestamps; check a clean day | Each incident found with its start time; nothing on the clean day |
+| 2. Drift | Monthly paper-vs-backtest reports; a delayed-signal bug and worse fills from July; 300 faithful copies | You explain why signal agreement and slippage catch the bug and tracking does not, and state the false-alarm rate |
+| 3. P&L attribution | Signal, execution and costs per day through the paper broker | The parts add up to the broker's equity change; the execution problem is visible |
+| 4. Alert rules | Four rules with severity and cool-downs, delivered to a local webhook standing in for n8n | One alert and one resolution per incident; no alerts on the clean day |
 
 ## Assessment
 
 | Item | Weight in course component | Due | Criteria |
 |---|---|---|---|
 | Quizzes 18a, 18b | quizzes (10%) | Fri W37, W38 | Monitoring and automation |
-| Labs 18a (+ 18b when released) | labs (20%) | Sun W38 | Runs; workflows imported |
+| Labs 18a, 18b | labs (20%) | Sun W38 | Runs; workflows imported; every monitoring alert traced to its planted incident |
 | Assignment: monitoring and automation for your capstone | assignments (15%) | Sun W39 | An error workflow for all CFMAT workflows, a new workflow of your design (for example an end-of-day P&L summary from the journal), and a monitoring checklist with thresholds for your capstone strategy. Rubric: reliability 35, usefulness 35, security 30 |
 
 ## Common mistakes
@@ -111,5 +108,5 @@ tests in `tests/test_automation.py`.
 
 - Owner: NLP/LLM and automation lead with the risk and execution lead for Week 37.
 - The n8n workflows are validated in real n8n (ids `CfmatSignalAlrt1`, `CfmatNewsDigest2`, `CfmatTradeJrnl03`); re-import them on the current n8n version before each cohort.
-- Lab 18b is planned; until it ships, C1 W37 uses the exercise pack. See the [audit](../../audit/2026-09-devils-advocate-review.md).
+- Lab 18b plants every incident in synthetic data, so learners can check each alert against the truth and measure false alarms on clean days before designing their own thresholds.
 - Capstone topics are approved this week; OH W38 is reserved for that.
