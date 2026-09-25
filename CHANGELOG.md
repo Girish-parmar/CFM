@@ -15,8 +15,18 @@ for the `cfmat` library; the course edition is recorded in `course/course.yaml`.
   exercise (`extras: [boost]`); the route manager checks them against `pyproject.toml` and
   renders the `run-order` table.
 
+- Market data from brokers and vendors: `data.alpaca_bars` (US stocks from Alpaca) and
+  `data.ibkr_bars` (Interactive Brokers, including NSE, with paced paging back in time), new
+  optional extras `alpaca` and `ibkr`, and the `cfmat-fetch` command
+  (`python -m cfmat.data.fetch {yahoo,alpaca,ibkr} SYMBOL ...`) that saves checked
+  `data/<SYMBOL>.csv` files.
+- `data.standardize_ohlcv` (one OHLCV shape for every source: lower-case columns, exchange-local
+  naive timestamps, sorted, no duplicates) and `data.ohlcv_problems` (plain-language data-quality
+  checks).
+
 ### Changed
 - Docs recommend Python 3.11 or 3.12 (the tested pins) instead of "3.11+".
+- `data.download_prices` returns the standard shape via `standardize_ohlcv`.
 
 ## [2.1.0] — 2026-09-25
 

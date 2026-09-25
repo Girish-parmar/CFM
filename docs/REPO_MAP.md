@@ -42,7 +42,7 @@ Where everything lives, how files are named, and where to go for common tasks.
 |---|---|---|
 | `analytics` | metrics, performance (tearsheets), indicators, patterns, momentum, volatility, relative (CAPM, RS, rotation), stats, factors | numpy, pandas, scipy, statsmodels |
 | `infra` | parallel map, paths, plotting | stdlib, matplotlib |
-| `data` | synthetic generators, loaders, sample data | analytics |
+| `data` | synthetic generators, loaders and quality checks, Alpaca/IBKR providers, the `fetch` command, sample data | analytics, infra (+ optional yfinance, alpaca-py, ib_async) |
 | `derivatives` | options, futures, option-structure backtests | analytics, microstructure, infra |
 | `strategies` | signal functions, rule language, specs, templates | analytics |
 | `microstructure` | order book, schedules, TCA, Indian costs | numpy, pandas |

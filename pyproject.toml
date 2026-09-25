@@ -28,6 +28,8 @@ dependencies = [
 
 [project.optional-dependencies]
 data = ["yfinance>=0.2.40"]
+alpaca = ["alpaca-py>=0.30"]
+ibkr = ["ib_async>=1.0"]
 boost = ["xgboost>=2.0", "lightgbm>=4.0", "optuna>=3.4"]
 llm = ["anthropic>=0.40"]
 dl = ["torch>=2.2"]
@@ -35,6 +37,7 @@ dev = ["pytest>=8", "pyyaml>=6", "ruff>=0.6", "pre-commit>=3.5"]
 
 [project.scripts]
 cfmat-signal-service = "cfmat.automation.signal_service:main"
+cfmat-fetch = "cfmat.data.fetch:main"
 
 [tool.setuptools.packages.find]
 include = ["cfmat*"]

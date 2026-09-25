@@ -112,7 +112,7 @@ def test_schema_catches_values_parsed_as_mappings(course):
 
 
 def test_lab_extras_must_be_optional_dependencies_in_pyproject(course):
-    assert set(rm.pip_extras()) == {"data", "boost", "llm", "dl"}
+    assert set(rm.pip_extras()) == {"data", "alpaca", "ibkr", "boost", "llm", "dl"}
     broken = rm.Course(copy.deepcopy(course.data))
     lab = broken.modules["M23"].labs[0]
     broken.modules["M23"].labs[0] = rm.Lab(lab.file, lab.status, lab.runtime_s, lab.title, lab.module, ("gpu",))

@@ -238,6 +238,8 @@ Install an extra only when you reach the module that needs it. With the environm
 |---|---|---|---|
 | `boost` | `pip install -e ".[boost]"` (already in `requirements.txt`) | XGBoost, LightGBM and Optuna sections of Lab 23a | M23 |
 | `data` | `pip install -e ".[data]"` | Real prices from Yahoo Finance (`data.download_prices("TCS.NS")`); `USE_REAL_DATA` in Lab 03a; real-data exercises | M03 onwards |
+| `alpaca` | `pip install -e ".[alpaca]"` and set `ALPACA_API_KEY`, `ALPACA_SECRET_KEY` | US stock bars from Alpaca (`data.alpaca_bars`, `cfmat-fetch alpaca`); no NSE | Real-data exercises, M16 |
+| `ibkr` | `pip install -e ".[ibkr]"`; TWS or IB Gateway running | Bars from Interactive Brokers, including NSE (`data.ibkr_bars`, `cfmat-fetch ibkr`) | Real-data exercises, M16–M17 |
 | `llm` | `pip install -e ".[llm]"` and set `ANTHROPIC_API_KEY` | The Claude answer step in Lab 22a (the retrieval pipeline runs without it) | M22 |
 | `dl` | `pip install -e ".[dl]"` (CPU only, much smaller on Windows/Linux: `pip install torch --index-url https://download.pytorch.org/whl/cpu`) | The PyTorch LSTM exercise in Lab 20a | M20 |
 
@@ -246,7 +248,42 @@ Install an extra only when you reach the module that needs it. With the environm
 ```bash
 export ANTHROPIC_API_KEY="..."            # macOS / Linux (current terminal)
 $env:ANTHROPIC_API_KEY = "..."            # Windows PowerShell (current terminal)
+export ALPACA_API_KEY="..." ALPACA_SECRET_KEY="..."     # Alpaca paper-account keys
 ```
+
+### Fetching real market data
+
+One command downloads bars, checks them and saves `data/<SYMBOL>.csv` in the standard shape
+(`date, open, high, low, close, volume`), which every lab function, `data.load_ohlcv_csv` and the
+signal service read directly:
+
+```bash
+python -m cfmat.data.fetch yahoo TCS.NS INFY.NS ^NSEI --start 2018-01-01          # free, daily, NSE via Yahoo
+python -m cfmat.data.fetch alpaca AAPL MSFT --start 2020-01-01 --timeframe 1Day   # US stocks, Alpaca keys
+python -m cfmat.data.fetch ibkr RELIANCE TCS --exchange NSE --currency INR --duration "5 Y"
+python -m cfmat.data.fetch ibkr NIFTY50 --sec-type IND --bar-size "5 mins" --duration "5 D" --chunks 4
+```
+
+(`cfmat-fetch` is the same command.) Each line prints the rows and date range saved and any
+data-quality warnings: prices at or below zero, highs below lows, closes outside the day's range,
+duplicate timestamps, or one-bar moves over 25%, which usually mean an unadjusted split. In Python:
+
+```python
+from cfmat import data
+
+aapl = data.alpaca_bars("AAPL", start="2020-01-01", timeframe="1Day")        # US, split/dividend-adjusted
+reliance = data.ibkr_bars("RELIANCE", exchange="NSE", currency="INR", duration="2 Y")
+print(data.ohlcv_problems(reliance) or "looks clean")
+```
+
+| Source | Markets | What you need | Watch out for |
+|---|---|---|---|
+| Yahoo Finance | NSE (`.NS`), BSE (`.BO`), US, indices | Nothing (the `data` extra) | Daily only; free data for learning, not for commercial use |
+| Alpaca | US stocks only | Free paper account; API keys in the environment | Free plan: IEX-only real-time; the newest 15 minutes of SIP data are delayed (the fetcher ends 16 minutes ago) |
+| Interactive Brokers | NSE (IBKR India account), US, global | TWS or IB Gateway running with API access (paper port 7497 or 4002) and a live market-data subscription for the exchange | About 60 historical requests per 10 minutes (`--chunks` paces itself); confirm IBKR's symbol for each contract in TWS |
+
+The data from all three is licensed for personal use. It stays in `data/`, which git ignores:
+do not commit or share it. The course's Indian cost model does not apply to US stocks.
 
 ### Optional services and tools
 

@@ -9,7 +9,7 @@ Generated from `cfmat` 2.1.0. Regenerate with `make docs`.
 | [`cfmat.analytics`](analytics.md) | Market analytics: returns and performance, indicators, patterns, momentum and volatility, relative performance, statistical tests and factor tools (M04, M06, M07, M10, M11). |
 | [`cfmat.automation`](automation.md) | Automation: the HTTP signal service and trade journal used by n8n (M18). |
 | [`cfmat.backtesting`](backtesting.md) | Backtesting engines and reports (M11, M12). Costs live in ``cfmat.microstructure.costs``. |
-| [`cfmat.data`](data.md) | Market data (M03, M05). |
+| [`cfmat.data`](data.md) | Market data (M03, M05, M16). |
 | [`cfmat.derivatives`](derivatives.md) | Futures and options (M08, M09). |
 | [`cfmat.econometrics`](econometrics.md) | Time-series econometrics for trading (M13, M23). |
 | [`cfmat.infra`](infra.md) | Infrastructure helpers. |

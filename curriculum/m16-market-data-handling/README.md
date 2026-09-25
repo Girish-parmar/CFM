@@ -8,7 +8,7 @@
 | Weeks | 34 |
 | Hours | 12 guided |
 | Labs | 16a (planned) — Tick aggregation, gap and spike checks, continuous futures, Parquet store |
-| Library | `cfmat.data` |
+| Library | `cfmat.data`, `cfmat.data.providers`, `cfmat.data.fetch` |
 | Prerequisites | [M05](../m05-data-engineering-databases/README.md), [M15](../m15-microstructure-execution/README.md) |
 | Committed topics | Market data handling |
 | Status | planned |
