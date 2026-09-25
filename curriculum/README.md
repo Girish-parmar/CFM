@@ -34,7 +34,7 @@ One folder per module: `mNN-slug/` holds the module guide (`README.md`) and its 
 | M19 | [Machine Learning for Trading](m19-machine-learning/README.md) | T5 | 39–40 | 24 | [19a](m19-machine-learning/lab_19a_machine_learning.py) | ready |
 | M20 | [Deep Learning for Financial Time Series](m20-deep-learning/README.md) | T5 | 41 | 12 | [20a](m20-deep-learning/lab_20a_deep_learning.py) | ready |
 | M21 | [Reinforcement Learning for Trading](m21-reinforcement-learning/README.md) | T5 | 42 | 12 | [21a](m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | ready |
-| M22 | [NLP, News Sentiment, LLMs and RAG](m22-nlp-news-llm-rag/README.md) | T5 | 43–44 | 24 | [22a](m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py), 22b (planned) | partial |
+| M22 | [NLP, News Sentiment, LLMs and RAG](m22-nlp-news-llm-rag/README.md) | T5 | 43–44 | 24 | [22a](m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py), [22b](m22-nlp-news-llm-rag/lab_22b_news_signal_event_study.py) | ready |
 | M23 | [Advanced Strategies and Hyperparameter Optimisation](m23-advanced-strategies-hpo/README.md) | T5 | 45–46 | 24 | [23a](m23-advanced-strategies-hpo/lab_23a_boosting_hpo.py), [23b](m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py), [23c](m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py), [23d](m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | ready |
 | – | Review, Term exam 3 and Bootcamp 3 | T5 | 47 | 12 + 24 bootcamp | – | – |
 | M24 | [Capstone, Paper Trading, Ethics and Career](m24-capstone-career/README.md) | T6 | 48–52 | 60 | [24a](m24-capstone-career/lab_24a_capstone_template.py) | ready |
@@ -76,7 +76,7 @@ One folder per module: `mNN-slug/` holds the module guide (`README.md`) and its 
 | 20a | M20 | [lab_20a_deep_learning.py](m20-deep-learning/lab_20a_deep_learning.py) | Sliding windows, MLP vs logistic on linear and nonlinear signals | ready | ~15 s |
 | 21a | M21 | [lab_21a_reinforcement_learning.py](m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | Q-learning policy, rule baseline, costs in the reward, seed spread | ready | ~30 s |
 | 22a | M22 | [lab_22a_sentiment_rag.py](m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py) | Lexicon and TF-IDF sentiment, RAG with relevance guard, optional Claude | ready | ~5 s |
-| 22b | M22 | lab_22b_news_signal_event_study.py | Timestamped news to signals: dedupe, lag, decay, event study | planned | – |
+| 22b | M22 | [lab_22b_news_signal_event_study.py](m22-nlp-news-llm-rag/lab_22b_news_signal_event_study.py) | Timestamped news to signals: dedupe, session alignment, decay, pooled event study, delay sweep | ready | ~5 s |
 | 23a | M23 | [lab_23a_boosting_hpo.py](m23-advanced-strategies-hpo/lab_23a_boosting_hpo.py) | HGB/XGBoost/LightGBM, random search, Optuna, nested walk-forward, PBO | ready | ~60 s |
 | 23b | M23 | [lab_23b_regimes_kalman_garch.py](m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py) | Markov regimes, GARCH volatility targeting, Kalman-filter pairs | ready | ~10 s |
 | 23c | M23 | [lab_23c_meta_labeling_ensembles.py](m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py) | Meta-labelling, bet sizing, multi-strategy allocation | ready | ~10 s |

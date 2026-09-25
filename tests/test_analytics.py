@@ -368,3 +368,16 @@ def test_tearsheet_monthly_table_and_rolling_metrics():
     assert {"sharpe", "max_drawdown", "beta"} <= set(roll.columns) and (roll["max_drawdown"] <= 0).all()
     assert perf.omega_ratio(pd.Series([0.02, -0.01])) == pytest.approx(2.0)
     assert perf.tail_ratio(pd.Series(np.linspace(-1, 1, 101))) == pytest.approx(1.0)
+
+
+def test_panel_event_study_keeps_its_size_with_correlated_stocks():
+    rejections, trials = 0, 60
+    for seed in range(trials):
+        rng = np.random.default_rng(seed)
+        market = rng.normal(0, 0.01, (400, 1))
+        close = pd.DataFrame(100 * np.exp(np.cumsum(market + rng.normal(0, 0.01, (400, 8)), axis=0)),
+                             index=pd.bdate_range("2024-01-01", periods=400))
+        same_day = rng.random(400) < 0.03                                   # news days shared across stocks
+        events = pd.DataFrame(np.repeat(same_day[:, None], 8, axis=1), index=close.index, columns=close.columns)
+        rejections += stats.event_study(close, events, horizons=(5,), n_perm=200, seed=seed)["p_value"].iloc[0] < 0.05
+    assert rejections / trials <= 0.12

@@ -7,11 +7,11 @@
 | Term | T5 · AI for Trading |
 | Weeks | 43–44 |
 | Hours | 24 guided |
-| Labs | [22a](lab_22a_sentiment_rag.py) — Lexicon and TF-IDF sentiment, RAG with relevance guard, optional Claude<br>22b (planned) — Timestamped news to signals: dedupe, lag, decay, event study |
+| Labs | [22a](lab_22a_sentiment_rag.py) — Lexicon and TF-IDF sentiment, RAG with relevance guard, optional Claude<br>[22b](lab_22b_news_signal_event_study.py) — Timestamped news to signals: dedupe, session alignment, decay, pooled event study, delay sweep |
 | Library | `cfmat.nlp` |
 | Prerequisites | [M06](../m06-technical-analysis-patterns/README.md), [M19](../m19-machine-learning/README.md) |
 | Committed topics | Sentiment and news analysis, Macroeconomics |
-| Status | partial |
+| Status | ready |
 <!-- END GENERATED: module-header -->
 
 ## Why this module
@@ -46,7 +46,7 @@ By the end of the module you can:
 |---|---|
 | L1 · Sat · 180 min | 0–15 retrieval quiz on M21 · 15–60 text as data: tokens, n-grams, TF-IDF; finance lexicons and why general sentiment lexicons fail on finance · 60–70 break · 70–120 negation, uncertainty and litigation words; transformer models and FinBERT · 120–170 live: Lab 22a §1–§2 — lexicon vs TF-IDF classifier · 170–180 exit ticket |
 | L2 · Sun · 180 min | 0–10 recap · 10–60 from headline to signal: timestamps, market hours, publication delay, deduplication, aggregation by stock and day, decay · 60–70 break · 70–130 workshop: a news-sentiment event study with `analytics.stats.event_study` · 130–170 case: results-day announcements and index moves (data ≥ 3 months old) · 170–180 exit ticket |
-| C1 · Tue · 120 min | 0–10 setup · 10–100 Lab 22b (when released) or the exercise pack: timestamped headlines → signal → event study · 100–120 blockers |
+| C1 · Tue · 120 min | 0–10 setup · 10–100 Lab 22b: timestamped headlines → stories → signal → pooled event study → delay sweep · 100–120 blockers |
 | OH · Wed · 60 min | NLP Q&A |
 | C2 · Thu · 120 min | 0–60 classifier comparison with a held-out, time-ordered split · 60–100 peer review · 100–120 review |
 | QP · Fri · 60 min | 0–20 quiz 22a · 20–50 label 30 headlines and measure inter-annotator agreement · 50–60 preview |
@@ -75,24 +75,21 @@ By the end of the module you can:
 | 3. RAG | Chunk filings, retrieve, build a grounded prompt, extractive answer | The right filing is retrieved; off-topic questions are refused |
 | 4. Claude (optional) | Send the grounded prompt to `claude-opus-5` | Answer cites sources; refusals handled |
 
-**Lab 22b — news to signals** (`lab_22b_news_signal_event_study.py`) · *planned*
+**Lab 22b — news to signals** (`lab_22b_news_signal_event_study.py`)
 
-| Section | Content | Library support needed |
+| Section | You do | What good looks like |
 |---|---|---|
-| 1. Timestamped news | Synthetic headlines with times, duplicates and a planted, decaying price response | `data.news_stream(seed)` |
-| 2. Signal | Dedupe, align to market hours, aggregate per stock-day, apply decay | `nlp.news_signal` |
-| 3. Event study | Returns after positive/negative news with HAC and permutation p-values | `analytics.stats.event_study` (exists) |
-| 4. Trading rule | Long/short on sentiment after costs, with a publication delay sweep | – |
-
-Acceptance: the planted response is recovered and disappears when the publication delay exceeds
-its half-life; runs offline in under 15 s; tests in `tests/test_nlp.py`.
+| 1. Timestamped news | Read two years of headlines at all hours, with re-publications | You say what share arrives outside market hours and why that matters |
+| 2. Signal | De-duplicate, score, assign each story to the first session that can act; fix the lexicon's misreadings ("downgrades", "record date") | Every story on the right session; the fixed scorer reads every direction correctly |
+| 3. Event study | Pooled, market-adjusted forward returns after good and bad news; HAC t and a permutation test that shifts all stocks together | The planted drift recovered within noise; significant at 1–5 days |
+| 4. Trading and delay | Long/short on the signal after costs; delay 0–8 sessions; the same-close look-ahead mistake | The edge is gone once the delay passes the half-life; the look-ahead Sharpe explained |
 
 ## Assessment
 
 | Item | Weight in course component | Due | Criteria |
 |---|---|---|---|
 | Quizzes 22a, 22b | quizzes (10%) | Fri W43, W44 | NLP and RAG concepts |
-| Lab 22a (+ 22b when released) | labs (20%) | Sun W44 | Runs; evaluation reported |
+| Labs 22a, 22b | labs (20%) | Sun W44 | Runs; evaluation, event study and delay sweep reported |
 | Assignment: a RAG assistant with an evaluation set | assignments (15%) | Sun W46 | RAG over ≥ 5 filings with ≥ 20 evaluation questions (≥ 5 unanswerable), recall@k, faithfulness and citation accuracy, and a prompt-injection test. Rubric: retrieval 25, evaluation 35, safety 25, clarity 15 |
 
 ## Common mistakes
@@ -115,4 +112,4 @@ its half-life; runs offline in under 15 s; tests in `tests/test_nlp.py`.
 - Owner: NLP/LLM and automation lead.
 - The sample headlines and filings are fictional (`cfmat/data/samples`); real filings used in class must be public and at least three months old.
 - The LLM step uses `claude-opus-5` by default (override with `CFMAT_CLAUDE_MODEL`); keep a budget per learner and log usage.
-- Lab 22b is planned; until it ships, C1 W43 uses the exercise pack. See the [audit](../../audit/2026-09-devils-advocate-review.md).
+- Lab 22b's look-ahead result (trading the close of the session a story belongs to) is worth a live demonstration: it is the most common error in news-signal capstones.

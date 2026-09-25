@@ -12,7 +12,7 @@ to tell an edge from a lucky backtest.
 | Duration | 52 weeks + 4 weeks of self-paced pre-work |
 | Format | Hybrid — live online weekend classes, weekday lab clinics, three 3-day in-person bootcamps |
 | Guided hours | 736 (plus 40 h pre-work and about 6 h/week self-study) |
-| Structure | 6 terms, 24 modules + pre-work, 36 labs (34 ready) |
+| Structure | 6 terms, 24 modules + pre-work, 36 labs (35 ready) |
 | Cohort | target 36, maximum 40; intakes January and July |
 | Programme fee | **₹10,00,000.00 all-inclusive** = ₹8,47,457.63 + GST 18% ₹1,52,542.37 |
 | Fee per guided hour | ₹1,358.70 (₹1,151.44 before GST) |
@@ -61,7 +61,7 @@ to tell an edge from a lucky backtest.
 | M19 | [Machine Learning for Trading](curriculum/m19-machine-learning/README.md) | T5 | 39–40 | 24 | [19a](curriculum/m19-machine-learning/lab_19a_machine_learning.py) | ready |
 | M20 | [Deep Learning for Financial Time Series](curriculum/m20-deep-learning/README.md) | T5 | 41 | 12 | [20a](curriculum/m20-deep-learning/lab_20a_deep_learning.py) | ready |
 | M21 | [Reinforcement Learning for Trading](curriculum/m21-reinforcement-learning/README.md) | T5 | 42 | 12 | [21a](curriculum/m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | ready |
-| M22 | [NLP, News Sentiment, LLMs and RAG](curriculum/m22-nlp-news-llm-rag/README.md) | T5 | 43–44 | 24 | [22a](curriculum/m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py), 22b (planned) | partial |
+| M22 | [NLP, News Sentiment, LLMs and RAG](curriculum/m22-nlp-news-llm-rag/README.md) | T5 | 43–44 | 24 | [22a](curriculum/m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py), [22b](curriculum/m22-nlp-news-llm-rag/lab_22b_news_signal_event_study.py) | ready |
 | M23 | [Advanced Strategies and Hyperparameter Optimisation](curriculum/m23-advanced-strategies-hpo/README.md) | T5 | 45–46 | 24 | [23a](curriculum/m23-advanced-strategies-hpo/lab_23a_boosting_hpo.py), [23b](curriculum/m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py), [23c](curriculum/m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py), [23d](curriculum/m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | ready |
 | – | Review, Term exam 3 and Bootcamp 3 | T5 | 47 | 12 + 24 bootcamp | – | – |
 | M24 | [Capstone, Paper Trading, Ethics and Career](curriculum/m24-capstone-career/README.md) | T6 | 48–52 | 60 | [24a](curriculum/m24-capstone-career/lab_24a_capstone_template.py) | ready |

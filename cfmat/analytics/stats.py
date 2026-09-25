@@ -67,9 +67,16 @@ def event_study(
       shifted circularly ``n_perm`` times, which keeps the events' clustering and the
       returns' autocorrelation. It stays honest when events are few, where HAC
       standard errors are too small.
+
+    ``close`` and ``events`` may also be DataFrames with one column per stock: forward
+    returns are pooled; every stock's events are shifted by the same amount in the
+    permutation, which keeps same-day clustering across correlated stocks; ``t_hac``
+    uses Newey-West errors within each stock.
     """
     import statsmodels.api as sm
 
+    if isinstance(close, pd.DataFrame):
+        return _panel_event_study(close, events, horizons, n_perm, seed)
     events = events.reindex(close.index).fillna(False).astype(bool)
     rng = np.random.default_rng(seed)
     rows = {}
@@ -89,6 +96,38 @@ def event_study(
             total = y.sum()
             after = np.array([y[(idx + s) % n].mean() for s in shifts])
             perm = after - (total - after * k) / (n - k)
+            p_value = (1 + np.sum(np.abs(perm) >= abs(observed))) / (1 + n_perm)
+            row.update(excess=observed, t_hac=float(fit.tvalues[1]), p_value=float(p_value))
+        else:
+            row.update(excess=np.nan, t_hac=np.nan, p_value=np.nan)
+        rows[f"{h}d"] = row
+    return pd.DataFrame(rows).T[["events", "mean_after", "mean_other", "excess", "hit_rate", "t_hac", "p_value"]]
+
+
+def _panel_event_study(close: pd.DataFrame, events: pd.DataFrame, horizons, n_perm: int, seed: int) -> pd.DataFrame:
+    import statsmodels.api as sm
+
+    events = events.reindex(index=close.index, columns=close.columns).fillna(False).astype(bool)
+    rng = np.random.default_rng(seed)
+    rows = {}
+    for h in horizons:
+        fwd = close.shift(-h) / close - 1
+        keep = fwd.notna().all(axis=1).to_numpy()
+        y, ev = fwd.to_numpy()[keep], events.to_numpy()[keep]
+        n, k = y.shape[0], int(ev.sum())
+        row = {"events": k, "mean_after": y[ev].mean() if k else np.nan,
+               "mean_other": y[~ev].mean() if k < y.size else np.nan,
+               "hit_rate": (y[ev] > 0).mean() if k else np.nan}
+        if k >= 2 and y.size - k >= 2:
+            groups = np.repeat(np.arange(y.shape[1]), n)
+            fit = sm.OLS(y.T.ravel(), sm.add_constant(ev.T.ravel().astype(float))).fit(
+                cov_type="hac-panel", cov_kwds={"groups": groups, "maxlags": max(h - 1, 1)})
+            observed = row["mean_after"] - row["mean_other"]
+            total = y.sum()
+            perm = np.empty(n_perm)
+            for i, shift in enumerate(rng.integers(1, n, size=n_perm)):
+                after = y[np.roll(ev, shift, axis=0)].sum()
+                perm[i] = after / k - (total - after) / (y.size - k)
             p_value = (1 + np.sum(np.abs(perm) >= abs(observed))) / (1 + n_perm)
             row.update(excess=observed, t_hac=float(fit.tvalues[1]), p_value=float(p_value))
         else:

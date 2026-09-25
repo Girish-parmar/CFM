@@ -663,3 +663,80 @@ def futures_chain(
                      "tick_size": tick_size, "expiry": expiry})
     master = pd.DataFrame(rows).set_index("symbol")
     return pd.DataFrame(prices).reindex(idx), master
+
+
+_NEWS_COMPANIES = {
+    "ARVSTL": "Aravalli Steel", "KONPWR": "Konkan Power", "DECPHR": "Deccan Pharma", "NARCEM": "Narmada Cement",
+    "SAHBNK": "Sahyadri Bank", "MALAUT": "Malabar Auto", "VINTEC": "Vindhya Tech", "GANFMC": "Ganga Foods",
+    "KAVTEL": "Kaveri Telecom", "THRINF": "Thar Infra", "NILCHM": "Nilgiri Chemicals", "BRAENR": "Brahmaputra Energy",
+}
+_NEWS_TEMPLATES = {
+    1: ["{c} beats estimates as margins improve", "{c} posts record quarterly profit",
+        "Broker upgrades {c} on strong order book", "{c} wins large export order",
+        "{c} gets regulatory approval for new plant", "{c} announces buyback at a premium"],
+    -1: ["{c} misses estimates on weak demand", "{c} reports quarterly loss",
+         "Broker downgrades {c} after guidance cut", "Regulator opens probe into {c} accounts",
+         "{c} fined for disclosure breach", "{c} shares slump after plant shutdown"],
+    0: ["{c} to hold board meeting on Friday", "{c} schedules annual general meeting",
+        "{c} appoints new company secretary", "{c} announces record date for AGM"],
+}
+
+
+def news_stream(
+    n_days: int = 500,
+    seed: int | None = None,
+    news_per_stock_day: float = 0.08,
+    drift: float = 0.004,
+    jump: float = 0.02,
+    half_life: float = 2.0,
+    duplicate_share: float = 0.3,
+    start: str = "2024-01-01",
+    session_close: str = "15:30",
+) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
+    """Timestamped company headlines and the prices they move, with the answer key.
+
+    Twelve fictional NSE companies. Headlines arrive at any hour, weekends included; a
+    ``duplicate_share`` of them is re-published by a second source within 20 minutes. Positive
+    and negative news move the stock on the first session that can react (``jump``), then keep
+    drifting: ``drift`` × 0.5^((k − 1)/``half_life``) on day k after it. Neutral news moves
+    nothing. Returns ``(news, close, truth)``: news has ``ts``, ``symbol``, ``source`` and
+    ``headline``; close is one column per symbol; ``truth["events"]`` has each original story's
+    sign and the session it hit, and ``truth["params"]`` the planted numbers.
+    """
+    rng = np.random.default_rng(seed)
+    days = trading_days(n_days, start)
+    symbols = list(_NEWS_COMPANIES)
+    n_sym = len(symbols)
+    market = rng.normal(0.0003, 0.009, n_days)
+    rets = market[:, None] * rng.uniform(0.7, 1.3, n_sym) + rng.normal(0, 0.013, (n_days, n_sym))
+    close_offset = pd.Timedelta(f"{session_close}:00")
+    span = (days[-1] + pd.Timedelta(days=1) - days[0]).total_seconds()
+    n_news = rng.poisson(news_per_stock_day * n_days * n_sym)
+    stamps = days[0] + pd.to_timedelta(np.sort(rng.uniform(0, span - 86_400 * 3, n_news)), unit="s")
+    rows, events = [], []
+    decay = 0.5 ** (np.arange(30) / half_life)
+    for ts in stamps:
+        symbol = symbols[int(rng.integers(n_sym))]
+        sign = int(rng.choice([1, -1, 0], p=[0.4, 0.4, 0.2]))
+        text = rng.choice(_NEWS_TEMPLATES[sign]).format(c=_NEWS_COMPANIES[symbol])
+        ts = ts.floor("s")
+        hit = days.searchsorted(ts.normalize() + (pd.Timedelta(0) if ts - ts.normalize() < close_offset
+                                                  else pd.Timedelta(days=1)))
+        if hit >= n_days:
+            continue
+        rows.append({"ts": ts, "symbol": symbol, "source": "wire", "headline": text})
+        if rng.random() < duplicate_share:
+            rows.append({"ts": ts + pd.Timedelta(seconds=int(rng.integers(30, 1200))), "symbol": symbol,
+                         "source": "portal", "headline": text})
+        events.append({"ts": ts, "symbol": symbol, "sign": sign, "session": days[hit]})
+        if sign:
+            j = symbols.index(symbol)
+            rets[hit, j] += sign * jump
+            later = slice(hit + 1, min(hit + 1 + len(decay), n_days))
+            rets[later, j] += sign * drift * decay[: later.stop - later.start]
+    rets[0] = 0.0
+    close = pd.DataFrame(100 * np.exp(np.cumsum(np.log1p(rets), axis=0)), index=days, columns=symbols)
+    news = pd.DataFrame(rows).sort_values("ts", kind="stable").reset_index(drop=True)
+    truth = {"events": pd.DataFrame(events),
+             "params": {"drift": drift, "jump": jump, "half_life": half_life}}
+    return news, close, truth

@@ -466,7 +466,7 @@ modules:
       - LLMs and retrieval-augmented generation for research
     labs:
       - {file: lab_22a_sentiment_rag.py, status: ready, runtime_s: 5, extras: [llm], title: "Lexicon and TF-IDF sentiment, RAG with relevance guard, optional Claude"}
-      - {file: lab_22b_news_signal_event_study.py, status: planned, runtime_s: 10, title: "Timestamped news to signals: dedupe, lag, decay, event study"}
+      - {file: lab_22b_news_signal_event_study.py, status: ready, runtime_s: 5, title: "Timestamped news to signals: dedupe, session alignment, decay, pooled event study, delay sweep"}
     library: [cfmat.nlp]
     topics: [sentiment-news, macroeconomics]
     prerequisites: [M06, M19]

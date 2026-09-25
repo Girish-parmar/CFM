@@ -195,13 +195,14 @@ message.
 | 27 | 41 | [20a](../curriculum/m20-deep-learning/lab_20a_deep_learning.py) | M20 | Sliding windows, MLP vs logistic on linear and nonlinear signals | ~15 s | `dl` |
 | 28 | 42 | [21a](../curriculum/m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | M21 | Q-learning policy, rule baseline, costs in the reward, seed spread | ~30 s | – |
 | 29 | 43–44 | [22a](../curriculum/m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py) | M22 | Lexicon and TF-IDF sentiment, RAG with relevance guard, optional Claude | ~5 s | `llm` |
-| 30 | 45–46 | [23a](../curriculum/m23-advanced-strategies-hpo/lab_23a_boosting_hpo.py) | M23 | HGB/XGBoost/LightGBM, random search, Optuna, nested walk-forward, PBO | ~60 s | `boost` |
-| 31 | 45–46 | [23b](../curriculum/m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py) | M23 | Markov regimes, GARCH volatility targeting, Kalman-filter pairs | ~10 s | – |
-| 32 | 45–46 | [23c](../curriculum/m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py) | M23 | Meta-labelling, bet sizing, multi-strategy allocation | ~10 s | – |
-| 33 | 45–46 | [23d](../curriculum/m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | M23 | Day/month/expiry/regime/pattern segments, FDR, per-segment walk-forward | ~60 s | – |
-| 34 | 48–52 | [24a](../curriculum/m24-capstone-career/lab_24a_capstone_template.py) | M24 | Pre-registration to paper-trading report: a reproducible capstone skeleton | ~5 s | – |
+| 30 | 43–44 | [22b](../curriculum/m22-nlp-news-llm-rag/lab_22b_news_signal_event_study.py) | M22 | Timestamped news to signals: dedupe, session alignment, decay, pooled event study, delay sweep | ~5 s | – |
+| 31 | 45–46 | [23a](../curriculum/m23-advanced-strategies-hpo/lab_23a_boosting_hpo.py) | M23 | HGB/XGBoost/LightGBM, random search, Optuna, nested walk-forward, PBO | ~60 s | `boost` |
+| 32 | 45–46 | [23b](../curriculum/m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py) | M23 | Markov regimes, GARCH volatility targeting, Kalman-filter pairs | ~10 s | – |
+| 33 | 45–46 | [23c](../curriculum/m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py) | M23 | Meta-labelling, bet sizing, multi-strategy allocation | ~10 s | – |
+| 34 | 45–46 | [23d](../curriculum/m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | M23 | Day/month/expiry/regime/pattern segments, FDR, per-segment walk-forward | ~60 s | – |
+| 35 | 48–52 | [24a](../curriculum/m24-capstone-career/lab_24a_capstone_template.py) | M24 | Pre-registration to paper-trading report: a reproducible capstone skeleton | ~5 s | – |
 
-Planned, not yet released: 02a, 22b.
+Planned, not yet released: 02a.
 <!-- END GENERATED: run-order -->
 
 ### How to run a lab

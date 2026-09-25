@@ -43,6 +43,11 @@ for the `cfmat` library; the course edition is recorded in `course/course.yaml`.
   differences) and `greek_pnl_attribution` (daily explain of an option position by delta,
   gamma, vega, theta, vanna, volga, charm and speed, with the residual); Greek maps; a short
   straddle through a sell-off; gamma scalping against realised volatility.
+- Lab 22b, news to signals: `data.news_stream` (timestamped headlines at all hours with
+  re-publications and a planted, decaying response), `nlp.news_events` (de-duplication, scoring,
+  assignment to the first session that can act) and `nlp.news_signal` (decayed per-stock
+  sentiment known at each close); `analytics.stats.event_study` accepts a panel (one column per
+  stock), shifting every stock's events together in the permutation test.
 - `data.standardize_ohlcv` (one OHLCV shape for every source: lower-case columns, exchange-local
   naive timestamps, sorted, no duplicates) and `data.ohlcv_problems` (plain-language data-quality
   checks).

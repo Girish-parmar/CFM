@@ -3,10 +3,15 @@
 sentiment  lexicon sentiment with negation, TF-IDF + logistic-regression classifier
 rag        chunking, TF-IDF retrieval, grounded prompts, extractive answers
 llm        optional Claude API answer step
+news       timestamped headlines to a signal: de-duplication, session alignment, decay
 """
 
 from .llm import (
     answer_with_claude,
+)
+from .news import (
+    news_events,
+    news_signal,
 )
 from .rag import (
     Chunk,
@@ -42,6 +47,8 @@ __all__ = [
     "lexicon_sentiment",
     "load_filings",
     "load_headlines",
+    "news_events",
+    "news_signal",
     "sentiment_classifier",
     "split_sentences",
     "tokenize",

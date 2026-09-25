@@ -8,6 +8,7 @@ Text analytics for markets (M22).
 sentiment  lexicon sentiment with negation, TF-IDF + logistic-regression classifier
 rag        chunking, TF-IDF retrieval, grounded prompts, extractive answers
 llm        optional Claude API answer step
+news       timestamped headlines to a signal: de-duplication, session alignment, decay
 ```
 
 ### `cfmat.nlp.llm`
@@ -17,6 +18,15 @@ Optional LLM answer step for RAG, using the Claude API (M22).
 | Name | Signature | Summary |
 |---|---|---|
 | `answer_with_claude` | `def answer_with_claude(question: str, hits: list[tuple[float, Chunk]], model: str \| None = None) -> str` | Generate a cited answer with Claude. |
+
+### `cfmat.nlp.news`
+
+From timestamped headlines to a tradable signal (M22).
+
+| Name | Signature | Summary |
+|---|---|---|
+| `news_events` | `def news_events(news: pd.DataFrame, trading_days: pd.DatetimeIndex, session_close: str = '15:30', dedupe_window: str = '30min', score: Callable[[str], float] \| None = None) -> pd.DataFrame` | Clean, scored news: one row per story, with the session it belongs to. |
+| `news_signal` | `def news_signal(events: pd.DataFrame, trading_days: pd.DatetimeIndex, symbols: list[str] \| None = None, half_life: float = 2.0) -> pd.DataFrame` | Per-stock sentiment known at each close: the day's summed scores plus the decayed past. |
 
 ### `cfmat.nlp.rag`
 

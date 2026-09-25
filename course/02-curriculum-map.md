@@ -35,7 +35,7 @@ notes) in [`curriculum/`](../curriculum/README.md), and runnable labs built on t
 | M19 | [Machine Learning for Trading](../curriculum/m19-machine-learning/README.md) | T5 | 39–40 | 24 | [19a](../curriculum/m19-machine-learning/lab_19a_machine_learning.py) | ready |
 | M20 | [Deep Learning for Financial Time Series](../curriculum/m20-deep-learning/README.md) | T5 | 41 | 12 | [20a](../curriculum/m20-deep-learning/lab_20a_deep_learning.py) | ready |
 | M21 | [Reinforcement Learning for Trading](../curriculum/m21-reinforcement-learning/README.md) | T5 | 42 | 12 | [21a](../curriculum/m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | ready |
-| M22 | [NLP, News Sentiment, LLMs and RAG](../curriculum/m22-nlp-news-llm-rag/README.md) | T5 | 43–44 | 24 | [22a](../curriculum/m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py), 22b (planned) | partial |
+| M22 | [NLP, News Sentiment, LLMs and RAG](../curriculum/m22-nlp-news-llm-rag/README.md) | T5 | 43–44 | 24 | [22a](../curriculum/m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py), [22b](../curriculum/m22-nlp-news-llm-rag/lab_22b_news_signal_event_study.py) | ready |
 | M23 | [Advanced Strategies and Hyperparameter Optimisation](../curriculum/m23-advanced-strategies-hpo/README.md) | T5 | 45–46 | 24 | [23a](../curriculum/m23-advanced-strategies-hpo/lab_23a_boosting_hpo.py), [23b](../curriculum/m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py), [23c](../curriculum/m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py), [23d](../curriculum/m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | ready |
 | – | Review, Term exam 3 and Bootcamp 3 | T5 | 47 | 12 + 24 bootcamp | – | – |
 | M24 | [Capstone, Paper Trading, Ethics and Career](../curriculum/m24-capstone-career/README.md) | T6 | 48–52 | 60 | [24a](../curriculum/m24-capstone-career/lab_24a_capstone_template.py) | ready |
@@ -55,13 +55,13 @@ These are the areas the programme commits to cover in depth, plus supporting are
 | Topic | Modules | State |
 |---|---|---|
 | Statistics in finance | M04, M06, M11, M23 | covered |
-| Sentiment and news analysis | M18, M22 (lab planned) | covered |
+| Sentiment and news analysis | M18, M22 | covered |
 | Risk management and position sizing | M13, M17, M24 | covered |
 | Strategy optimisation by segment (day, month, regime, pattern) | M23 | covered |
 | Market microstructure | M15 | covered |
 | Futures and options — Greeks, second-order Greeks and strategies | M08, M09, M12 | covered |
 | Technical indicators, chart and candlestick patterns | M06, M12 | covered |
-| Macroeconomics | M02 (lab planned), M22 (lab planned) | planned |
+| Macroeconomics | M22, M02 (lab planned) | covered |
 | Portfolio management methods | M14, M23 | covered |
 | Trading platform structure and infrastructure | M05, M17, M18 | covered |
 | Machine-learning techniques | M19, M23 | covered |
