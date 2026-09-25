@@ -38,6 +38,11 @@ for the `cfmat` library; the course edition is recorded in `course/course.yaml`.
   MET/NOT MET verdict, paper trading through the OMS and RMS with a journal and monitoring (acting
   only on the previous close), three checks (no look-ahead, risk limits, costs), and a capstone
   folder with README, PREREGISTRATION, report tables and a passing `pytest` file.
+- Lab 09a, second-order Greeks: `derivatives.options.bs_second_order_greeks` (vanna, volga,
+  charm, speed, zomma, colour in the same units as `bs_greeks`, checked against finite
+  differences) and `greek_pnl_attribution` (daily explain of an option position by delta,
+  gamma, vega, theta, vanna, volga, charm and speed, with the residual); Greek maps; a short
+  straddle through a sell-off; gamma scalping against realised volatility.
 - `data.standardize_ohlcv` (one OHLCV shape for every source: lower-case columns, exchange-local
   naive timestamps, sorted, no duplicates) and `data.ohlcv_problems` (plain-language data-quality
   checks).

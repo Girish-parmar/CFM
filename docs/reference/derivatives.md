@@ -5,7 +5,8 @@
 Futures and options (M08, M09).
 
 ```text
-options            Black-Scholes, Greeks, implied volatility, binomial trees, payoffs
+options            Black-Scholes, first- and second-order Greeks, Greek P&L attribution, implied
+                   volatility, binomial trees, payoffs
 futures            expiry calendars, futures curves, rollover-aware backtests, basis trades
 option_strategies  multi-leg option structures backtested with repricing
 ```
@@ -43,8 +44,11 @@ Option pricing (M08, M09): Black–Scholes–Merton, Greeks, implied volatility,
 | `binomial_price` | `def binomial_price(S: float, K: float, T: float, r: float, sigma: float, kind: str = 'call', steps: int = 200, american: bool = False, q: float = 0.0) -> float` | Cox–Ross–Rubinstein tree. Set ``american=True`` for early exercise. |
 | `bs_greeks` | `def bs_greeks(S: float, K: float, T: float, r: float, sigma: float, kind: str = 'call', q: float = 0.0) -> Greeks` | Black–Scholes–Merton Greeks for a European option with continuous dividend yield ``q``. |
 | `bs_price` | `def bs_price(S: float, K: float, T: float, r: float, sigma: float, kind: str = 'call', q: float = 0.0) -> float` | Black–Scholes–Merton price of a European option. |
+| `bs_second_order_greeks` | `def bs_second_order_greeks(S: float, K: float, T: float, r: float, sigma: float, kind: str = 'call', q: float = 0.0) -> SecondOrderGreeks` | Closed-form second-order Greeks under Black–Scholes–Merton with dividend yield ``q``. |
 | `futures_fair_value` | `def futures_fair_value(spot: float, T: float, r: float, q: float = 0.0) -> float` | Cost-of-carry fair value F = S·e^((r−q)T). |
+| `greek_pnl_attribution` | `def greek_pnl_attribution(legs: list[dict], path: pd.DataFrame, r: float = 0.065, q: float = 0.0) -> pd.DataFrame` | Explain an option position's P&L, step by step, with its Greeks. |
 | `Greeks` | `class Greeks(delta: float, gamma: float, vega: float, theta: float, rho: float) -> None` | First-order Greeks: vega per 1 volatility point, theta per calendar day, rho per 1% rate move. |
 | `implied_volatility` | `def implied_volatility(price: float, S: float, K: float, T: float, r: float, kind: str = 'call', q: float = 0.0) -> float` | Volatility that makes the Black–Scholes price equal the market ``price``. |
 | `put_call_parity_gap` | `def put_call_parity_gap(call: float, put: float, S: float, K: float, T: float, r: float, q: float = 0.0) -> float` | C − P − (S·e^(−qT) − K·e^(−rT)). Near zero when prices are consistent. |
+| `SecondOrderGreeks` | `class SecondOrderGreeks(vanna: float, volga: float, charm: float, speed: float, zomma: float, color: float) -> None` | Second-order Greeks in the same units as ``Greeks`` (volatility points, calendar days). |
 | `strategy_payoff` | `def strategy_payoff(legs: list[dict], spot: np.ndarray, lot_size: int = 1) -> np.ndarray` | Profit at expiry of a multi-leg position across a range of spot prices. |

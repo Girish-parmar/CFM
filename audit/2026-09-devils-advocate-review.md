@@ -105,7 +105,7 @@ reviews and the CI checks), and use feature branches with pull requests from the
 | P1 | 24a capstone template — **shipped in v2.2.0** | Every learner uses it; highest value per hour | glue only | One command reproduces every capstone table; look-ahead, risk and cost tests |
 | P1 | 16a market data handler — **shipped in v2.2.0** | Algo-developer route; feeds M17–M18 | `data.handler`, tick-stream generator | Planted faults found with no false alarms; deterministic replay (40 seeds: 960/960 found, 0 false alarms) |
 | P1 | 18b live monitoring — **shipped in v2.2.0** | Committed topic "monitoring system" | `automation.monitoring` | Planted incidents detected; no alerts on a clean day |
-| P2 | 09a second-order Greeks | Committed topic; derivatives route | `bs_second_order_greeks`, `pnl_attribution` | Closed forms match finite differences; attribution residual < 5% |
+| P2 | 09a second-order Greeks — **shipped in v2.2.0** | Committed topic; derivatives route | `bs_second_order_greeks`, `greek_pnl_attribution` | Closed forms match finite differences (worst 5.5e-6 relative); daily residual < 5% of gross Greek P&L |
 | P2 | 22b news to signals | Committed topic "sentiment and news" | `data.news_stream`, `nlp.news_signal` | Planted response recovered; vanishes beyond its half-life |
 | P2 | 02a macro event study | Committed topic "macroeconomics" | `data.macro_calendar`, `analytics.rates.nelson_siegel_fit` | Known Nelson–Siegel parameters recovered; causal regime labels |
 

@@ -156,3 +156,48 @@ def test_straddle_payoff_shape():
 
 def test_futures_fair_value():
     assert opt.futures_fair_value(100, 1, 0.05) == pytest.approx(100 * np.exp(0.05))
+
+
+# -- second-order Greeks and P&L attribution (M09) -------------------------------------------------
+
+@pytest.mark.parametrize("S,K,T,sigma", [(24000, 24500, 30 / 365, 0.16), (24000, 22000, 7 / 365, 0.25),
+                                         (100, 100, 1.0, 0.30), (100, 130, 0.25, 0.40)])
+@pytest.mark.parametrize("kind", ["call", "put"])
+def test_second_order_greeks_match_finite_differences(S, K, T, sigma, kind):
+    r, q = 0.065, 0.012
+    g = opt.bs_second_order_greeks(S, K, T, r, sigma, kind, q)
+
+    def first(**kw):
+        return opt.bs_greeks(**{**dict(S=S, K=K, T=T, r=r, sigma=sigma, kind=kind, q=q), **kw})
+
+    hs, hv, ht = S * 1e-4, 1e-4, 1e-6
+    fd = {"vanna": (first(sigma=sigma + hv).delta - first(sigma=sigma - hv).delta) / (2 * hv) / 100,
+          "volga": (first(sigma=sigma + hv).vega - first(sigma=sigma - hv).vega) / (2 * hv) / 100,
+          "charm": -(first(T=T + ht).delta - first(T=T - ht).delta) / (2 * ht) / 365,
+          "speed": (first(S=S + hs).gamma - first(S=S - hs).gamma) / (2 * hs),
+          "zomma": (first(sigma=sigma + hv).gamma - first(sigma=sigma - hv).gamma) / (2 * hv) / 100,
+          "color": -(first(T=T + ht).gamma - first(T=T - ht).gamma) / (2 * ht) / 365}
+    for name, value in fd.items():
+        assert getattr(g, name) == pytest.approx(value, rel=1e-4), name
+
+
+def test_second_order_greeks_call_put_relations():
+    args = (24000, 24200, 45 / 365, 0.065, 0.18)
+    call = opt.bs_second_order_greeks(*args, "call", q=0.012)
+    put = opt.bs_second_order_greeks(*args, "put", q=0.012)
+    for name in ("vanna", "volga", "speed", "zomma", "color"):
+        assert getattr(call, name) == pytest.approx(getattr(put, name))
+    assert call.charm - put.charm == pytest.approx(0.012 * np.exp(-0.012 * 45 / 365) / 365)   # from put-call parity
+
+
+def test_greek_attribution_explains_a_short_straddle_through_a_sell_off():
+    days = pd.bdate_range("2026-03-02", periods=16)
+    rng = np.random.default_rng(9)
+    path = pd.DataFrame({"spot": 24000 * np.exp(np.cumsum(np.r_[0, rng.normal(-0.012, 0.006, 15)])),
+                         "iv": 0.14 + np.cumsum(np.r_[0, rng.normal(0.01, 0.004, 15)])}, index=days)
+    legs = [{"kind": k, "strike": 24000, "qty": -50, "expiry": "2026-04-28"} for k in ("call", "put")]
+    att = opt.greek_pnl_attribution(legs, path)
+    gross = att[["delta", "gamma", "vega", "theta", "vanna", "volga", "charm", "speed"]].abs().sum(axis=1)
+    assert (att["residual"].abs() < 0.05 * gross).all()
+    assert att["residual"].abs().sum() < 0.02 * att["actual"].abs().sum()
+    assert att["actual"].sum() < 0 and att["gamma"].sum() < 0 and att["vega"].sum() < 0 and att["theta"].sum() > 0

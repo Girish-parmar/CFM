@@ -278,7 +278,7 @@ modules:
       - Second-order Greeks (vanna, volga, charm, speed) and Greek P&L attribution
       - Futures curves, carry and option structures by market view
     labs:
-      - {file: lab_09a_second_order_greeks.py, status: planned, runtime_s: 10, title: "Vanna, volga, charm, speed; gamma scalping; P&L attribution"}
+      - {file: lab_09a_second_order_greeks.py, status: ready, runtime_s: 10, title: "Vanna, volga, charm, speed, zomma, colour; P&L attribution through a sell-off; gamma scalping"}
       - {file: lab_09b_futures_options_structures.py, status: ready, runtime_s: 10, title: "Futures curve, cash-and-carry, seven option structures in parallel"}
     library: [cfmat.derivatives.options, cfmat.derivatives.futures, cfmat.derivatives.option_strategies]
     topics: [fno-greeks]

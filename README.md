@@ -12,7 +12,7 @@ to tell an edge from a lucky backtest.
 | Duration | 52 weeks + 4 weeks of self-paced pre-work |
 | Format | Hybrid — live online weekend classes, weekday lab clinics, three 3-day in-person bootcamps |
 | Guided hours | 736 (plus 40 h pre-work and about 6 h/week self-study) |
-| Structure | 6 terms, 24 modules + pre-work, 36 labs (33 ready) |
+| Structure | 6 terms, 24 modules + pre-work, 36 labs (34 ready) |
 | Cohort | target 36, maximum 40; intakes January and July |
 | Programme fee | **₹10,00,000.00 all-inclusive** = ₹8,47,457.63 + GST 18% ₹1,52,542.37 |
 | Fee per guided hour | ₹1,358.70 (₹1,151.44 before GST) |
@@ -47,7 +47,7 @@ to tell an edge from a lucky backtest.
 | M06 | [Technical Indicators, Candlestick and Chart Patterns](curriculum/m06-technical-analysis-patterns/README.md) | T2 | 12–13 | 24 | [06a](curriculum/m06-technical-analysis-patterns/lab_06a_indicators_patterns.py) | ready |
 | M07 | [Fundamental Analysis and Factor Investing](curriculum/m07-fundamental-factor-investing/README.md) | T2 | 14 | 12 | [07a](curriculum/m07-fundamental-factor-investing/lab_07a_factors_quantamental.py) | ready |
 | M08 | [Derivatives — Futures, Options Pricing and the Greeks](curriculum/m08-derivatives-pricing-greeks/README.md) | T2 | 15–17 | 36 | [08a](curriculum/m08-derivatives-pricing-greeks/lab_08a_options_pricing_greeks.py) | ready |
-| M09 | [F&O Strategies and Second-Order Greeks](curriculum/m09-fno-strategies-advanced-greeks/README.md) | T2 | 18–19 | 24 | 09a (planned), [09b](curriculum/m09-fno-strategies-advanced-greeks/lab_09b_futures_options_structures.py) | partial |
+| M09 | [F&O Strategies and Second-Order Greeks](curriculum/m09-fno-strategies-advanced-greeks/README.md) | T2 | 18–19 | 24 | [09a](curriculum/m09-fno-strategies-advanced-greeks/lab_09a_second_order_greeks.py), [09b](curriculum/m09-fno-strategies-advanced-greeks/lab_09b_futures_options_structures.py) | ready |
 | M10 | [Algorithmic Trading Strategies](curriculum/m10-trading-strategies/README.md) | T3 | 20–22 | 36 | [10a](curriculum/m10-trading-strategies/lab_10a_trading_strategies.py), [10b](curriculum/m10-trading-strategies/lab_10b_momentum_volatility.py) | ready |
 | M11 | [Backtesting and Research Methodology](curriculum/m11-backtesting-research/README.md) | T3 | 23–24 | 24 | [11a](curriculum/m11-backtesting-research/lab_11a_backtesting_costs_walk_forward.py), [11b](curriculum/m11-backtesting-research/lab_11b_analysis_tearsheet.py) | ready |
 | M12 | [Strategy Studio: Screeners, Strategy Creator and Parallel Research](curriculum/m12-strategy-studio/README.md) | T3 | 25–26 | 24 | [12a](curriculum/m12-strategy-studio/lab_12a_screener_instrument_selection.py), [12b](curriculum/m12-strategy-studio/lab_12b_strategy_creator_parallel.py), [12c](curriculum/m12-strategy-studio/lab_12c_fno_signals_and_filters.py) | ready |

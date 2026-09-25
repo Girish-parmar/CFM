@@ -7,11 +7,11 @@
 | Term | T2 · Analysis and Derivatives |
 | Weeks | 18–19 |
 | Hours | 24 guided |
-| Labs | 09a (planned) — Vanna, volga, charm, speed; gamma scalping; P&L attribution<br>[09b](lab_09b_futures_options_structures.py) — Futures curve, cash-and-carry, seven option structures in parallel |
+| Labs | [09a](lab_09a_second_order_greeks.py) — Vanna, volga, charm, speed, zomma, colour; P&L attribution through a sell-off; gamma scalping<br>[09b](lab_09b_futures_options_structures.py) — Futures curve, cash-and-carry, seven option structures in parallel |
 | Library | `cfmat.derivatives.options`, `cfmat.derivatives.futures`, `cfmat.derivatives.option_strategies` |
 | Prerequisites | [M08](../m08-derivatives-pricing-greeks/README.md) |
 | Committed topics | Futures and options — Greeks, second-order Greeks and strategies |
-| Status | partial |
+| Status | ready |
 <!-- END GENERATED: module-header -->
 
 ## Why this module
@@ -46,7 +46,7 @@ By the end of the module you can:
 |---|---|
 | L1 · Sat · 180 min | 0–15 retrieval quiz on M08 · 15–60 the Taylor expansion of option value in spot, vol and time; which cross terms matter · 60–70 break · 70–125 vanna and volga: skew, smile dynamics and why short-vol books lose twice in a sell-off · 125–170 charm, speed, zomma, colour: delta and gamma drift into expiry; pin risk · 170–180 exit ticket |
 | L2 · Sun · 180 min | 0–10 recap · 10–60 Greek P&L attribution: daily explain vs unexplained · 60–70 break · 70–130 workshop: attribute a short straddle's P&L over a turbulent week · 130–170 gamma scalping and variance: the hedged option as a bet on realised vs implied · 170–180 exit ticket |
-| C1 · Tue · 120 min | 0–10 setup · 10–100 Lab 09a (when released) or the exercise pack: second-order Greeks by finite differences on `bs_price` · 100–120 blockers |
+| C1 · Tue · 120 min | 0–10 setup · 10–100 Lab 09a §1–§3: closed forms against finite differences, Greek maps, and the short-straddle P&L explain · 100–120 blockers |
 | OH · Wed · 60 min | Greeks Q&A |
 | C2 · Thu · 120 min | 0–60 P&L attribution exercise · 60–100 peer review · 100–120 review |
 | QP · Fri · 60 min | 0–20 quiz 9a · 20–50 "which Greek hurt?" case cards · 50–60 preview |
@@ -66,19 +66,14 @@ By the end of the module you can:
 
 ## Labs
 
-**Lab 09a — second-order Greeks and P&L attribution** (`lab_09a_second_order_greeks.py`) · *planned*
+**Lab 09a — second-order Greeks and P&L attribution** (`lab_09a_second_order_greeks.py`)
 
-Specification (for the lab author):
-
-| Section | Content | Library support needed |
+| Section | You do | What good looks like |
 |---|---|---|
-| 1. Closed forms | Vanna, volga, charm, speed, zomma, colour under BSM with dividends | `derivatives.options.bs_second_order_greeks` (closed form + finite-difference tests) |
-| 2. Surfaces | Each Greek across spot and time to expiry | – |
-| 3. P&L attribution | Daily explain of a short straddle through a synthetic sell-off (spot down, IV up) | `derivatives.options.pnl_attribution(position, path)` |
-| 4. Gamma scalping | Hedged long straddle P&L vs realised − implied variance | reuse `bs_greeks` |
-
-Acceptance: closed forms match finite differences to 1e-4; attribution residual < 5% of P&L on
-daily steps; runs in under 15 s; tests added to `tests/test_derivatives.py`.
+| 1. Closed forms | Vanna, volga, charm, speed, zomma and colour for a call; check each by bumping a first-order Greek | Every closed form within 1e-4 of its finite difference |
+| 2. Where they live | Maps across strike/spot and days to expiry | You say where each Greek peaks and why (wings for vanna/volga, at-the-money near expiry for the rest) |
+| 3. P&L attribution | A short straddle through a sell-off with rising IV, explained day by day | Largest daily residual below 5% of that day's gross Greek P&L; about 1% unexplained over the period |
+| 4. Gamma scalping | Delta-hedged long straddle bought at 16% on paths realising 10–28% | Average P&L follows realised − implied; you explain the spread across paths |
 
 **Lab 09b — futures and option structures** (`lab_09b_futures_options_structures.py`)
 
@@ -93,7 +88,7 @@ daily steps; runs in under 15 s; tests added to `tests/test_derivatives.py`.
 | Item | Weight in course component | Due | Criteria |
 |---|---|---|---|
 | Quizzes 9a, 9b | quizzes (10%) | Fri W18, W19 | Greeks and structures |
-| Lab 09b (+ 09a when released) | labs (20%) | Sun W19 | Runs; worst-trade analysis written |
+| Labs 09a, 09b | labs (20%) | Sun W19 | Runs; the attribution and the worst-trade analysis written up |
 | Assignment: a tail-aware option strategy | assignments (15%) | Sun W20 | Choose one structure, add a tail rule (wing, stop or event filter), backtest on the synthetic IV index and on a historical IV series if licensed, attribute the worst three trades to Greeks. Rubric: design 25, risk analysis 35, correctness 25, clarity 15 |
 
 ## Common mistakes
@@ -114,6 +109,6 @@ daily steps; runs in under 15 s; tests added to `tests/test_derivatives.py`.
 ## Instructor notes
 
 - Owner: markets and derivatives lead.
-- Lab 09a is planned; until it ships, C1 W18 uses the finite-difference exercise pack. Track it in the [audit](../../audit/2026-09-devils-advocate-review.md).
+- Lab 09a §4 (gamma scalping) makes a good opener for the W19 L1 discussion of volatility trading.
 - Lot size, strike step and expiry weekday are parameters in the labs; set them from current circulars before class.
 - This module's assignment feeds directly into derivatives capstones.
