@@ -27,6 +27,7 @@ def _derived_rng(seed: int | None, salt: int) -> np.random.Generator:
 
 _OHLC_SALT = 0x4F484C43   # "OHLC"
 _IV_SALT = 0x49565331     # "IVS1"
+_VOL_SALT = 0x564F4C53    # "VOLS"
 
 
 def trading_days(n: int, start: str = "2022-01-03") -> pd.DatetimeIndex:
@@ -140,13 +141,15 @@ def universe(
     n_assets: int = 10,
     n_days: int = 756,
     market_vol: float = 0.18,
-    idio_vol: float = 0.20,
+    idio_vol: float | tuple[float, float] = 0.20,
     seed: int | None = None,
     start: str = "2022-01-03",
 ) -> pd.DataFrame:
     """Closes for ``n_assets`` stocks driven by one market factor plus noise.
 
     Betas are drawn from U(0.6, 1.4) and annual drifts from N(8%, 6%).
+    ``idio_vol`` is one idiosyncratic volatility for every stock, or a
+    ``(low, high)`` range from which each stock draws its own.
     Columns are named SYN01, SYN02, ...
     """
     rng = np.random.default_rng(seed)
@@ -154,7 +157,11 @@ def universe(
     market = rng.normal(0.0, market_vol * np.sqrt(dt), size=(n_days - 1, 1))
     betas = rng.uniform(0.6, 1.4, size=n_assets)
     drifts = rng.normal(0.08, 0.06, size=n_assets)
-    idio = rng.normal(0.0, idio_vol * np.sqrt(dt), size=(n_days - 1, n_assets))
+    idio = rng.normal(0.0, np.sqrt(dt), size=(n_days - 1, n_assets))
+    if isinstance(idio_vol, tuple):
+        idio *= _derived_rng(seed, _VOL_SALT).uniform(*idio_vol, size=n_assets)
+    else:
+        idio *= idio_vol
     rets = drifts * dt + market * betas + idio
     paths = 100.0 * np.exp(np.vstack([np.zeros(n_assets), np.cumsum(rets, axis=0)]))
     cols = [f"SYN{i + 1:02d}" for i in range(n_assets)]

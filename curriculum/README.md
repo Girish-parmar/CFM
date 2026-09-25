@@ -21,15 +21,15 @@ One folder per module: `mNN-slug/` holds the module guide (`README.md`) and its 
 | M07 | [Fundamental Analysis and Factor Investing](m07-fundamental-factor-investing/README.md) | T2 | 14 | 12 | [07a](m07-fundamental-factor-investing/lab_07a_factors_quantamental.py) | ready |
 | M08 | [Derivatives — Futures, Options Pricing and the Greeks](m08-derivatives-pricing-greeks/README.md) | T2 | 15–17 | 36 | [08a](m08-derivatives-pricing-greeks/lab_08a_options_pricing_greeks.py) | ready |
 | M09 | [F&O Strategies and Second-Order Greeks](m09-fno-strategies-advanced-greeks/README.md) | T2 | 18–19 | 24 | 09a (planned), [09b](m09-fno-strategies-advanced-greeks/lab_09b_futures_options_structures.py) | partial |
-| M10 | [Algorithmic Trading Strategies](m10-trading-strategies/README.md) | T3 | 20–22 | 36 | [10a](m10-trading-strategies/lab_10a_trading_strategies.py) | ready |
-| M11 | [Backtesting and Research Methodology](m11-backtesting-research/README.md) | T3 | 23–24 | 24 | [11a](m11-backtesting-research/lab_11a_backtesting_costs_walk_forward.py) | ready |
+| M10 | [Algorithmic Trading Strategies](m10-trading-strategies/README.md) | T3 | 20–22 | 36 | [10a](m10-trading-strategies/lab_10a_trading_strategies.py), [10b](m10-trading-strategies/lab_10b_momentum_volatility.py) | ready |
+| M11 | [Backtesting and Research Methodology](m11-backtesting-research/README.md) | T3 | 23–24 | 24 | [11a](m11-backtesting-research/lab_11a_backtesting_costs_walk_forward.py), [11b](m11-backtesting-research/lab_11b_analysis_tearsheet.py) | ready |
 | M12 | [Strategy Studio: Screeners, Strategy Creator and Parallel Research](m12-strategy-studio/README.md) | T3 | 25–26 | 24 | [12a](m12-strategy-studio/lab_12a_screener_instrument_selection.py), [12b](m12-strategy-studio/lab_12b_strategy_creator_parallel.py), [12c](m12-strategy-studio/lab_12c_fno_signals_and_filters.py) | ready |
 | – | Review, Term exam 2 and Bootcamp 2 | T3 | 27 | 12 + 24 bootcamp | – | – |
 | M13 | [Risk Management and Position Sizing](m13-risk-position-sizing/README.md) | T4 | 28–29 | 24 | [13a](m13-risk-position-sizing/lab_13a_risk_sizing_stress.py) | ready |
 | M14 | [Portfolio Management and Strategy Allocation](m14-portfolio-management/README.md) | T4 | 30–31 | 24 | [14a](m14-portfolio-management/lab_14a_portfolio_construction.py) | ready |
 | M15 | [Market Microstructure and Execution](m15-microstructure-execution/README.md) | T4 | 32–33 | 24 | [15a](m15-microstructure-execution/lab_15a_order_book_execution.py) | ready |
 | M16 | [Market Data Handling](m16-market-data-handling/README.md) | T4 | 34 | 12 | 16a (planned) | planned |
-| M17 | [Trading Platform, Broker APIs and Compliance](m17-trading-platform-compliance/README.md) | T4 | 35–36 | 24 | [17a](m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py) | ready |
+| M17 | [Trading Platform, Broker APIs and Compliance](m17-trading-platform-compliance/README.md) | T4 | 35–36 | 24 | [17a](m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py), [17b](m17-trading-platform-compliance/lab_17b_order_management_journal.py) | ready |
 | M18 | [Monitoring and Automation with n8n](m18-monitoring-automation/README.md) | T4 | 37–38 | 24 | [18a](m18-monitoring-automation/lab_18a_n8n_signal_service.py), 18b (planned) | partial |
 | M19 | [Machine Learning for Trading](m19-machine-learning/README.md) | T5 | 39–40 | 24 | [19a](m19-machine-learning/lab_19a_machine_learning.py) | ready |
 | M20 | [Deep Learning for Financial Time Series](m20-deep-learning/README.md) | T5 | 41 | 12 | [20a](m20-deep-learning/lab_20a_deep_learning.py) | ready |
@@ -58,7 +58,9 @@ One folder per module: `mNN-slug/` holds the module guide (`README.md`) and its 
 | 09a | M09 | lab_09a_second_order_greeks.py | Vanna, volga, charm, speed; gamma scalping; P&L attribution | planned | – |
 | 09b | M09 | [lab_09b_futures_options_structures.py](m09-fno-strategies-advanced-greeks/lab_09b_futures_options_structures.py) | Futures curve, cash-and-carry, seven option structures in parallel | ready | ~10 s |
 | 10a | M10 | [lab_10a_trading_strategies.py](m10-trading-strategies/lab_10a_trading_strategies.py) | Trend, momentum, mean reversion, cross-sectional momentum, pairs | ready | ~10 s |
+| 10b | M10 | [lab_10b_momentum_volatility.py](m10-trading-strategies/lab_10b_momentum_volatility.py) | Volatility estimators vs truth, cones and regimes, momentum scores, TSMOM with a vol target | ready | ~5 s |
 | 11a | M11 | [lab_11a_backtesting_costs_walk_forward.py](m11-backtesting-research/lab_11a_backtesting_costs_walk_forward.py) | Indian costs, grid search vs walk-forward, deflated Sharpe, event engine | ready | ~20 s |
+| 11b | M11 | [lab_11b_analysis_tearsheet.py](m11-backtesting-research/lab_11b_analysis_tearsheet.py) | Tearsheet vs benchmark, drawdown anatomy, rolling and distribution views, CAPM, RS and rotation | ready | ~5 s |
 | 12a | M12 | [lab_12a_screener_instrument_selection.py](m12-strategy-studio/lab_12a_screener_instrument_selection.py) | Parallel screener, regime labels, ranking, pattern scan, shortlist | ready | ~10 s |
 | 12b | M12 | [lab_12b_strategy_creator_parallel.py](m12-strategy-studio/lab_12b_strategy_creator_parallel.py) | Strategy library and creator, sweeps (serial/thread/process), walk-forward | ready | ~20 s |
 | 12c | M12 | [lab_12c_fno_signals_and_filters.py](m12-strategy-studio/lab_12c_fno_signals_and_filters.py) | Trend template on futures; regime filters for option structures | ready | ~10 s |
@@ -67,6 +69,7 @@ One folder per module: `mNN-slug/` holds the module guide (`README.md`) and its 
 | 15a | M15 | [lab_15a_order_book_execution.py](m15-microstructure-execution/lab_15a_order_book_execution.py) | Order book, TWAP/VWAP/POV, Almgren–Chriss, impact, shortfall | ready | ~5 s |
 | 16a | M16 | lab_16a_market_data_handler.py | Tick aggregation, gap and spike checks, continuous futures, Parquet store | planned | – |
 | 17a | M17 | [lab_17a_oms_rms_paper_trading.py](m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py) | Paper broker, RMS rejects, throttle, kill switch, trade journal | ready | ~5 s |
+| 17b | M17 | [lab_17b_order_management_journal.py](m17-trading-platform-compliance/lab_17b_order_management_journal.py) | OMS states, stops, IOC/DAY, bracket and OCO, reconciliation; journal review with R and MAE/MFE | ready | ~5 s |
 | 18a | M18 | [lab_18a_n8n_signal_service.py](m18-monitoring-automation/lab_18a_n8n_signal_service.py) | Signal service endpoints used by the n8n workflows | ready | ~5 s |
 | 18b | M18 | lab_18b_live_monitoring.py | Heartbeats, live-vs-backtest drift, alert rules, incident drill | planned | – |
 | 19a | M19 | [lab_19a_machine_learning.py](m19-machine-learning/lab_19a_machine_learning.py) | Features, triple barrier, leakage vs purged CV, walk-forward trading | ready | ~30 s |

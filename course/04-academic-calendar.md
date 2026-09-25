@@ -66,9 +66,9 @@ Module guides adapt these shapes; where a guide differs, the guide wins.
 | 19 | T2 | [M09](../curriculum/m09-fno-strategies-advanced-greeks/README.md) F&O Strategies and Second-Order Greeks | Futures curves, carry and option structures by market view | lab 09a, lab 09b |
 | 20 | T3 | [M10](../curriculum/m10-trading-strategies/README.md) Algorithmic Trading Strategies | Trend following and time-series momentum |  |
 | 21 | T3 | [M10](../curriculum/m10-trading-strategies/README.md) Algorithmic Trading Strategies | Mean reversion and cross-sectional momentum |  |
-| 22 | T3 | [M10](../curriculum/m10-trading-strategies/README.md) Algorithmic Trading Strategies | Statistical arbitrage — pairs and cointegration | lab 10a |
+| 22 | T3 | [M10](../curriculum/m10-trading-strategies/README.md) Algorithmic Trading Strategies | Statistical arbitrage — pairs and cointegration | lab 10a, lab 10b |
 | 23 | T3 | [M11](../curriculum/m11-backtesting-research/README.md) Backtesting and Research Methodology | Backtest engines, Indian costs and the classic biases |  |
-| 24 | T3 | [M11](../curriculum/m11-backtesting-research/README.md) Backtesting and Research Methodology | Walk-forward testing, the deflated Sharpe ratio and research hygiene | lab 11a |
+| 24 | T3 | [M11](../curriculum/m11-backtesting-research/README.md) Backtesting and Research Methodology | Walk-forward testing, the deflated Sharpe ratio and research hygiene | lab 11a, lab 11b |
 | 25 | T3 | [M12](../curriculum/m12-strategy-studio/README.md) Strategy Studio: Screeners, Strategy Creator and Parallel Research | Screening and instrument selection; the rule language |  |
 | 26 | T3 | [M12](../curriculum/m12-strategy-studio/README.md) Strategy Studio: Screeners, Strategy Creator and Parallel Research | Strategy Creator, parallel optimisation and F&O signals | lab 12a, lab 12b, lab 12c |
 | 27 | T3 | **R2** | Review, Term exam 2 and Bootcamp 2 | exam + in-person bootcamp |
@@ -80,7 +80,7 @@ Module guides adapt these shapes; where a guide differs, the guide wins.
 | 33 | T4 | [M15](../curriculum/m15-microstructure-execution/README.md) Market Microstructure and Execution | Execution algorithms and transaction-cost analysis | lab 15a |
 | 34 | T4 | [M16](../curriculum/m16-market-data-handling/README.md) Market Data Handling | Feeds, ticks to bars, instrument masters, data quality and storage | lab 16a |
 | 35 | T4 | [M17](../curriculum/m17-trading-platform-compliance/README.md) Trading Platform, Broker APIs and Compliance | OMS/RMS architecture, broker APIs and paper trading |  |
-| 36 | T4 | [M17](../curriculum/m17-trading-platform-compliance/README.md) Trading Platform, Broker APIs and Compliance | SEBI's retail-algo framework, audit trails and operational risk | lab 17a |
+| 36 | T4 | [M17](../curriculum/m17-trading-platform-compliance/README.md) Trading Platform, Broker APIs and Compliance | SEBI's retail-algo framework, audit trails and operational risk | lab 17a, lab 17b |
 | 37 | T4 | [M18](../curriculum/m18-monitoring-automation/README.md) Monitoring and Automation with n8n | Live monitoring: health checks, drift, P&L attribution and kill switches |  |
 | 38 | T4 | [M18](../curriculum/m18-monitoring-automation/README.md) Monitoring and Automation with n8n | Automation with n8n — alerts, digests and trade journals | lab 18a, lab 18b |
 | 39 | T5 | [M19](../curriculum/m19-machine-learning/README.md) Machine Learning for Trading | Features, labels and leakage | CT +2 h |

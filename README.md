@@ -12,7 +12,7 @@ to tell an edge from a lucky backtest.
 | Duration | 52 weeks + 4 weeks of self-paced pre-work |
 | Format | Hybrid — live online weekend classes, weekday lab clinics, three 3-day in-person bootcamps |
 | Guided hours | 736 (plus 40 h pre-work and about 6 h/week self-study) |
-| Structure | 6 terms, 24 modules + pre-work, 33 labs (27 ready) |
+| Structure | 6 terms, 24 modules + pre-work, 36 labs (30 ready) |
 | Cohort | target 36, maximum 40; intakes January and July |
 | Programme fee | **₹10,00,000.00 all-inclusive** = ₹8,47,457.63 + GST 18% ₹1,52,542.37 |
 | Fee per guided hour | ₹1,358.70 (₹1,151.44 before GST) |
@@ -48,15 +48,15 @@ to tell an edge from a lucky backtest.
 | M07 | [Fundamental Analysis and Factor Investing](curriculum/m07-fundamental-factor-investing/README.md) | T2 | 14 | 12 | [07a](curriculum/m07-fundamental-factor-investing/lab_07a_factors_quantamental.py) | ready |
 | M08 | [Derivatives — Futures, Options Pricing and the Greeks](curriculum/m08-derivatives-pricing-greeks/README.md) | T2 | 15–17 | 36 | [08a](curriculum/m08-derivatives-pricing-greeks/lab_08a_options_pricing_greeks.py) | ready |
 | M09 | [F&O Strategies and Second-Order Greeks](curriculum/m09-fno-strategies-advanced-greeks/README.md) | T2 | 18–19 | 24 | 09a (planned), [09b](curriculum/m09-fno-strategies-advanced-greeks/lab_09b_futures_options_structures.py) | partial |
-| M10 | [Algorithmic Trading Strategies](curriculum/m10-trading-strategies/README.md) | T3 | 20–22 | 36 | [10a](curriculum/m10-trading-strategies/lab_10a_trading_strategies.py) | ready |
-| M11 | [Backtesting and Research Methodology](curriculum/m11-backtesting-research/README.md) | T3 | 23–24 | 24 | [11a](curriculum/m11-backtesting-research/lab_11a_backtesting_costs_walk_forward.py) | ready |
+| M10 | [Algorithmic Trading Strategies](curriculum/m10-trading-strategies/README.md) | T3 | 20–22 | 36 | [10a](curriculum/m10-trading-strategies/lab_10a_trading_strategies.py), [10b](curriculum/m10-trading-strategies/lab_10b_momentum_volatility.py) | ready |
+| M11 | [Backtesting and Research Methodology](curriculum/m11-backtesting-research/README.md) | T3 | 23–24 | 24 | [11a](curriculum/m11-backtesting-research/lab_11a_backtesting_costs_walk_forward.py), [11b](curriculum/m11-backtesting-research/lab_11b_analysis_tearsheet.py) | ready |
 | M12 | [Strategy Studio: Screeners, Strategy Creator and Parallel Research](curriculum/m12-strategy-studio/README.md) | T3 | 25–26 | 24 | [12a](curriculum/m12-strategy-studio/lab_12a_screener_instrument_selection.py), [12b](curriculum/m12-strategy-studio/lab_12b_strategy_creator_parallel.py), [12c](curriculum/m12-strategy-studio/lab_12c_fno_signals_and_filters.py) | ready |
 | – | Review, Term exam 2 and Bootcamp 2 | T3 | 27 | 12 + 24 bootcamp | – | – |
 | M13 | [Risk Management and Position Sizing](curriculum/m13-risk-position-sizing/README.md) | T4 | 28–29 | 24 | [13a](curriculum/m13-risk-position-sizing/lab_13a_risk_sizing_stress.py) | ready |
 | M14 | [Portfolio Management and Strategy Allocation](curriculum/m14-portfolio-management/README.md) | T4 | 30–31 | 24 | [14a](curriculum/m14-portfolio-management/lab_14a_portfolio_construction.py) | ready |
 | M15 | [Market Microstructure and Execution](curriculum/m15-microstructure-execution/README.md) | T4 | 32–33 | 24 | [15a](curriculum/m15-microstructure-execution/lab_15a_order_book_execution.py) | ready |
 | M16 | [Market Data Handling](curriculum/m16-market-data-handling/README.md) | T4 | 34 | 12 | 16a (planned) | planned |
-| M17 | [Trading Platform, Broker APIs and Compliance](curriculum/m17-trading-platform-compliance/README.md) | T4 | 35–36 | 24 | [17a](curriculum/m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py) | ready |
+| M17 | [Trading Platform, Broker APIs and Compliance](curriculum/m17-trading-platform-compliance/README.md) | T4 | 35–36 | 24 | [17a](curriculum/m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py), [17b](curriculum/m17-trading-platform-compliance/lab_17b_order_management_journal.py) | ready |
 | M18 | [Monitoring and Automation with n8n](curriculum/m18-monitoring-automation/README.md) | T4 | 37–38 | 24 | [18a](curriculum/m18-monitoring-automation/lab_18a_n8n_signal_service.py), 18b (planned) | partial |
 | M19 | [Machine Learning for Trading](curriculum/m19-machine-learning/README.md) | T5 | 39–40 | 24 | [19a](curriculum/m19-machine-learning/lab_19a_machine_learning.py) | ready |
 | M20 | [Deep Learning for Financial Time Series](curriculum/m20-deep-learning/README.md) | T5 | 41 | 12 | [20a](curriculum/m20-deep-learning/lab_20a_deep_learning.py) | ready |
@@ -72,9 +72,9 @@ to tell an edge from a lucky backtest.
 ```
 course/       the programme: manifest (course.yaml), mission, fees, calendar, assessment, routes, operations
 curriculum/   one folder per module: micro-level guide (README.md) + labs (lab_NNx_*.py)
-cfmat/        the course library, 14 subpackages (data, analytics, derivatives, strategies,
+cfmat/        the course library, 15 subpackages (data, analytics, derivatives, strategies,
               backtesting, research, portfolio, microstructure, trading, automation, ml,
-              nlp, econometrics, infra) + cfmat.studio
+              nlp, econometrics, viz, infra) + cfmat.studio
 tools/        route_manager.py (validate + render the manifest), gen_api_docs.py
 tests/        one test file per subpackage, layout and course checks, lab smoke tests
 n8n/          three importable workflows (signal alerts, news digest, trade-journal webhook)

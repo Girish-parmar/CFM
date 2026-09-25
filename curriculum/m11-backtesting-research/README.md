@@ -7,8 +7,8 @@
 | Term | T3 · Strategy Research |
 | Weeks | 23–24 |
 | Hours | 24 guided |
-| Labs | [11a](lab_11a_backtesting_costs_walk_forward.py) — Indian costs, grid search vs walk-forward, deflated Sharpe, event engine |
-| Library | `cfmat.backtesting.vectorized`, `cfmat.backtesting.event_driven`, `cfmat.microstructure.costs`, `cfmat.analytics.metrics` |
+| Labs | [11a](lab_11a_backtesting_costs_walk_forward.py) — Indian costs, grid search vs walk-forward, deflated Sharpe, event engine<br>[11b](lab_11b_analysis_tearsheet.py) — Tearsheet vs benchmark, drawdown anatomy, rolling and distribution views, CAPM, RS and rotation |
+| Library | `cfmat.backtesting.vectorized`, `cfmat.backtesting.event_driven`, `cfmat.microstructure.costs`, `cfmat.analytics.metrics`, `cfmat.analytics.performance`, `cfmat.analytics.relative`, `cfmat.viz` |
 | Prerequisites | [M10](../m10-trading-strategies/README.md) |
 | Committed topics | Statistics in finance |
 | Status | ready |
@@ -28,7 +28,7 @@ By the end of the module you can:
 1. Build vectorised and event-driven backtests and explain when to use each.
 2. Identify and prevent look-ahead bias, survivorship bias, data snooping and unrealistic fills.
 3. Model Indian transaction costs, slippage and market impact, and show a strategy's sensitivity to them.
-4. Report the right metrics (CAGR, volatility, Sharpe, Sortino, drawdown, Calmar, turnover, hit rate, profit factor) against a sensible benchmark.
+4. Report the right metrics (CAGR, volatility, Sharpe, Sortino, drawdown, Calmar, turnover, hit rate, profit factor) against a sensible benchmark, and read a full tearsheet: drawdown periods, rolling and calendar views, tails (VaR, CVaR, skew), and CAPM alpha, beta and capture ratios.
 5. Run walk-forward optimisation and keep a true hold-out period.
 6. Quantify multiple-testing risk with the probabilistic and deflated Sharpe ratios, counting trials honestly.
 7. Keep a research log and pre-register hypotheses.
@@ -48,7 +48,7 @@ By the end of the module you can:
 | L2 · Sun · 180 min | 0–10 recap · 10–60 Indian costs with `IndianCostModel`: brokerage, STT, exchange fees, SEBI fee, stamp duty, GST, DP charge; slippage and impact · 60–70 break · 70–130 metrics and benchmarks: what each metric hides · 130–170 the event-driven engine (`backtesting.event_driven`) with a paper broker and RMS · 170–180 exit ticket |
 | C1 · Tue · 120 min | 0–10 setup · 10–90 Lab 11a §1 costs; §4 event engine vs vectorised · 90–120 blockers |
 | OH · Wed · 60 min | Mini-project 1 clinic |
-| C2 · Thu · 120 min | 0–60 cost sensitivity: double costs, move fills, add slippage · 60–100 peer review · 100–120 review |
+| C2 · Thu · 120 min | 0–45 cost sensitivity: double costs, move fills, add slippage · 45–105 Lab 11b §1–§4: tearsheet, drawdown anatomy, calendar view · 105–120 review |
 | QP · Fri · 60 min | 0–20 quiz 11a · 20–50 "spot the bias" code cards · 50–60 preview |
 | Self-study · ~6 h | López de Prado ch. 11–12; Mini-project 1 |
 
@@ -60,7 +60,7 @@ By the end of the module you can:
 | L2 · Sun · 180 min | 0–10 recap · 10–60 pre-registration and research logs: templates and Git history as evidence · 60–70 break · 70–130 workshop: grid search vs walk-forward on the same strategy (Lab 11a §2–3) · 130–170 case studies: backtests that failed live and why · 170–180 exit ticket |
 | C1 · Tue · 120 min | 0–100 Lab 11a §2–§3 · 100–120 review |
 | OH · Wed · 60 min | Assignment clinic |
-| C2 · Thu · 120 min | 0–60 backtest audit of Mini-project 1 · 60–100 peer review · 100–120 quiz review |
+| C2 · Thu · 120 min | 0–45 Lab 11b §5–§8: rolling view and the base rate of bad quarters, distribution, CAPM, relative strength and rotation · 45–95 backtest audit of Mini-project 1 with a tearsheet · 95–120 peer review |
 | QP · Fri · 60 min | 0–20 quiz 11b · 20–50 peer review of audits · 50–60 preview of M12 |
 | Self-study · ~6 h | Bailey et al. (2014); Harvey, Liu and Zhu (2016); finish the audit |
 
@@ -75,13 +75,26 @@ By the end of the module you can:
 | 3. Deflated Sharpe | DSR for the grid winner with the true trial count | DSR well below the naive confidence |
 | 4. Event engine | Same strategy in event-driven and vectorised form | Results agree within costs and fill differences |
 
+**Lab 11b — performance analysis and the tearsheet** (`lab_11b_analysis_tearsheet.py`)
+
+| Section | You do | What good looks like |
+|---|---|---|
+| 1–2. Strategy and tearsheet | Dual momentum vs equal weight; read every tearsheet line | A one-paragraph verdict: return for risk, worst stretch, tails, skill vs beta |
+| 3. Drawdown anatomy | Worst five drawdowns with time to trough and to recover | You name the drawdown you could not have lived through |
+| 4. Calendar view | Monthly heatmap and annual returns | Lumpy years called out |
+| 5. Rolling view | Rolling metrics; simulate a true-Sharpe-1 strategy | The base rate of negative quarters (about a third) stated |
+| 6. Distribution | Histogram, Q-Q plot, VaR and CVaR | Fat tails recognised, or their absence noted |
+| 7. Skill or exposure | CAPM alpha with a Newey–West t, rolling beta, capture | Alpha significance judged by its t-statistic |
+| 8. The universe | RS rating, Mansfield RS, rotation graph, clustered correlation | Leaders and laggards named with their quadrant |
+
 ## Assessment
 
 | Item | Weight in course component | Due | Criteria |
 |---|---|---|---|
 | Quizzes 11a, 11b | quizzes (10%) | Fri W23, W24 | Biases, metrics, DSR |
 | Lab 11a | labs (20%) | Sun W24 | Runs; interpretation |
-| Assignment: backtest audit | assignments (15%) | Sun W25 | For Mini-project 1: list every assumption, double costs, move fills to next open, run walk-forward, report DSR with an honest trial count. Rubric: completeness 35, correctness 35, honesty 30 |
+| Lab 11b | labs (20%) | Sun W24 | Runs; tearsheet verdict and the rolling-Sharpe base rate explained |
+| Assignment: backtest audit | assignments (15%) | Sun W25 | For Mini-project 1: list every assumption, double costs, move fills to next open, run walk-forward, report DSR with an honest trial count, and attach a tearsheet against a sensible benchmark. Rubric: completeness 35, correctness 35, honesty 30 |
 
 ## Common mistakes
 

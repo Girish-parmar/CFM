@@ -1,5 +1,6 @@
 """Tests for cfmat.data: synthetic generators."""
 
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -38,3 +39,25 @@ def test_volume_profile_sums_to_one_and_is_u_shaped():
     p = data.intraday_volume_profile(25)
     assert p.sum() == pytest.approx(1.0)
     assert p[0] > p[12] < p[-1]
+
+
+def test_universe_can_draw_a_volatility_per_stock():
+    def vol_ratio(prices):
+        vol = np.log(prices).diff().std() * np.sqrt(252)
+        return vol.max() / vol.min()
+
+    assert vol_ratio(data.universe(20, 1000, idio_vol=(0.10, 0.50), seed=1)) > 2.0
+    assert vol_ratio(data.universe(20, 1000, idio_vol=0.20, seed=1)) < 1.6
+
+
+def test_brownian_ohlc_is_consistent_and_carries_the_true_volatility():
+    sigma = np.r_[np.full(50, 0.1), np.full(50, 0.4)]
+    bars = data.brownian_ohlc(100, sigma=sigma, seed=7)
+    assert (bars["high"] >= bars[["open", "close"]].max(axis=1)).all()
+    assert (bars["low"] <= bars[["open", "close"]].min(axis=1)).all()
+    assert bars["true_vol"].tolist() == sigma.tolist()
+    no_gaps = data.brownian_ohlc(100, overnight_share=0.0, seed=7)
+    assert np.allclose(no_gaps["open"].iloc[1:].to_numpy(), no_gaps["close"].iloc[:-1].to_numpy())
+    assert not np.allclose(bars["open"].iloc[1:].to_numpy(), bars["close"].iloc[:-1].to_numpy())
+    with pytest.raises(ValueError):
+        data.brownian_ohlc(10, overnight_share=1.0)

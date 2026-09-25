@@ -13,7 +13,7 @@ program:
   name: Certificate in Financial Market and Algorithmic Trading
   code: CFMAT
   edition: "2027"
-  version: 2.0.0
+  version: 2.1.0
   duration_weeks: 52
   prework_weeks: 4
   prework_hours: 40
@@ -295,7 +295,8 @@ modules:
       - Statistical arbitrage — pairs and cointegration
     labs:
       - {file: lab_10a_trading_strategies.py, status: ready, runtime_s: 10, title: "Trend, momentum, mean reversion, cross-sectional momentum, pairs"}
-    library: [cfmat.strategies.signals, cfmat.backtesting.vectorized]
+      - {file: lab_10b_momentum_volatility.py, status: ready, runtime_s: 5, title: "Volatility estimators vs truth, cones and regimes, momentum scores, TSMOM with a vol target"}
+    library: [cfmat.strategies.signals, cfmat.backtesting.vectorized, cfmat.analytics.momentum, cfmat.analytics.volatility, cfmat.viz]
     topics: []
     prerequisites: [M04, M06]
 
@@ -309,7 +310,8 @@ modules:
       - Walk-forward testing, the deflated Sharpe ratio and research hygiene
     labs:
       - {file: lab_11a_backtesting_costs_walk_forward.py, status: ready, runtime_s: 20, title: "Indian costs, grid search vs walk-forward, deflated Sharpe, event engine"}
-    library: [cfmat.backtesting.vectorized, cfmat.backtesting.event_driven, cfmat.microstructure.costs, cfmat.analytics.metrics]
+      - {file: lab_11b_analysis_tearsheet.py, status: ready, runtime_s: 5, title: "Tearsheet vs benchmark, drawdown anatomy, rolling and distribution views, CAPM, RS and rotation"}
+    library: [cfmat.backtesting.vectorized, cfmat.backtesting.event_driven, cfmat.microstructure.costs, cfmat.analytics.metrics, cfmat.analytics.performance, cfmat.analytics.relative, cfmat.viz]
     topics: [statistics]
     prerequisites: [M10]
 
@@ -394,7 +396,8 @@ modules:
       - SEBI's retail-algo framework, audit trails and operational risk
     labs:
       - {file: lab_17a_oms_rms_paper_trading.py, status: ready, runtime_s: 5, title: "Paper broker, RMS rejects, throttle, kill switch, trade journal"}
-    library: [cfmat.trading, cfmat.backtesting.event_driven]
+      - {file: lab_17b_order_management_journal.py, status: ready, runtime_s: 5, title: "OMS states, stops, IOC/DAY, bracket and OCO, reconciliation; journal review with R and MAE/MFE"}
+    library: [cfmat.trading, cfmat.trading.oms, cfmat.trading.journal, cfmat.backtesting.event_driven, cfmat.viz]
     topics: [platform, risk-sizing]
     prerequisites: [M11, M13]
 

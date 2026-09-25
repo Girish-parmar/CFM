@@ -7,8 +7,8 @@
 | Term | T4 · Risk, Portfolio and Trading Systems |
 | Weeks | 35–36 |
 | Hours | 24 guided |
-| Labs | [17a](lab_17a_oms_rms_paper_trading.py) — Paper broker, RMS rejects, throttle, kill switch, trade journal |
-| Library | `cfmat.trading`, `cfmat.backtesting.event_driven` |
+| Labs | [17a](lab_17a_oms_rms_paper_trading.py) — Paper broker, RMS rejects, throttle, kill switch, trade journal<br>[17b](lab_17b_order_management_journal.py) — OMS states, stops, IOC/DAY, bracket and OCO, reconciliation; journal review with R and MAE/MFE |
+| Library | `cfmat.trading`, `cfmat.trading.oms`, `cfmat.trading.journal`, `cfmat.backtesting.event_driven`, `cfmat.viz` |
 | Prerequisites | [M11](../m11-backtesting-research/README.md), [M13](../m13-risk-position-sizing/README.md) |
 | Committed topics | Trading platform structure and infrastructure, Risk management and position sizing |
 | Status | ready |
@@ -32,6 +32,8 @@ By the end of the module you can:
 4. Deploy a strategy on a cloud server with a static IP, secrets management, logging and alerting.
 5. Explain SEBI's retail-algo framework (algo IDs, broker as principal, empanelled providers, order-rate thresholds, white-box vs black-box) and the research-analyst and investment-adviser rules as they apply to algo builders.
 6. Keep audit trails suitable for broker and exchange review.
+7. Manage orders through an OMS: stop and stop-limit orders, time in force (DAY, IOC, GTC), amendments, bracket and OCO orders, and partial fills.
+8. Review trading from a journal: round trips, R-multiples against the planned stop, MAE/MFE, and statistics by setup, tag and time of day.
 
 ## Before you start
 
@@ -46,9 +48,9 @@ By the end of the module you can:
 |---|---|
 | L1 · Sat · 180 min | 0–15 retrieval quiz on M16 · 15–60 architecture: components, event loops, queues, latency budgets, failure modes · 60–70 break · 70–120 the OMS: order states, idempotent order IDs, partial fills, cancels and modifies; reconciliation · 120–170 tour of `cfmat.trading` and `backtesting.event_driven`: why the same strategy code runs in backtest and paper · 170–180 exit ticket |
 | L2 · Sun · 180 min | 0–10 recap · 10–60 broker APIs: REST and WebSocket (Kite Connect, Upstox, SmartAPI, IBKR); auth and sessions; rate limits · 60–70 break · 70–130 the RMS: pre-trade checks, throttles, kill switch, mark-to-market loss limits · 130–170 workshop: configure `RiskLimits` for a capstone-like strategy and try to break them · 170–180 exit ticket |
-| C1 · Tue · 120 min | 0–10 setup · 10–100 Lab 17a §1–§3 · 100–120 blockers |
+| C1 · Tue · 120 min | 0–10 setup · 10–70 Lab 17a §1–§3 · 70–110 Lab 17b §1–§3: OMS states and client ids, stops and stop-limits on a gap, IOC, DAY expiry and amendments with partial fills · 110–120 blockers |
 | OH · Wed · 60 min | Adapter design clinic |
-| C2 · Thu · 120 min | 0–60 Lab 17a §4–§5: kill switch; a `BrokerAdapter` skeleton for a sandbox or mock · 60–100 peer review · 100–120 review |
+| C2 · Thu · 120 min | 0–45 Lab 17a §4–§5: kill switch; a `BrokerAdapter` skeleton for a sandbox or mock · 45–95 Lab 17b §4–§5: bracket and OCO orders, reconciliation breaks · 95–120 peer review |
 | QP · Fri · 60 min | 0–20 quiz 17a · 20–50 incident role-play: runaway orders · 50–60 preview |
 | Self-study · ~6 h | Narang, *Inside the Black Box*, execution and infrastructure chapters; broker API docs |
 
@@ -60,7 +62,7 @@ By the end of the module you can:
 | L2 · Sun · 180 min | 0–10 recap · 10–60 deployment: cloud VM, static IP, secrets, process supervision, time sync · 60–70 break · 70–130 audit trails: what to log, retention, tamper evidence; the trade journal (`cfmat.trading.TradeJournal`, `automation.journal_store`) · 130–170 incident runbooks: disconnects, stuck orders, reconciliation breaks · 170–180 exit ticket |
 | C1 · Tue · 120 min | 0–100 deploy the paper strategy on a VM with a static IP (course cloud) · 100–120 review |
 | OH · Wed · 60 min | Assignment clinic |
-| C2 · Thu · 120 min | 0–60 incident drill: kill the network mid-session · 60–100 peer review of runbooks · 100–120 quiz review |
+| C2 · Thu · 120 min | 0–40 incident drill: kill the network mid-session, then reconcile · 40–95 Lab 17b §6–§8: two weeks of breakouts through the OMS and the journal review · 95–120 peer review of runbooks |
 | QP · Fri · 60 min | 0–20 quiz 17b · 20–50 compliance case cards · 50–60 preview of M18 |
 | Self-study · ~6 h | SEBI circular and exchange standards; finish the assignment |
 
@@ -76,17 +78,32 @@ By the end of the module you can:
 | 4. Kill switch | Loss-limit breach halts trading | No orders after the switch; positions flattened |
 | 5. From paper to live | Sketch a `BrokerAdapter` | Same strategy code, different adapter |
 
+**Lab 17b — order management and the trading journal** (`lab_17b_order_management_journal.py`)
+
+| Section | You do | What good looks like |
+|---|---|---|
+| 1. OMS and state machine | Submit with client ids; read the transition table and audit trail | A retry sends nothing; every state change is logged |
+| 2. Stops and stop-limits | Gap through a stop and a stop-limit | You explain why one filled at the gap and the other waited |
+| 3. Thin liquidity | IOC, DAY expiry, amend with partial fills | Fill history kept across cancel/replace |
+| 4. Bracket and OCO | Partial entry, partial target, stop-out; OCO breakout | Exit legs always sized to the open exposure |
+| 5. Reconciliation | Manual order and broker-side cancel | Every break listed; flatten leaves zero breaks |
+| 6. Strategy through the OMS | Opening-range breakouts with brackets and risk-based size | Rejections read and explained; flat every close |
+| 7–8. Journal review | Round trips, R, MAE/MFE, breakdowns; SQLite round trip; charts | Journal P&L and charges equal the broker's; small-sample caution stated |
+
 ## Assessment
 
 | Item | Weight in course component | Due | Criteria |
 |---|---|---|---|
 | Quizzes 17a, 17b | quizzes (10%) | Fri W35, W36 | Architecture and regulation |
 | Lab 17a | labs (20%) | Sun W36 | Runs; rejects and switch explained |
+| Lab 17b | labs (20%) | Sun W36 | Runs; order states, bracket resizing and the journal review explained |
 | Assignment: adapter and runbook | assignments (15%) | Sun W37 | A `BrokerAdapter` for a broker sandbox or a documented mock, `RiskManager` in front of it, and an incident runbook (runaway orders, API disconnect, reconciliation break). Rubric: adapter 35, risk controls 30, runbook 35 |
 
 ## Common mistakes
 
 - Retrying a timed-out order without an idempotent client ID → duplicate orders.
+- A stop "protecting" a position that the broker has rejected or that a partial fill has outgrown → size exits to the filled quantity (bracket/OCO) and reconcile.
+- Judging a setup from ten trades → report R-multiples with the sample size and wait for more.
 - Risk checks in the strategy instead of in front of the broker → RMS sits in the order path.
 - API keys in code or notebooks → secrets management; `.env` is git-ignored.
 - Sharing strategy signals with friends "for fun" → RA/IA rules in L1 W36.
