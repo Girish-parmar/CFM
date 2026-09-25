@@ -20,6 +20,13 @@ for the `cfmat` library; the course edition is recorded in `course/course.yaml`.
   optional extras `alpaca` and `ibkr`, and the `cfmat-fetch` command
   (`python -m cfmat.data.fetch {yahoo,alpaca,ibkr} SYMBOL ...`) that saves checked
   `data/<SYMBOL>.csv` files.
+- Lab 16a, market data handler, and `cfmat.data.handler`: `validate_ticks` (duplicates,
+  late ticks, spikes that still accept a genuine jump, frozen prices, outages), time/volume/
+  dollar `aggregate_bars` and the live `BarBuilder`, `InstrumentMaster` (lot and tick checks,
+  front month with a roll rule), `continuous_futures` (none, back- and ratio-adjusted),
+  partitioned `store_ticks`/`load_ticks` (Parquet or CSV) and deterministic `replay`; the
+  generators `data.tick_stream` (with planted faults and an answer key) and `data.futures_chain`.
+  pyarrow joins the `data` extra.
 - `data.standardize_ohlcv` (one OHLCV shape for every source: lower-case columns, exchange-local
   naive timestamps, sorted, no duplicates) and `data.ohlcv_problems` (plain-language data-quality
   checks).

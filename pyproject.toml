@@ -27,7 +27,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-data = ["yfinance>=0.2.40"]
+data = ["yfinance>=0.2.40", "pyarrow>=14"]
 alpaca = ["alpaca-py>=0.30"]
 ibkr = ["ib_async>=1.0"]
 boost = ["xgboost>=2.0", "lightgbm>=4.0", "optuna>=3.4"]

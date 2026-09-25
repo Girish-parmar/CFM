@@ -1,4 +1,4 @@
-"""Tests for cfmat.data: synthetic generators, loaders, broker/vendor providers and the fetch command."""
+"""Tests for cfmat.data: synthetic generators, loaders, providers, the fetch command and the market-data handler."""
 
 import datetime as dt
 import enum
@@ -12,7 +12,7 @@ import pytest
 from cfmat import data
 from cfmat.analytics import metrics
 from cfmat.data import fetch as fetch_cli
-from cfmat.data import loaders, providers
+from cfmat.data import handler, loaders, providers
 
 
 def test_regime_generator_labels_states():
@@ -223,3 +223,97 @@ def test_fetch_command_saves_checked_csv_files(fake_alpaca, tmp_path, capsys):
     out = capsys.readouterr()
     assert "OK   AAPL: 2 bars" in out.out and "FAIL NOPE" in out.err
     assert fetch_cli.file_name("^nsei") == "NSEI" and fetch_cli.file_name("tcs.ns") == "TCS.NS"
+
+
+# -- market-data handler (M16) ---------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("seed", [0, 1, 2])
+def test_tick_validation_finds_every_planted_fault_and_nothing_else(seed):
+    ticks, truth = data.tick_stream(seed=seed)
+    report = handler.validate_ticks(ticks)
+    for kind in ("duplicate", "out_of_order", "spike"):
+        assert report.flags[kind].equals(truth["flags"][kind]), kind
+    periods = truth["periods"].set_index("kind")
+    gap, stale = report.gaps.iloc[0], report.stale.iloc[0]
+    assert len(report.gaps) == 1 and gap.start <= periods.loc["outage", "start"] and gap.end >= periods.loc["outage", "end"]
+    assert len(report.stale) == 1 and abs(stale.start - periods.loc["stale", "start"]) < pd.Timedelta("5s")
+    clean, _ = data.tick_stream(seed=seed, faults=False)
+    assert sum(handler.validate_ticks(clean).summary().values()) == 0
+
+
+def test_spike_filter_accepts_a_genuine_jump():
+    ticks, _ = data.tick_stream(seed=4, faults=False)
+    jumped = ticks.copy()
+    jumped.loc[10_000:, "price"] = (jumped.loc[10_000:, "price"] * 1.03 / 0.05).round() * 0.05   # news: +3% and it stays
+    assert handler.validate_ticks(jumped).flags["spike"].sum() == 0
+
+
+def test_time_bars_match_pandas_and_the_live_builder():
+    ticks, _ = data.tick_stream(seed=5)
+    clean = handler.validate_ticks(ticks).clean()
+    bars = handler.aggregate_bars(clean, "time", "1min")
+    series = clean.set_index("ts")
+    ref = series["price"].resample("1min").ohlc().dropna()
+    ref["volume"] = series["qty"].resample("1min").sum()
+    pd.testing.assert_frame_equal(bars[["open", "high", "low", "close", "volume"]].astype(float),
+                                  ref.loc[bars.index].astype(float), check_names=False, check_freq=False)
+    builder, live = handler.BarBuilder("1min"), []
+    for row in clean.itertuples():
+        live += builder.update(row.ts, row.price, row.qty)
+    live = pd.DataFrame(live + builder.flush()).set_index("ts")
+    np.testing.assert_allclose(live[handler.BAR_COLUMNS].to_numpy(float), bars[handler.BAR_COLUMNS].to_numpy(float))
+    assert handler.aggregate_bars(clean, "time", "30min").index[0].strftime("%H:%M") == "09:15"
+
+
+def test_volume_and_dollar_bars_stay_inside_each_session():
+    ticks, _ = data.tick_stream(n_days=2, seed=6, faults=False)
+    for kind, size in (("volume", 40_000), ("dollar", 8e7)):
+        bars = handler.aggregate_bars(ticks, kind, size)
+        column = "volume" if kind == "volume" else "dollar"
+        assert bars[column].sum() == pytest.approx((ticks["qty"] if kind == "volume" else ticks["price"] * ticks["qty"]).sum())
+        full = bars[bars.index.normalize().duplicated(keep="last")]                     # all but each day's last bar
+        assert (full[column] >= 0.9 * size).all() and bars.index.normalize().nunique() == 2
+
+
+def test_instrument_master_and_continuous_futures():
+    spot = data.gbm_prices(400, s0=24000, seed=2, start="2025-01-01")
+    prices, table = data.futures_chain(spot, seed=2)
+    master = handler.InstrumentMaster(table)
+    assert master.front("DEMOIDX", "2025-01-27", roll_days=2) == "DEMOIDX25FEBFUT"
+    assert master.check_quantity("DEMOIDX25FEBFUT", 100) == "" and "lots of 50" in master.check_quantity("DEMOIDX25FEBFUT", 75)
+    assert master.round_price("DEMOIDX25FEBFUT", 24001.03) == 24001.05
+    raw = handler.continuous_futures(prices, master, method="none")
+    ratio = handler.continuous_futures(prices, master, method="ratio")
+    back = handler.continuous_futures(prices, master, method="back")
+    own_prev = [prices.at[p, c] for p, c in zip(raw.index[:-1], raw["contract"].iloc[1:], strict=True)]
+    own_ret = raw["price"].iloc[1:].to_numpy() / np.array(own_prev) - 1
+    np.testing.assert_allclose(ratio["price"].pct_change().iloc[1:], own_ret)             # true contract returns
+    own_diff = raw["price"].iloc[1:].to_numpy() - np.array(own_prev)
+    np.testing.assert_allclose(back["price"].diff().iloc[1:], own_diff, atol=1e-6)      # true point changes
+    assert raw["roll"].sum() >= 15 and not np.allclose(raw["price"].pct_change().iloc[1:], own_ret)
+    assert ratio["price"].iloc[-1] == back["price"].iloc[-1] == raw["price"].iloc[-1]
+
+
+def test_store_load_and_replay_are_deterministic(tmp_path):
+    ticks, _ = data.tick_stream(n_days=2, seed=7)
+    clean = handler.validate_ticks(ticks).clean()
+    paths = handler.store_ticks(clean, tmp_path, fmt="csv")
+    assert [p.parent.parent.name for p in paths] == ["date=2026-01-05", "date=2026-01-06"]
+    loaded = handler.load_ticks(tmp_path)
+    pd.testing.assert_frame_equal(loaded[handler.TICK_COLUMNS], clean[handler.TICK_COLUMNS], check_dtype=False)
+    assert handler.load_ticks(tmp_path, start="2026-01-06")["ts"].dt.day.unique().tolist() == [6]
+
+    def closes(source):
+        builder, out = handler.BarBuilder("5min"), []
+        handler.replay(source, lambda ts, symbol, price, qty: out.extend(builder.update(ts, price, qty)))
+        return [bar["close"] for bar in out]
+
+    assert closes(loaded) == closes(loaded) == closes(clean)
+
+
+def test_parquet_storage_when_pyarrow_is_installed(tmp_path):
+    pytest.importorskip("pyarrow")
+    ticks, _ = data.tick_stream(seed=8, faults=False)
+    handler.store_ticks(ticks, tmp_path, fmt="parquet")
+    assert len(handler.load_ticks(tmp_path)) == len(ticks)

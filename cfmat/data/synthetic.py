@@ -512,3 +512,154 @@ def brownian_ohlc(
     frame = pd.DataFrame(np.exp(rows), columns=["open", "high", "low", "close"], index=trading_days(n_days, start))
     frame["true_vol"] = vol
     return frame
+
+
+NSE_SESSION = ("09:15", "15:30")
+
+
+def _session_seconds(session: tuple[str, str]) -> tuple[pd.Timedelta, float]:
+    open_, close = (pd.Timedelta(f"{t}:00") for t in session)
+    return open_, (close - open_).total_seconds()
+
+
+def tick_stream(
+    n_days: int = 1,
+    seed: int | None = None,
+    symbol: str = "DEMO",
+    s0: float = 2000.0,
+    sigma: float = 0.25,
+    ticks_per_second: float = 1.0,
+    tick_size: float = 0.05,
+    start: str = "2026-01-05",
+    session: tuple[str, str] = NSE_SESSION,
+    faults: bool = True,
+) -> tuple[pd.DataFrame, dict[str, pd.DataFrame]]:
+    """Trades as a feed delivers them (arrival order), with planted faults and the answer key.
+
+    Columns: ``ts`` (exchange time), ``seq`` (feed sequence number), ``symbol``,
+    ``price`` (on the tick grid) and ``qty``. Prices follow a random walk with
+    annual volatility ``sigma``; arrivals are Poisson at ``ticks_per_second``.
+    With ``faults``, each day gets 10 duplicated messages, 8 ticks delivered
+    late (out of order), 6 bad prints (2–4% spikes), a 45-second frozen price
+    and a 90-second outage. Returns ``(ticks, truth)``: ``truth["flags"]`` has
+    one boolean column per tick-level fault aligned with ``ticks``, and
+    ``truth["periods"]`` lists the outage and stale windows.
+    """
+    rng = np.random.default_rng(seed)
+    open_, seconds = _session_seconds(session)
+    per_tick_sd = sigma / np.sqrt(TRADING_DAYS * seconds * ticks_per_second)
+    days = trading_days(n_days, start)
+    frames, flag_frames, periods, seq0, log_p = [], [], [], 0, np.log(s0)
+    for day in days:
+        n = int(rng.poisson(ticks_per_second * seconds))
+        offsets = np.sort(rng.uniform(0, seconds, n))
+        log_p += rng.normal(0, 0.004)                                           # overnight gap
+        path = log_p + np.cumsum(rng.normal(0, per_tick_sd, n))
+        log_p = path[-1]
+        price = (np.round(np.exp(path) / tick_size) * tick_size).round(4)
+        qty = np.maximum(1, rng.lognormal(3.0, 1.0, n)).round().astype(int)
+        ts = day + open_ + pd.to_timedelta(np.round(offsets, 3), unit="s")
+        day_ticks = pd.DataFrame({"ts": ts, "seq": np.arange(seq0 + 1, seq0 + n + 1), "symbol": symbol,
+                                  "price": price, "qty": qty})
+        seq0 += n
+        flags = pd.DataFrame(False, index=day_ticks.index, columns=["duplicate", "out_of_order", "spike"])
+        if faults:
+            day_ticks, flags, day_periods = _plant_faults(day_ticks, flags, day + open_, seconds, tick_size, rng)
+            periods += day_periods
+        frames.append(day_ticks)
+        flag_frames.append(flags)
+    ticks = pd.concat(frames, ignore_index=True)
+    flags = pd.concat(flag_frames, ignore_index=True)
+    periods_frame = pd.DataFrame(periods, columns=["kind", "start", "end"])
+    return ticks, {"flags": flags, "periods": periods_frame}
+
+
+def _plant_faults(ticks, flags, day_open, seconds, tick_size, rng):
+    """Outage and frozen window first, then single-tick faults well apart from each other and from the windows."""
+    def window(length, avoid=None):
+        while True:
+            start = day_open + pd.Timedelta(seconds=float(rng.uniform(0.2 * seconds, 0.8 * seconds - length)))
+            end = start + pd.Timedelta(seconds=length)
+            if avoid is None or end + pd.Timedelta(minutes=10) < avoid[0] or start > avoid[1] + pd.Timedelta(minutes=10):
+                return start, end
+
+    outage = window(90)
+    stale = window(45, avoid=outage)
+    ticks = ticks[~ticks["ts"].between(*outage, inclusive="neither")].reset_index(drop=True)
+    in_stale = ticks["ts"].between(*stale, inclusive="left").to_numpy()
+    first = int(np.argmax(in_stale))
+    ticks.loc[in_stale, "price"] = ticks.loc[first - 1, "price"]           # the feed repeats the last price
+    flags = pd.DataFrame(False, index=ticks.index, columns=flags.columns)
+    busy = np.zeros(len(ticks), bool)
+    busy[max(first - 60, 0): first + int(in_stale.sum()) + 60] = True
+    chosen = []
+    candidates = rng.permutation(np.arange(100, len(ticks) - 100))
+    for pos in candidates:
+        if len(chosen) == 24:
+            break
+        if not busy[pos - 40: pos + 40].any():
+            chosen.append(int(pos))
+            busy[pos - 40: pos + 40] = True
+    spikes, late, dups = chosen[:6], chosen[6:14], chosen[14:24]
+    for pos in spikes:
+        move = rng.uniform(0.02, 0.04) * rng.choice([-1, 1])
+        ticks.loc[pos, "price"] = round(round(ticks.loc[pos, "price"] * (1 + move) / tick_size) * tick_size, 4)
+    rows = ticks.to_dict("records")
+    marks = [{"duplicate": False, "out_of_order": False, "spike": i in spikes} for i in range(len(rows))]
+    order = list(range(len(rows)))
+    for pos in late:                                                        # delivered 3-10 messages later
+        order.remove(pos)
+        order.insert(order.index(pos + int(rng.integers(3, 11))) + 1, pos)
+        marks[pos]["out_of_order"] = True
+    out_rows, out_marks = [], []
+    for i in order:
+        out_rows.append(rows[i])
+        out_marks.append(marks[i])
+        if i in dups:                                                       # the same message sent twice
+            out_rows.append(dict(rows[i]))
+            out_marks.append({"duplicate": True, "out_of_order": False, "spike": False})
+    periods = [("outage", *outage), ("stale", *stale)]
+    return pd.DataFrame(out_rows), pd.DataFrame(out_marks), periods
+
+
+def futures_chain(
+    spot: pd.Series,
+    underlying: str = "DEMOIDX",
+    listed: int = 3,
+    expiry_weekday: int = 1,
+    lot_size: int = 50,
+    tick_size: float = 0.05,
+    r: float = 0.065,
+    q: float = 0.012,
+    basis_noise_bps: float = 5.0,
+    seed: int | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Daily closes for a chain of monthly futures on ``spot``, and their instrument master.
+
+    Each contract expires on the last ``expiry_weekday`` of its month (0 =
+    Monday; set it to the exchange's current rule) and trades for ``listed``
+    months before expiry at cost of carry, S·e^((r−q)·days/365), plus noise.
+    Returns ``(prices, master)``: one price column per contract (missing
+    outside its life) and a table of symbol, underlying, segment, lot size,
+    tick size and expiry. Symbols follow the NSE pattern, e.g. ``DEMOIDX26JANFUT``.
+    """
+    rng = _derived_rng(seed, 0x46555453)   # "FUTS"
+    idx = spot.index
+    months = pd.period_range(idx[0], idx[-1] + pd.DateOffset(months=listed), freq="M")
+    rows, prices = [], {}
+    for month in months:
+        last = month.to_timestamp(how="end").normalize()
+        expiry = last - pd.Timedelta(days=(last.weekday() - expiry_weekday) % 7)
+        first_day = (month - listed).to_timestamp()
+        live = (idx >= first_day) & (idx <= expiry)
+        if not live.any():
+            continue
+        symbol = f"{underlying}{expiry:%y}{expiry:%b}".upper() + "FUT"
+        days_left = (expiry - idx[live]).days.to_numpy()
+        noise = rng.normal(0, basis_noise_bps / 1e4, live.sum())
+        fair = spot[live].to_numpy() * np.exp((r - q) * days_left / 365) * (1 + noise)
+        prices[symbol] = pd.Series((np.round(fair / tick_size) * tick_size).round(4), index=idx[live])
+        rows.append({"symbol": symbol, "underlying": underlying, "segment": "FUT", "lot_size": lot_size,
+                     "tick_size": tick_size, "expiry": expiry})
+    master = pd.DataFrame(rows).set_index("symbol")
+    return pd.DataFrame(prices).reindex(idx), master

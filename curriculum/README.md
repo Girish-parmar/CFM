@@ -28,7 +28,7 @@ One folder per module: `mNN-slug/` holds the module guide (`README.md`) and its 
 | M13 | [Risk Management and Position Sizing](m13-risk-position-sizing/README.md) | T4 | 28–29 | 24 | [13a](m13-risk-position-sizing/lab_13a_risk_sizing_stress.py) | ready |
 | M14 | [Portfolio Management and Strategy Allocation](m14-portfolio-management/README.md) | T4 | 30–31 | 24 | [14a](m14-portfolio-management/lab_14a_portfolio_construction.py) | ready |
 | M15 | [Market Microstructure and Execution](m15-microstructure-execution/README.md) | T4 | 32–33 | 24 | [15a](m15-microstructure-execution/lab_15a_order_book_execution.py) | ready |
-| M16 | [Market Data Handling](m16-market-data-handling/README.md) | T4 | 34 | 12 | 16a (planned) | planned |
+| M16 | [Market Data Handling](m16-market-data-handling/README.md) | T4 | 34 | 12 | [16a](m16-market-data-handling/lab_16a_market_data_handler.py) | ready |
 | M17 | [Trading Platform, Broker APIs and Compliance](m17-trading-platform-compliance/README.md) | T4 | 35–36 | 24 | [17a](m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py), [17b](m17-trading-platform-compliance/lab_17b_order_management_journal.py) | ready |
 | M18 | [Monitoring and Automation with n8n](m18-monitoring-automation/README.md) | T4 | 37–38 | 24 | [18a](m18-monitoring-automation/lab_18a_n8n_signal_service.py), 18b (planned) | partial |
 | M19 | [Machine Learning for Trading](m19-machine-learning/README.md) | T5 | 39–40 | 24 | [19a](m19-machine-learning/lab_19a_machine_learning.py) | ready |
@@ -67,7 +67,7 @@ One folder per module: `mNN-slug/` holds the module guide (`README.md`) and its 
 | 13a | M13 | [lab_13a_risk_sizing_stress.py](m13-risk-position-sizing/lab_13a_risk_sizing_stress.py) | VaR/ES, Kupiec, GARCH VaR, sizing, risk of ruin, stress tests | ready | ~15 s |
 | 14a | M14 | [lab_14a_portfolio_construction.py](m14-portfolio-management/lab_14a_portfolio_construction.py) | Optimisers out of sample, Ledoit–Wolf, frontier, strategy sleeves | ready | ~15 s |
 | 15a | M15 | [lab_15a_order_book_execution.py](m15-microstructure-execution/lab_15a_order_book_execution.py) | Order book, TWAP/VWAP/POV, Almgren–Chriss, impact, shortfall | ready | ~5 s |
-| 16a | M16 | lab_16a_market_data_handler.py | Tick aggregation, gap and spike checks, continuous futures, Parquet store | planned | – |
+| 16a | M16 | [lab_16a_market_data_handler.py](m16-market-data-handling/lab_16a_market_data_handler.py) | Tick validation with scored detectors, time/volume/dollar bars, instrument master, continuous futures, storage and replay | ready | ~10 s |
 | 17a | M17 | [lab_17a_oms_rms_paper_trading.py](m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py) | Paper broker, RMS rejects, throttle, kill switch, trade journal | ready | ~5 s |
 | 17b | M17 | [lab_17b_order_management_journal.py](m17-trading-platform-compliance/lab_17b_order_management_journal.py) | OMS states, stops, IOC/DAY, bracket and OCO, reconciliation; journal review with R and MAE/MFE | ready | ~5 s |
 | 18a | M18 | [lab_18a_n8n_signal_service.py](m18-monitoring-automation/lab_18a_n8n_signal_service.py) | Signal service endpoints used by the n8n workflows | ready | ~5 s |

@@ -29,7 +29,7 @@ notes) in [`curriculum/`](../curriculum/README.md), and runnable labs built on t
 | M13 | [Risk Management and Position Sizing](../curriculum/m13-risk-position-sizing/README.md) | T4 | 28–29 | 24 | [13a](../curriculum/m13-risk-position-sizing/lab_13a_risk_sizing_stress.py) | ready |
 | M14 | [Portfolio Management and Strategy Allocation](../curriculum/m14-portfolio-management/README.md) | T4 | 30–31 | 24 | [14a](../curriculum/m14-portfolio-management/lab_14a_portfolio_construction.py) | ready |
 | M15 | [Market Microstructure and Execution](../curriculum/m15-microstructure-execution/README.md) | T4 | 32–33 | 24 | [15a](../curriculum/m15-microstructure-execution/lab_15a_order_book_execution.py) | ready |
-| M16 | [Market Data Handling](../curriculum/m16-market-data-handling/README.md) | T4 | 34 | 12 | 16a (planned) | planned |
+| M16 | [Market Data Handling](../curriculum/m16-market-data-handling/README.md) | T4 | 34 | 12 | [16a](../curriculum/m16-market-data-handling/lab_16a_market_data_handler.py) | ready |
 | M17 | [Trading Platform, Broker APIs and Compliance](../curriculum/m17-trading-platform-compliance/README.md) | T4 | 35–36 | 24 | [17a](../curriculum/m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py), [17b](../curriculum/m17-trading-platform-compliance/lab_17b_order_management_journal.py) | ready |
 | M18 | [Monitoring and Automation with n8n](../curriculum/m18-monitoring-automation/README.md) | T4 | 37–38 | 24 | [18a](../curriculum/m18-monitoring-automation/lab_18a_n8n_signal_service.py), 18b (planned) | partial |
 | M19 | [Machine Learning for Trading](../curriculum/m19-machine-learning/README.md) | T5 | 39–40 | 24 | [19a](../curriculum/m19-machine-learning/lab_19a_machine_learning.py) | ready |
@@ -67,7 +67,7 @@ These are the areas the programme commits to cover in depth, plus supporting are
 | Machine-learning techniques | M19, M23 | covered |
 | Deep-learning techniques | M20 | covered |
 | Reinforcement learning | M21 | covered |
-| Market data handling | M05, M16 (lab planned) | covered |
+| Market data handling | M05, M16 | covered |
 | Monitoring systems | M18 (lab planned), M24 (lab planned) | planned |
 | Fundamental and factor investing *(supporting)* | M07 | covered |
 | Screeners and instrument selection *(supporting)* | M12 | covered |

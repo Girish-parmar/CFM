@@ -8,6 +8,7 @@ Market data (M03, M05, M16).
 synthetic  reproducible generators with documented, planted properties
 loaders    CSV and Yahoo Finance loaders; one standard OHLCV shape and data-quality checks
 providers  historical bars from Alpaca (US) and Interactive Brokers (NSE, US, global)
+handler    ticks to bars, tick validation, instrument master, continuous futures, storage, replay
 fetch      command line: python -m cfmat.data.fetch {yahoo,alpaca,ibkr} SYMBOL ... → data/<SYMBOL>.csv
 samples/   fictional headlines and filings used by the NLP labs (package data)
 ```
@@ -22,6 +23,32 @@ Fetch historical bars into ``data/<SYMBOL>.csv`` from Yahoo Finance, Alpaca or I
 | `file_name` | `def file_name(symbol: str) -> str` | The CSV name for a symbol: upper case, only the characters the signal service accepts (``^NSEI`` → ``NSEI``). |
 | `main` | `def main(argv: list[str] \| None = None) -> int` | Command-line entry point; returns 0 when every symbol was saved. |
 | `save_bars` | `def save_bars(bars: pd.DataFrame, symbol: str, folder: str \| Path \| None = None) -> Path` | Write bars to ``<folder>/<SYMBOL>.csv`` (default ``data/``) with a ``date`` column; returns the path. |
+
+### `cfmat.data.handler`
+
+Market-data handling: ticks to bars, validation, instruments, continuous futures, storage and replay (M16).
+
+| Name | Signature | Summary |
+|---|---|---|
+| `aggregate_bars` | `def aggregate_bars(ticks: pd.DataFrame, kind: str = 'time', size: str \| float = '1min', session: tuple[str, str] = ('09:15', '15:30')) -> pd.DataFrame` | OHLCV bars from clean ticks (see ``TickReport.clean``), never spanning two sessions. |
+| `BarBuilder` | `class BarBuilder(size: str = '1min', session: tuple[str, str] = ('09:15', '15:30')) -> None` | Time bars built one tick at a time, as a live feed handler builds them. |
+| `BarBuilder.flush` | `flush(self) -> list[dict]` | Close the open bar, if any. |
+| `BarBuilder.update` | `update(self, ts, price: float, qty: int) -> list[dict]` | Add one tick; returns completed bars. |
+| `continuous_futures` | `def continuous_futures(prices: pd.DataFrame, master: InstrumentMaster \| pd.DataFrame, underlying: str \| None = None, roll_days: int = 2, method: str = 'ratio') -> pd.DataFrame` | One price series across contract rolls. |
+| `InstrumentMaster` | `class InstrumentMaster(table: pd.DataFrame) -> None` | Reference data for tradable instruments, indexed by symbol. |
+| `InstrumentMaster.check_quantity` | `check_quantity(self, symbol: str, qty: int) -> str` | An empty string if ``qty`` is a positive whole number of lots, else the reason it is not. |
+| `InstrumentMaster.contracts` | `contracts(self, underlying: str, on: str \| pd.Timestamp \| None = None) -> pd.DataFrame` | Futures on ``underlying`` not yet expired on ``on`` (all if None), nearest expiry first. |
+| `InstrumentMaster.front` | `front(self, underlying: str, on: str \| pd.Timestamp, roll_days: int = 0) -> str` | The contract to hold on ``on``: the nearest whose expiry is more than ``roll_days`` business days away. |
+| `InstrumentMaster.get` | `get(self, symbol: str) -> pd.Series` | One instrument's row; ``KeyError`` names unknown symbols. |
+| `InstrumentMaster.round_price` | `round_price(self, symbol: str, price: float) -> float` | The nearest valid price on the instrument's tick grid. |
+| `InstrumentMaster.to_csv` | `to_csv(self, path: str \| Path) -> Path` | Save the master; returns the path. |
+| `load_ticks` | `def load_ticks(root: str \| Path, symbols: Iterable[str] \| None = None, start: str \| None = None, end: str \| None = None) -> pd.DataFrame` | Read stored ticks, opening only the partitions for the wanted symbols and dates, in (ts, seq) order. |
+| `replay` | `def replay(ticks: pd.DataFrame, on_tick: Callable[[pd.Timestamp, str, float, int], None]) -> int` | Call ``on_tick(ts, symbol, price, qty)`` for every tick in (ts, seq) order; returns the count. |
+| `store_ticks` | `def store_ticks(ticks: pd.DataFrame, root: str \| Path, fmt: str = 'auto') -> list[Path]` | Write ticks partitioned as ``root/date=YYYY-MM-DD/symbol=XXX/ticks.parquet`` (or ``.csv``). |
+| `TickReport` | `class TickReport(ticks: pd.DataFrame, flags: pd.DataFrame, gaps: pd.DataFrame, stale: pd.DataFrame) -> None` | What ``validate_ticks`` found: per-tick flags and the outage and stale periods. |
+| `TickReport.clean` | `clean(self) -> pd.DataFrame` | Ticks without duplicates, spikes and frozen prices, in exchange-time order (late ticks slotted in). |
+| `TickReport.summary` | `summary(self) -> dict[str, int]` | Counts of each problem. |
+| `validate_ticks` | `def validate_ticks(ticks: pd.DataFrame, tick_size: float = 0.05, spike_z: float = 10.0, spike_window: int = 50, confirm: int = 3, max_gap: str = '30s', stale_after: str = '30s', min_stale_ticks: int = 5, session: tuple[str, str] = ('09:15', '15:30')) -> TickReport` | Check a tick stream in arrival order, the way a feed handler sees it. |
 
 ### `cfmat.data.loaders`
 
@@ -56,6 +83,7 @@ Synthetic market data with known, documented properties (M03-M23).
 | `cointegrated_pair` | `def cointegrated_pair(n: int = 756, beta: float = 1.5, half_life: float = 10.0, spread_sigma: float = 1.5, seed: int \| None = None, start: str = '2022-01-03') -> pd.DataFrame` | Two price series with y = 20 + beta * x + OU spread. |
 | `drifting_pair` | `def drifting_pair(n: int = 1500, beta_start: float = 1.2, beta_end: float = 1.9, half_life: float = 8.0, spread_sigma: float = 1.5, seed: int \| None = None, start: str = '2019-01-01') -> pd.DataFrame` | A pair whose hedge ratio drifts from ``beta_start`` to ``beta_end``. |
 | `factor_panel` | `def factor_panel(n_stocks: int = 200, n_months: int = 120, premia: dict[str, float] \| None = None, premium_vol: float = 1.5, outlier_share: float = 0.02, seed: int \| None = None, start: str = '2015-01-31') -> pd.DataFrame` | Monthly (date, stock) panel of characteristics and next-month returns. |
+| `futures_chain` | `def futures_chain(spot: pd.Series, underlying: str = 'DEMOIDX', listed: int = 3, expiry_weekday: int = 1, lot_size: int = 50, tick_size: float = 0.05, r: float = 0.065, q: float = 0.012, basis_noise_bps: float = 5.0, seed: int \| None = None) -> tuple[pd.DataFrame, pd.DataFrame]` | Daily closes for a chain of monthly futures on ``spot``, and their instrument master. |
 | `garch_prices` | `def garch_prices(n: int = 2500, omega: float = 2e-06, alpha: float = 0.08, beta: float = 0.9, mu: float = 0.08, seed: int \| None = None, start: str = '2016-01-01') -> pd.DataFrame` | Prices whose daily returns follow GARCH(1,1): volatility clusters. |
 | `gbm_prices` | `def gbm_prices(n: int = 756, s0: float = 100.0, mu: float = 0.1, sigma: float = 0.2, seed: int \| None = None, start: str = '2022-01-03') -> pd.Series` | Daily closes from geometric Brownian motion. |
 | `implied_vol_series` | `def implied_vol_series(close: pd.Series, premium: float = 0.15, noise_vol_pts: float = 1.5, floor: float = 0.08, seed: int \| None = None) -> pd.Series` | A synthetic at-the-money implied-volatility index for ``close``. |
@@ -65,5 +93,6 @@ Synthetic market data with known, documented properties (M03-M23).
 | `ohlcv_from_close` | `def ohlcv_from_close(close: pd.Series, seed: int \| None = None, base_volume: float = 1000000.0) -> pd.DataFrame` | Build plausible open/high/low/volume columns around a close series. |
 | `regime_prices` | `def regime_prices(n: int = 2500, mu: tuple[float, float] = (0.15, -0.25), sigma: tuple[float, float] = (0.12, 0.35), phi: tuple[float, float] = (0.0, 0.0), p_stay: tuple[float, float] = (0.985, 0.95), seed: int \| None = None, start: str = '2016-01-01') -> pd.DataFrame` | Prices from a two-state Markov-switching model. |
 | `seasonal_prices` | `def seasonal_prices(n: int = 3000, base_drift: float = 0.06, sigma: tuple[float, float] = (0.12, 0.3), phi: tuple[float, float] = (0.2, -0.2), p_stay: tuple[float, float] = (0.98, 0.98), weekday_effect: dict[int, float] \| None = None, turn_of_month: float = 0.0015, tom_days: tuple[int, int] = (1, 3), streak_len: int = 3, streak_bounce: float = 0.002, seed: int \| None = None, start: str = '2014-01-01') -> pd.DataFrame` | Daily OHLCV with *planted* calendar, regime and pattern effects. |
+| `tick_stream` | `def tick_stream(n_days: int = 1, seed: int \| None = None, symbol: str = 'DEMO', s0: float = 2000.0, sigma: float = 0.25, ticks_per_second: float = 1.0, tick_size: float = 0.05, start: str = '2026-01-05', session: tuple[str, str] = ('09:15', '15:30'), faults: bool = True) -> tuple[pd.DataFrame, dict[str, pd.DataFrame]]` | Trades as a feed delivers them (arrival order), with planted faults and the answer key. |
 | `trading_days` | `def trading_days(n: int, start: str = '2022-01-03') -> pd.DatetimeIndex` | ``n`` business days starting at ``start`` (exchange holidays ignored). |
 | `universe` | `def universe(n_assets: int = 10, n_days: int = 756, market_vol: float = 0.18, idio_vol: float \| tuple[float, float] = 0.2, seed: int \| None = None, start: str = '2022-01-03') -> pd.DataFrame` | Closes for ``n_assets`` stocks driven by one market factor plus noise. |

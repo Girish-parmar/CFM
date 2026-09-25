@@ -381,8 +381,8 @@ modules:
     week_themes:
       - Feeds, ticks to bars, instrument masters, data quality and storage
     labs:
-      - {file: lab_16a_market_data_handler.py, status: planned, runtime_s: 10, title: "Tick aggregation, gap and spike checks, continuous futures, Parquet store"}
-    library: [cfmat.data, cfmat.data.providers, cfmat.data.fetch]
+      - {file: lab_16a_market_data_handler.py, status: ready, runtime_s: 10, title: "Tick validation with scored detectors, time/volume/dollar bars, instrument master, continuous futures, storage and replay"}
+    library: [cfmat.data, cfmat.data.handler, cfmat.data.providers, cfmat.data.fetch]
     topics: [market-data]
     prerequisites: [M05, M15]
 

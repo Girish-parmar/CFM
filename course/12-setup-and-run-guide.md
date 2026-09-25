@@ -185,19 +185,20 @@ message.
 | 17 | 28–29 | [13a](../curriculum/m13-risk-position-sizing/lab_13a_risk_sizing_stress.py) | M13 | VaR/ES, Kupiec, GARCH VaR, sizing, risk of ruin, stress tests | ~15 s | – |
 | 18 | 30–31 | [14a](../curriculum/m14-portfolio-management/lab_14a_portfolio_construction.py) | M14 | Optimisers out of sample, Ledoit–Wolf, frontier, strategy sleeves | ~15 s | – |
 | 19 | 32–33 | [15a](../curriculum/m15-microstructure-execution/lab_15a_order_book_execution.py) | M15 | Order book, TWAP/VWAP/POV, Almgren–Chriss, impact, shortfall | ~5 s | – |
-| 20 | 35–36 | [17a](../curriculum/m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py) | M17 | Paper broker, RMS rejects, throttle, kill switch, trade journal | ~5 s | – |
-| 21 | 35–36 | [17b](../curriculum/m17-trading-platform-compliance/lab_17b_order_management_journal.py) | M17 | OMS states, stops, IOC/DAY, bracket and OCO, reconciliation; journal review with R and MAE/MFE | ~5 s | – |
-| 22 | 37–38 | [18a](../curriculum/m18-monitoring-automation/lab_18a_n8n_signal_service.py) | M18 | Signal service endpoints used by the n8n workflows | ~5 s | – |
-| 23 | 39–40 | [19a](../curriculum/m19-machine-learning/lab_19a_machine_learning.py) | M19 | Features, triple barrier, leakage vs purged CV, walk-forward trading | ~30 s | – |
-| 24 | 41 | [20a](../curriculum/m20-deep-learning/lab_20a_deep_learning.py) | M20 | Sliding windows, MLP vs logistic on linear and nonlinear signals | ~15 s | `dl` |
-| 25 | 42 | [21a](../curriculum/m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | M21 | Q-learning policy, rule baseline, costs in the reward, seed spread | ~30 s | – |
-| 26 | 43–44 | [22a](../curriculum/m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py) | M22 | Lexicon and TF-IDF sentiment, RAG with relevance guard, optional Claude | ~5 s | `llm` |
-| 27 | 45–46 | [23a](../curriculum/m23-advanced-strategies-hpo/lab_23a_boosting_hpo.py) | M23 | HGB/XGBoost/LightGBM, random search, Optuna, nested walk-forward, PBO | ~60 s | `boost` |
-| 28 | 45–46 | [23b](../curriculum/m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py) | M23 | Markov regimes, GARCH volatility targeting, Kalman-filter pairs | ~10 s | – |
-| 29 | 45–46 | [23c](../curriculum/m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py) | M23 | Meta-labelling, bet sizing, multi-strategy allocation | ~10 s | – |
-| 30 | 45–46 | [23d](../curriculum/m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | M23 | Day/month/expiry/regime/pattern segments, FDR, per-segment walk-forward | ~60 s | – |
+| 20 | 34 | [16a](../curriculum/m16-market-data-handling/lab_16a_market_data_handler.py) | M16 | Tick validation with scored detectors, time/volume/dollar bars, instrument master, continuous futures, storage and replay | ~10 s | – |
+| 21 | 35–36 | [17a](../curriculum/m17-trading-platform-compliance/lab_17a_oms_rms_paper_trading.py) | M17 | Paper broker, RMS rejects, throttle, kill switch, trade journal | ~5 s | – |
+| 22 | 35–36 | [17b](../curriculum/m17-trading-platform-compliance/lab_17b_order_management_journal.py) | M17 | OMS states, stops, IOC/DAY, bracket and OCO, reconciliation; journal review with R and MAE/MFE | ~5 s | – |
+| 23 | 37–38 | [18a](../curriculum/m18-monitoring-automation/lab_18a_n8n_signal_service.py) | M18 | Signal service endpoints used by the n8n workflows | ~5 s | – |
+| 24 | 39–40 | [19a](../curriculum/m19-machine-learning/lab_19a_machine_learning.py) | M19 | Features, triple barrier, leakage vs purged CV, walk-forward trading | ~30 s | – |
+| 25 | 41 | [20a](../curriculum/m20-deep-learning/lab_20a_deep_learning.py) | M20 | Sliding windows, MLP vs logistic on linear and nonlinear signals | ~15 s | `dl` |
+| 26 | 42 | [21a](../curriculum/m21-reinforcement-learning/lab_21a_reinforcement_learning.py) | M21 | Q-learning policy, rule baseline, costs in the reward, seed spread | ~30 s | – |
+| 27 | 43–44 | [22a](../curriculum/m22-nlp-news-llm-rag/lab_22a_sentiment_rag.py) | M22 | Lexicon and TF-IDF sentiment, RAG with relevance guard, optional Claude | ~5 s | `llm` |
+| 28 | 45–46 | [23a](../curriculum/m23-advanced-strategies-hpo/lab_23a_boosting_hpo.py) | M23 | HGB/XGBoost/LightGBM, random search, Optuna, nested walk-forward, PBO | ~60 s | `boost` |
+| 29 | 45–46 | [23b](../curriculum/m23-advanced-strategies-hpo/lab_23b_regimes_kalman_garch.py) | M23 | Markov regimes, GARCH volatility targeting, Kalman-filter pairs | ~10 s | – |
+| 30 | 45–46 | [23c](../curriculum/m23-advanced-strategies-hpo/lab_23c_meta_labeling_ensembles.py) | M23 | Meta-labelling, bet sizing, multi-strategy allocation | ~10 s | – |
+| 31 | 45–46 | [23d](../curriculum/m23-advanced-strategies-hpo/lab_23d_segment_optimisation.py) | M23 | Day/month/expiry/regime/pattern segments, FDR, per-segment walk-forward | ~60 s | – |
 
-Planned, not yet released: 02a, 09a, 16a, 18b, 22b, 24a.
+Planned, not yet released: 02a, 09a, 18b, 22b, 24a.
 <!-- END GENERATED: run-order -->
 
 ### How to run a lab
@@ -237,7 +238,7 @@ Install an extra only when you reach the module that needs it. With the environm
 | Extra | Command | Unlocks | Module |
 |---|---|---|---|
 | `boost` | `pip install -e ".[boost]"` (already in `requirements.txt`) | XGBoost, LightGBM and Optuna sections of Lab 23a | M23 |
-| `data` | `pip install -e ".[data]"` | Real prices from Yahoo Finance (`data.download_prices("TCS.NS")`); `USE_REAL_DATA` in Lab 03a; real-data exercises | M03 onwards |
+| `data` | `pip install -e ".[data]"` | Real prices from Yahoo Finance (`data.download_prices("TCS.NS")`); `USE_REAL_DATA` in Lab 03a; Parquet tick storage in Lab 16a (pyarrow); real-data exercises | M03 onwards |
 | `alpaca` | `pip install -e ".[alpaca]"` and set `ALPACA_API_KEY`, `ALPACA_SECRET_KEY` | US stock bars from Alpaca (`data.alpaca_bars`, `cfmat-fetch alpaca`); no NSE | Real-data exercises, M16 |
 | `ibkr` | `pip install -e ".[ibkr]"`; TWS or IB Gateway running | Bars from Interactive Brokers, including NSE (`data.ibkr_bars`, `cfmat-fetch ibkr`) | Real-data exercises, M16–M17 |
 | `llm` | `pip install -e ".[llm]"` and set `ANTHROPIC_API_KEY` | The Claude answer step in Lab 22a (the retrieval pipeline runs without it) | M22 |

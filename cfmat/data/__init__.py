@@ -3,6 +3,7 @@
 synthetic  reproducible generators with documented, planted properties
 loaders    CSV and Yahoo Finance loaders; one standard OHLCV shape and data-quality checks
 providers  historical bars from Alpaca (US) and Interactive Brokers (NSE, US, global)
+handler    ticks to bars, tick validation, instrument master, continuous futures, storage, replay
 fetch      command line: python -m cfmat.data.fetch {yahoo,alpaca,ibkr} SYMBOL ... → data/<SYMBOL>.csv
 samples/   fictional headlines and filings used by the NLP labs (package data)
 """
@@ -26,6 +27,7 @@ from .synthetic import (
     cointegrated_pair,
     drifting_pair,
     factor_panel,
+    futures_chain,
     garch_prices,
     gbm_prices,
     implied_vol_series,
@@ -35,6 +37,7 @@ from .synthetic import (
     ohlcv_from_close,
     regime_prices,
     seasonal_prices,
+    tick_stream,
     trading_days,
     universe,
 )
@@ -50,6 +53,7 @@ __all__ = [
     "download_prices",
     "drifting_pair",
     "factor_panel",
+    "futures_chain",
     "garch_prices",
     "gbm_prices",
     "ibkr_bars",
@@ -63,6 +67,7 @@ __all__ = [
     "regime_prices",
     "seasonal_prices",
     "standardize_ohlcv",
+    "tick_stream",
     "trading_days",
     "universe",
 ]
