@@ -144,3 +144,23 @@ Evidence for v2.1.0: 228 unit tests passing on Python 3.10 and 3.11; 30 ready la
 tests; the wheel installs and runs outside the repository; manifest and API reference current.
 Lab narratives were checked against their outputs. Where the synthetic data shows no edge
 (dual momentum in lab 11b, time-series momentum on the GARCH market in lab 10b), the lab says so.
+
+## I. Addendum — v2.2.0 (2026-09-25)
+
+The planned-lab backlog (section E) is complete: labs 24a, 16a, 18b, 09a, 22b and 02a shipped,
+so every lab in the manifest is `ready`. Building them exposed these issues.
+
+| # | Severity | Finding | Fix | Guard |
+|---|---|---|---|---|
+| C1 | Medium | A circular-shift permutation test on the *raw* difference in means is anti-conservative when event days are more volatile: shifted dates land on calmer days, so the null distribution is too narrow. On synthetic Budget days (2.5× volatility, no planted mean effect) it rejected at 5% in 11 of 40 seeds | `stats.event_day_effect` permutes a studentised (Welch) statistic; rejection rates 5–7% on 60 null seeds for every event type | `test_event_day_effect_keeps_its_size_when_event_days_are_more_volatile` |
+| C2 | Low | Strictly periodic events are shifted onto themselves by multiples of the period, which puts a floor of about 1 / period under a circular-shift p-value; macro calendars are nearly periodic | Documented in `event_day_effect`; tests use irregular dates | `test_event_day_effect_finds_higher_volatility` |
+| C3 | Low | Session assignment ("first session whose close follows the timestamp") was written inline in `nlp.news_events`; macro releases need the same rule | One helper, `analytics.macro.release_sessions`, used by both | `test_release_sessions_respect_the_close_weekends_and_the_calendar_end` |
+| C4 | Teaching | A regime label built from final, revised data by reference month looks far better than any label that could have been traded (in lab 02a the best-minus-worst regime spread falls from 59% to 32% a year once only published data are used) | `growth_inflation_regimes` is causal by default; the hindsight mode exists only for comparison and fails the truncation test | `test_regime_labels_are_causal_under_truncation` |
+
+Labs report what their tests can and cannot see: lab 02a states that the planted RBI-day premium
+(15 bp) needs about 600 meetings to detect, and its seed is the first one meeting criteria fixed
+before looking (no significant effect where none is planted, at least two curve inversions).
+
+Evidence for v2.2.0: 280 unit tests passing on Python 3.10 and 3.12; all 36 labs are `ready` and
+run as smoke tests in CI (`pytest -m lab`); each new lab's narrative was checked against its
+output; manifest and API reference current.

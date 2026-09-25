@@ -26,4 +26,4 @@ Everything is written for teaching: small, readable and tested. It is not a
 production trading system.
 """
 
-__version__ = "2.1.0"
+__version__ = "2.2.0"

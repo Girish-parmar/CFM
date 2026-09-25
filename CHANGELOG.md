@@ -5,6 +5,8 @@ for the `cfmat` library; the course edition is recorded in `course/course.yaml`.
 
 ## [Unreleased]
 
+## [2.2.0] — 2026-09-25
+
 ### Added
 - `course/12-setup-and-run-guide.md`: which Python to install and how on Windows, macOS and
   Linux; the virtual environment; the must and optional install steps; the environment check;
