@@ -3,6 +3,44 @@
 All notable changes to the course and its library. Versions follow [Semantic Versioning](https://semver.org/)
 for the `cfmat` library; the course edition is recorded in `course/course.yaml`.
 
+## [2.1.0] — 2026-09-25
+
+### Added
+- **Order management** (`cfmat.trading.oms.OrderManager`): order state machine with an audit trail;
+  idempotent client order ids; stop and stop-limit orders held until triggered; DAY, IOC and GTC
+  time in force; amend as cancel/replace; bracket orders whose exits follow the filled entry
+  quantity; OCO groups; reconciliation against the broker; flatten. See [ADR 0005](docs/adr/0005-order-management-layer.md).
+- **Trading journal**: notes on fills (`setup`, `stop`, `target`, `tags`), `annotate`, flat-to-flat
+  `round_trips` with net P&L and R-multiples, `excursions` (MAE/MFE, exit efficiency),
+  `trade_summary` (expectancy in ₹ and R, SQN, costs, streaks), `trade_breakdown` (by setup, tag,
+  weekday, hour), CSV and SQLite persistence.
+- **Momentum and volatility**: `analytics.momentum` (12-1, risk-adjusted, regression, information
+  discreteness, acceleration, TSMOM with a volatility target, cross-sectional ranks, dual momentum)
+  and `analytics.volatility` (close-to-close, Parkinson, Garman–Klass, Rogers–Satchell, Yang–Zhang,
+  EWMA, ATR %, cones, percentiles, regimes, vol of vol).
+- **Analysis tools**: `analytics.performance` (tearsheet with benchmark, drawdown periods,
+  underwater curve, rolling metrics, monthly and annual returns, ulcer, omega, tail ratio,
+  gain-to-pain) and `analytics.relative` (CAPM alpha with a Newey–West t, beta, capture ratios,
+  rolling beta and correlation, relative strength, Mansfield RS, RS rating, relative rotation).
+- **Visualisation**: `cfmat.viz` — price charts with overlays, trade and pattern markers, volume
+  and indicator panels; equity and drawdown, monthly heatmap, rolling metrics, return
+  distribution, trade review; correlation heatmap, volatility estimators, cone, rankings,
+  rotation graph, efficient frontier.
+- `data.brownian_ohlc` (bars from a simulated one-minute path with a known true volatility);
+  `data.universe(idio_vol=(low, high))` draws a volatility per stock.
+- Labs 10b (momentum and volatility), 11b (performance analysis and the tearsheet) and 17b (order
+  management and the trading journal); module guides M10, M11 and M17 updated.
+
+### Changed
+- `PaperBroker` supports partial fills (`max_fill_qty`), publishes fills to listeners and reports
+  working orders; `Order` tracks `filled_qty` and `avg_fill_price` and must be MARKET or LIMIT.
+- `backtesting.report.monthly_returns_table` delegates to `analytics.performance.monthly_returns`.
+
+### Fixed
+- A limit order that was marketable on arrival filled at its limit price instead of the market
+  price, overstating the cost of aggressive limit orders.
+- `backtesting.report.__all__` exported `np`.
+
 ## [2.0.0] — 2026-09-24
 
 A full review and restructure: see the [devil's-advocate audit](audit/2026-09-devils-advocate-review.md).

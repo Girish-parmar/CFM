@@ -125,3 +125,22 @@ Each lab's full specification is in its module guide. When a lab ships, flip its
 - Market prices of comparable programmes, and every cost line in the unit economics — replace the assumptions with quotes.
 - GST treatment of bootcamp stay and joint certification — needs a chartered accountant.
 - Learner outcomes — none exist yet for v2; publish only audited numbers with their base and period.
+
+## H. Addendum — v2.1.0 (2026-09-25)
+
+Adding order management, the trading journal, momentum and volatility, analysis tools and
+visualisation (see the [CHANGELOG](../CHANGELOG.md)) exposed these issues in v2.0.0.
+
+| # | Severity | Finding | Fix | Guard |
+|---|---|---|---|---|
+| B1 | Medium | A limit order that was marketable on arrival filled at its **limit** price, not the market price, overstating the cost of aggressive limit orders in every paper-trading result | Fill at the market price with slippage, never worse than the limit | `test_marketable_limit_fills_at_the_market_not_at_its_limit` |
+| B2 | Medium | No order-management layer: stops, brackets, time in force, safe retries and reconciliation lived in strategy code or nowhere, so M17 taught them only in slides | `trading.oms.OrderManager` with a state machine, audit trail and reconciliation ([ADR 0005](../docs/adr/0005-order-management-layer.md)); lab 17b | 14 OMS tests, including idempotent retries, bracket resizing on partial fills and reconciliation breaks |
+| B3 | Low | `metrics.drawdown_series` measures from the first close, so a loss on the first day is not counted as a drawdown | Documented; `analytics.performance.underwater` and the tearsheet measure from the starting capital. `drawdown_series` is unchanged so existing results stay comparable | `test_underwater_counts_losses_from_the_starting_capital` |
+| B4 | Low | The trade journal stored fills only: R-multiples, round trips and excursions had to be rebuilt by hand, and reversals were easy to get wrong | `round_trips`, `excursions`, `trade_summary`, `trade_breakdown`; charges split pro rata on reversals | `test_round_trips_handle_scaling_partial_exits_and_reversals`; journal P&L and charges equal the broker's |
+| B5 | Low | `backtesting.report.__all__` exported `np` (a leftover that silenced an unused-import warning) | Removed | `test_public_names_resolve` |
+| B6 | Teaching | Volatility-regime labels from trailing percentiles adapt: a lasting shift to high volatility is labelled "normal" within months. Learners would read that as calm returning | Stated in the docstring and in lab 10b | `test_ewma_cone_percentile_and_regime_follow_a_volatility_shift` |
+
+Evidence for v2.1.0: 228 unit tests passing on Python 3.10 and 3.11; 30 ready labs run as smoke
+tests; the wheel installs and runs outside the repository; manifest and API reference current.
+Lab narratives were checked against their outputs. Where the synthetic data shows no edge
+(dual momentum in lab 11b, time-series momentum on the GARCH market in lab 10b), the lab says so.

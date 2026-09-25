@@ -40,13 +40,13 @@ Where everything lives, how files are named, and where to go for common tasks.
 
 | Subpackage | Owns | Depends on |
 |---|---|---|
-| `analytics` | metrics, indicators, patterns, stats, factors | numpy, pandas, scipy, statsmodels |
+| `analytics` | metrics, performance (tearsheets), indicators, patterns, momentum, volatility, relative (CAPM, RS, rotation), stats, factors | numpy, pandas, scipy, statsmodels |
 | `infra` | parallel map, paths, plotting | stdlib, matplotlib |
 | `data` | synthetic generators, loaders, sample data | analytics |
 | `derivatives` | options, futures, option-structure backtests | analytics, microstructure, infra |
 | `strategies` | signal functions, rule language, specs, templates | analytics |
 | `microstructure` | order book, schedules, TCA, Indian costs | numpy, pandas |
-| `trading` | orders, risk checks, paper broker, journal | microstructure |
+| `trading` | orders, risk checks, paper broker, OMS, journal | microstructure |
 | `backtesting` | vectorised, event-driven and rule engines, optimisers, reports | analytics, strategies, trading, microstructure, research |
 | `research` | screener, segments | analytics, backtesting, infra |
 | `portfolio` | risk, construction | numpy, pandas, scipy |
@@ -54,6 +54,7 @@ Where everything lives, how files are named, and where to go for common tasks.
 | `ml` | features, labels, validation, sizing, tuning, RL | analytics, scikit-learn (+ optional boosters) |
 | `nlp` | sentiment, RAG, LLM step | scikit-learn, infra (+ optional anthropic) |
 | `automation` | signal service, journal store | analytics, data, nlp, infra |
+| `viz` | price, performance and analysis charts | analytics, portfolio, infra |
 | `studio` (module) | one namespace for the Strategy Creator workflow | strategies, backtesting |
 
 ## Where do I…
